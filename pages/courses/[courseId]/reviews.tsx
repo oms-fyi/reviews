@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import format from "date-fns/format";
 import { CalendarIcon, ArrowLeftIcon } from "@heroicons/react/outline";
+import { Course, Review, HydratedCourse } from "../../../types";
 import allCourses from "../../../data/courses.json";
 import allReviews from "../../../data/reviews.json";
 import Link from "next/link";
@@ -15,28 +16,6 @@ export const getStaticPaths = () => {
     fallback: false,
   };
 };
-
-interface Review {
-  difficulty: number;
-  rating: number;
-  workload: number;
-  course_id: string;
-}
-
-interface Course {
-  id: string;
-  name: string;
-  foundational: string;
-  deprecated: string;
-  [key: string]: string | number | null;
-}
-
-interface HydratedCourse extends Course {
-  reviewCount: number;
-  avg_difficulty: number;
-  avg_rating: number;
-  avg_workload: number;
-}
 
 export const getStaticProps = ({
   params: { courseId },
@@ -83,16 +62,6 @@ const hydrateCourseData = (
 
   return hydrated;
 };
-
-interface Review {
-  semester_id: string;
-  rating: number;
-  difficulty: number;
-  workload: number;
-  created: number;
-  body: string;
-  course_id: string;
-}
 
 export default function Reviews({
   reviews,
