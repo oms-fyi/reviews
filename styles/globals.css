@@ -9,7 +9,8 @@ body {
 html,
 body,
 #__next {
-  height: 100%;
+  @apply h-full;
+  @apply bg-gray-100;
 }
 
 a {

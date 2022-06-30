@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Script from "next/script";
+import Banner from "../components/Banner";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
@@ -33,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Component {...pageProps} />
       <Analytics />
+      {/* <Banner /> */}
     </>
   );
 }
