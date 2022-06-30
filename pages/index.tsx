@@ -1,10 +1,10 @@
-import { useLocalStorage } from "react-use";
+// import { useLocalStorage } from "react-use";
 import { PlusSmIcon, MinusSmIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SortIcon } from "../components/SortIcon";
 import { Toggle } from "../components/Toggle";
-import { Banner } from "../components/Banner";
+// import { Banner } from "../components/Banner";
 import courseData from "../data/courses.json";
 import reviewData from "../data/reviews.json";
 
