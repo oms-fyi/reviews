@@ -5,33 +5,12 @@ import { useMemo, useState } from "react";
 import { SortIcon } from "../components/SortIcon";
 import { Toggle } from "../components/Toggle";
 // import { Banner } from "../components/Banner";
+import { Course, Review, HydratedCourse } from "../types";
 import courseData from "../data/courses.json";
 import reviewData from "../data/reviews.json";
 
-interface Review {
-  difficulty: number;
-  rating: number;
-  workload: number;
-  course_id: string;
-}
-
-interface Course {
-  id: string;
-  name: string;
-  foundational: string;
-  deprecated: string;
-  [key: string]: string | number | null;
-}
-
-interface HydratedCourse extends Course {
-  reviewCount: number;
-  avg_difficulty: number;
-  avg_rating: number;
-  avg_workload: number;
-}
-
 const hydrateCourseData = (): HydratedCourse[] => {
-  return courseData.map((course) => {
+  return courseData.map((course: Course) => {
     const hydrated = {
       ...course,
       reviewCount: 0,
