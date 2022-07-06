@@ -1,10 +1,8 @@
-// import { useLocalStorage } from "react-use";
 import { PlusSmIcon, MinusSmIcon } from "@heroicons/react/solid";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SortIcon } from "../components/SortIcon";
 import { Toggle } from "../components/Toggle";
-// import { Banner } from "../components/Banner";
 import { Course, Review, HydratedCourse } from "../types";
 import courseData from "../data/courses.json";
 import reviewData from "../data/reviews.json";
@@ -46,8 +44,6 @@ export default function Home() {
     attribute: "reviewCount",
     direction: "desc",
   });
-
-  // const [showBanner, setShowBanner] = useLocalStorage("show-banner", "1");
 
   const [foundational, setFoundational] = useState(false);
   const [deprecated, setDeprecated] = useState(false);
@@ -332,7 +328,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {/* {showBanner === "1" && <Banner onDismiss={() => setShowBanner("0")} />} */}
       </>
     </main>
   );
