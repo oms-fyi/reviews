@@ -1,46 +1,34 @@
 import { PlusSmIcon, MinusSmIcon } from "@heroicons/react/solid";
+import type { NextPage, GetStaticProps } from "next";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { SortIcon } from "../components/SortIcon";
 import { Toggle } from "../components/Toggle";
-import { Course, Review, HydratedCourse } from "../types";
-import courseData from "../data/courses.json";
-import reviewData from "../data/reviews.json";
+import { Course } from "../@types";
+import { getCourses } from "../lib/sanity";
 
-const hydrateCourseData = (): HydratedCourse[] => {
-  return courseData.map((course: Course) => {
-    const hydrated = {
-      ...course,
-      reviewCount: 0,
-      avg_difficulty: 0,
-      avg_workload: 0,
-      avg_rating: 0,
-    };
+interface HomePageProps {
+  courses: Course[];
+}
 
-    const reviews: Review[] = (reviewData as Review[]).filter(
-      (review: Review) => review.course_id === course.id
-    );
+export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
+  const courses = await getCourses();
 
-    const reviewCount = reviews.length;
-
-    if (!reviewCount) return hydrated;
-
-    const difficulty = reviews.reduce((sum, cur) => sum + +cur.difficulty, 0);
-    const rating = reviews.reduce((sum, cur) => sum + +cur.rating, 0);
-    const workload = reviews.reduce((sum, cur) => sum + +cur.workload, 0);
-
-    hydrated.avg_difficulty = difficulty / reviewCount;
-    hydrated.avg_rating = rating / reviewCount;
-    hydrated.avg_workload = workload / reviewCount;
-    hydrated.reviewCount = reviewCount;
-
-    return hydrated;
-  });
+  return {
+    props: { courses },
+  };
 };
 
-export default function Home() {
-  const [courses, _] = useState(hydrateCourseData);
-  const [sort, setSort] = useState({
+interface SortConfig {
+  attribute: keyof Pick<
+    Course,
+    "name" | "difficulty" | "reviewCount" | "rating" | "workload"
+  >;
+  direction: "desc" | "asc";
+}
+
+const Home: NextPage<HomePageProps> = ({ courses }) => {
+  const [sort, setSort] = useState<SortConfig>({
     attribute: "reviewCount",
     direction: "desc",
   });
@@ -53,31 +41,31 @@ export default function Home() {
 
   const coursesView = useMemo(() => {
     const { attribute } = sort;
-    if (!attribute) return courses;
 
     const sorted = courses.sort((a, b) => {
-      let comp;
+      const ordering = sort.direction === "asc" ? 1 : -1;
 
-      if (typeof a[attribute] === "string") {
-        // @ts-ignore
-        comp = a[attribute].localeCompare(b[attribute]);
-      } else if (typeof a[attribute] === "number") {
-        // @ts-ignore
-        comp = a[attribute] - b[attribute];
+      if (attribute === "name") {
+        return a[attribute].localeCompare(b[attribute]) * ordering;
+      } else if (typeof a[attribute] === "undefined") {
+        return 1;
+      } else if (typeof b[attribute] === "undefined") {
+        return -1;
+      } else {
+        return ((a[attribute] as number) - (b[attribute] as number)) * ordering;
       }
-      return sort.direction === "asc" ? comp : -comp;
     });
 
     return sorted.filter((course) => {
       return (
-        (foundational ? course.foundational === "true" : true) &&
-        (deprecated ? course.deprecated === "true" : true) &&
+        (foundational ? course.isFoundational : true) &&
+        (deprecated ? course.isDeprecated : true) &&
         (hasReviews ? course.reviewCount > 0 : true)
       );
     });
   }, [sort, courses, foundational, deprecated, hasReviews]);
 
-  function toggleSort(attribute: string) {
+  function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
       setSort({ attribute, direction: "asc" });
     } else {
@@ -212,11 +200,11 @@ export default function Home() {
                           <a
                             href="#"
                             className="group inline-flex"
-                            onClick={() => toggleSort("avg_rating")}
+                            onClick={() => toggleSort("rating")}
                           >
                             Rating
                             <SortIcon
-                              active={sort.attribute === "avg_rating"}
+                              active={sort.attribute === "rating"}
                               direction={sort.direction}
                             ></SortIcon>
                           </a>
@@ -228,11 +216,11 @@ export default function Home() {
                           <a
                             href="#"
                             className="group inline-flex"
-                            onClick={() => toggleSort("avg_difficulty")}
+                            onClick={() => toggleSort("difficulty")}
                           >
                             Difficulty
                             <SortIcon
-                              active={sort.attribute === "avg_difficulty"}
+                              active={sort.attribute === "difficulty"}
                               direction={sort.direction}
                             ></SortIcon>
                           </a>
@@ -244,11 +232,11 @@ export default function Home() {
                           <a
                             href="#"
                             className="group inline-flex"
-                            onClick={() => toggleSort("avg_workload")}
+                            onClick={() => toggleSort("workload")}
                           >
                             Workload
                             <SortIcon
-                              active={sort.attribute === "avg_workload"}
+                              active={sort.attribute === "workload"}
                               direction={sort.direction}
                             ></SortIcon>
                           </a>
@@ -278,9 +266,9 @@ export default function Home() {
                             id,
                             name,
                             reviewCount,
-                            avg_difficulty,
-                            avg_rating,
-                            avg_workload,
+                            difficulty,
+                            rating,
+                            workload,
                           },
                           index
                         ) => (
@@ -307,13 +295,13 @@ export default function Home() {
                               </dl>
                             </td>
                             <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {avg_rating.toFixed(2)}
+                              {rating ? rating.toFixed(2) : "N/A"}
                             </td>
                             <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {avg_difficulty.toFixed(2)}
+                              {difficulty ? difficulty.toFixed(2) : "N/A"}
                             </td>
                             <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {avg_workload.toFixed(2)}
+                              {workload ? workload.toFixed(2) : "N/A"}
                             </td>
                             <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
                               {reviewCount}
@@ -331,4 +319,6 @@ export default function Home() {
       </>
     </main>
   );
-}
+};
+
+export default Home;
