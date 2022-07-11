@@ -1,12 +1,9 @@
-import { PlusSmIcon, MinusSmIcon } from "@heroicons/react/solid";
 import { useMemo, useState } from "react";
-
 import type { NextPage, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
 import { SortIcon } from "../components/SortIcon";
-import { Toggle } from "../components/Toggle";
 import type { Course } from "../@types";
 import { getCourses } from "../lib/sanity";
 
@@ -36,16 +33,10 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
     direction: "desc",
   });
 
-  const [foundational, setFoundational] = useState(false);
-  const [deprecated, setDeprecated] = useState(false);
-  const [hasReviews, setHasReviews] = useState(true);
-
-  const [showFilters, setShowFilters] = useState(false);
-
   const coursesView = useMemo(() => {
     const { attribute } = sort;
 
-    const sorted = courses.sort((a, b) => {
+    return courses.sort((a, b) => {
       const ordering = sort.direction === "asc" ? 1 : -1;
 
       if (attribute === "name") {
@@ -58,15 +49,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
         return ((a[attribute] as number) - (b[attribute] as number)) * ordering;
       }
     });
-
-    return sorted.filter((course) => {
-      return (
-        (foundational ? course.isFoundational : true) &&
-        (deprecated ? course.isDeprecated : true) &&
-        (hasReviews ? course.reviewCount > 0 : true)
-      );
-    });
-  }, [sort, courses, foundational, deprecated, hasReviews]);
+  }, [sort, courses]);
 
   function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
@@ -115,67 +98,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                   </button>
                 </div>
               </div>
-              <div className="relative">
-                <div
-                  className="absolute inset-0 flex items-center"
-                  aria-hidden="true"
-                >
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex items-center justify-between">
-                  <span className="pr-3 font-medium text-gray-900 bg-gray-100">
-                    Showing {coursesView.length} / {courses.length} courses
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowFilters((f) => !f)}
-                    className="inline-flex items-center shadow-sm px-4 py-1.5 border border-gray-300 text-sm leading-5 font-medium rounded-full text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    {showFilters ? (
-                      <MinusSmIcon
-                        className="-ml-1.5 mr-1 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      <PlusSmIcon
-                        className="-ml-1.5 mr-1 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    )}
-                    <span>Filters</span>
-                  </button>
-                </div>
-              </div>
               <div className="inline-block min-w-full py-3 align-middle">
-                <div className={showFilters ? "block pt-2 pb-5" : "hidden"}>
-                  <div className="py-2">
-                    <Toggle
-                      label="Foundational Courses"
-                      enabled={foundational}
-                      onChange={() => {
-                        setFoundational((f) => !f);
-                      }}
-                    />
-                  </div>
-                  <div className="py-2">
-                    <Toggle
-                      label="Deprecated Courses"
-                      enabled={deprecated}
-                      onChange={() => {
-                        setDeprecated((f) => !f);
-                      }}
-                    />
-                  </div>
-                  <div className="py-2">
-                    <Toggle
-                      label="Courses with 1+ Reviews"
-                      enabled={hasReviews}
-                      onChange={() => {
-                        setHasReviews((f) => !f);
-                      }}
-                    />
-                  </div>
-                </div>
                 <div className="shadow-sm ring-1 ring-black ring-opacity-5">
                   <table
                     className="min-w-full border-separate"
