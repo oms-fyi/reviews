@@ -1,15 +1,27 @@
 import { useMemo } from "react";
 import format from "date-fns/format";
-import { CalendarIcon, ArrowLeftIcon } from "@heroicons/react/outline";
-import { Course, Review, HydratedCourse } from "../../../types";
-import allCourses from "../../../data/courses.json";
-import allReviews from "../../../data/reviews.json";
+import {
+  CalendarIcon,
+  ArrowLeftIcon,
+  PencilAltIcon,
+} from "@heroicons/react/outline";
+import { Course, CourseWithReviews } from "../../../@types";
+import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { getCourseIds, getReviews } from "../../../lib/sanity";
 
-export const getStaticPaths = () => {
-  const paths = allCourses.map(({ id: courseId }) => {
-    return { params: { courseId } };
-  });
+interface ReviewsPathParams {
+  courseId: Course["id"];
+  [key: string]: any;
+}
+
+interface ReviewsPageProps {
+  course: CourseWithReviews;
+}
+
+export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
+  const courseIds = await getCourseIds();
+  const paths = courseIds.map(({ id: courseId }) => ({ params: { courseId } }));
 
   return {
     paths,
@@ -17,62 +29,24 @@ export const getStaticPaths = () => {
   };
 };
 
-export const getStaticProps = ({
-  params: { courseId },
-}: {
-  params: { courseId: string };
-}) => {
-  if (!Array.isArray(allReviews)) return { props: {} };
+export const getStaticProps: GetStaticProps<
+  ReviewsPageProps,
+  ReviewsPathParams
+> = async ({ params: { courseId } = {} }) => {
+  if (!courseId) {
+    throw new Error("No courseId passed to `getStaticProps`");
+  }
 
-  const course = allCourses.find(({ id }) => id === courseId)!;
-
-  const reviews = allReviews.filter(
-    ({ course_id }): boolean => courseId === course_id
-  );
-
-  const hydratedCourse = hydrateCourseData(course, reviews);
-
-  return { props: { reviews, course: hydratedCourse } };
+  const course = await getReviews(courseId);
+  return { props: { course } };
 };
 
-const hydrateCourseData = (
-  course: Course,
-  reviews: Review[]
-): HydratedCourse => {
-  const hydrated = {
-    ...course,
-    reviewCount: 0,
-    avg_difficulty: 0,
-    avg_workload: 0,
-    avg_rating: 0,
-  };
-
-  const reviewCount = reviews.length;
-
-  if (!reviewCount) return hydrated;
-
-  const difficulty = reviews.reduce((sum, cur) => sum + +cur.difficulty, 0);
-  const rating = reviews.reduce((sum, cur) => sum + +cur.rating, 0);
-  const workload = reviews.reduce((sum, cur) => sum + +cur.workload, 0);
-
-  hydrated.avg_difficulty = difficulty / reviewCount;
-  hydrated.avg_rating = rating / reviewCount;
-  hydrated.avg_workload = workload / reviewCount;
-  hydrated.reviewCount = reviewCount;
-
-  return hydrated;
+const capitalize = (word: string): string => {
+  return word[0].toUpperCase() + word.slice(1);
 };
 
-export default function Reviews({
-  reviews,
-  course,
-}: {
-  reviews: Review[];
-  course: any;
-}) {
-  const mostRecent = useMemo(() => {
-    return reviews.sort((a, b) => b.created - a.created);
-  }, [reviews]);
+const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
+  const { name, rating, difficulty, workload, reviews } = course;
 
   return (
     <main className="max-w-3xl m-auto pb-5 bg-white">
@@ -85,7 +59,7 @@ export default function Reviews({
         </Link>
         <div className="sm:flex sm:items-center sm:justify-between">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            {course.name}
+            {name}
           </h3>
           <div className="mt-3 sm:mt-0 sm:ml-4">
             <button
@@ -105,50 +79,65 @@ export default function Reviews({
                 <span className="hidden sm:inline">Average</span> Rating
               </dt>
               <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                {course.avg_rating.toFixed(2)} / 5
+                {rating ? `${rating.toFixed(2)} / 5` : "N/A"}
               </dd>
             </div>
+
             <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
               <dt className="text-xs font-medium text-gray-500">
                 <span className="hidden sm:inline">Average</span> Difficulty
               </dt>
               <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                {course.avg_difficulty.toFixed(2)} / 5
+                {difficulty ? `${difficulty.toFixed(2)} / 5` : "N/A"}
               </dd>
             </div>
             <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
               <dt className="text-xs font-medium text-gray-500">
-                <span className="hidden sm:inline">Weekly</span> Workload
+                <span className="hidden sm:inline">Average Weekly</span>{" "}
+                Workload
               </dt>
               <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                {course.avg_workload.toFixed(2)} hours
+                {workload ? `${workload.toFixed(2)} hours` : "N/A"}
               </dd>
             </div>
           </dl>
         </div>
       </div>
       <ul role="list" className="divide-y px-6 divide-gray-200">
-        {mostRecent.map((review) => (
-          <li key={review.created} className="py-4">
-            <p className="text-gray-500 mb-2 flex items-center uppercase text-xs">
-              <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-              {format(new Date(+review.created), "MMMM dd, yyyy - p")}
-            </p>
-            <p className="break-words">{review.body}</p>
-            <div className="py-2 flex flex-row gap-2 items-start">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Rating: {review.rating} / 5
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Difficulty: {review.difficulty} / 5
-              </span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                {review.workload} hours / week
-              </span>
-            </div>
-          </li>
-        ))}
+        {reviews.map(
+          ({ created, body, rating, difficulty, workload, semester }) => (
+            <li key={created} className="py-4">
+              <p className="break-words">{body}</p>
+              <div className="py-2 flex flex-row gap-2 items-start">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Rating: {rating ? `${rating} / 5` : "N/A"}
+                </span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Difficulty: {difficulty ? `${difficulty} / 5` : "N/A"}
+                </span>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  Workload: {workload ? `${workload} hours / week` : "N/A"}
+                </span>
+              </div>
+              {semester && (
+                <p className="text-gray-500 mt-2 flex items-center text-xs">
+                  <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                  Semester: {capitalize(semester.term)} {semester.year}
+                </p>
+              )}
+              <p className="text-gray-500 mt-2 flex items-center text-xs">
+                <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                Review submitted: {format(
+                  new Date(created),
+                  "MMMM dd, yyyy"
+                )}{" "}
+              </p>
+            </li>
+          )
+        )}
       </ul>
     </main>
   );
-}
+};
+
+export default Reviews;
