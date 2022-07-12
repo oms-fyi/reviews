@@ -4,6 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { SortIcon } from "../components/SortIcon";
+import { Filters, CourseFilter } from "../components/Filters";
 import type { Course } from "../@types";
 import { getCourses } from "../lib/sanity";
 
@@ -33,10 +34,17 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
     direction: "desc",
   });
 
-  const coursesView = useMemo(() => {
+  const [filter, setFilter] = useState<CourseFilter>();
+
+  const filtered = useMemo(
+    () => courses.filter((course) => filter?.(course) || true),
+    [courses, filter]
+  );
+
+  const sorted = useMemo(() => {
     const { attribute } = sort;
 
-    return courses.sort((a, b) => {
+    return filtered.sort((a, b) => {
       const ordering = sort.direction === "asc" ? 1 : -1;
 
       if (attribute === "name") {
@@ -49,7 +57,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
         return ((a[attribute] as number) - (b[attribute] as number)) * ordering;
       }
     });
-  }, [sort, courses]);
+  }, [sort, filtered]);
 
   function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
@@ -98,6 +106,11 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                   </button>
                 </div>
               </div>
+              <div className="text-right">
+                <Filters
+                  onChange={(nextFilter: CourseFilter) => setFilter(nextFilter)}
+                />
+              </div>
               <div className="inline-block min-w-full py-3 align-middle">
                 <div className="shadow-sm ring-1 ring-black ring-opacity-5">
                   <table
@@ -108,7 +121,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                       <tr>
                         <th
                           scope="col"
-                          className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <a
                             href="#"
@@ -124,7 +137,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                         </th>
                         <th
                           scope="col"
-                          className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <a
                             href="#"
@@ -140,7 +153,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                         </th>
                         <th
                           scope="col"
-                          className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <a
                             href="#"
@@ -156,7 +169,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                         </th>
                         <th
                           scope="col"
-                          className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <a
                             href="#"
@@ -172,7 +185,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                         </th>
                         <th
                           scope="col"
-                          className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <a
                             href="#"
@@ -189,7 +202,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {coursesView.map(
+                      {sorted.map(
                         (
                           {
                             id,
