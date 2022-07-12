@@ -1,10 +1,13 @@
 import { PlusSmIcon, MinusSmIcon } from "@heroicons/react/solid";
-import type { NextPage, GetStaticProps } from "next";
-import Link from "next/link";
 import { useMemo, useState } from "react";
+
+import type { NextPage, GetStaticProps } from "next";
+import Head from "next/head";
+import Link from "next/link";
+
 import { SortIcon } from "../components/SortIcon";
 import { Toggle } from "../components/Toggle";
-import { Course } from "../@types";
+import type { Course } from "../@types";
 import { getCourses } from "../lib/sanity";
 
 interface HomePageProps {
@@ -77,8 +80,11 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   }
 
   return (
-    <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 mt-10">
-      <>
+    <>
+      <Head>
+        <title>Home | OMSCentral</title>
+      </Head>
+      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 mt-10">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="mt-8 flex flex-col">
             <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
@@ -316,8 +322,8 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
             </div>
           </div>
         </div>
-      </>
-    </main>
+      </main>
+    </>
   );
 };
 
