@@ -22,10 +22,10 @@ export interface Course {
   url?: string;
   aliases: string[];
   reviewCount: number;
-  // A course with no reviews has undefined rating/workload/difficulty
-  rating?: number;
-  workload?: number;
-  difficulty?: number;
+  // A course with no reviews has NaN rating/workload/difficulty
+  rating: number;
+  workload: number;
+  difficulty: number;
 }
 
 export interface CourseWithReviews extends Course {
