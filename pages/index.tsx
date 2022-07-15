@@ -12,6 +12,7 @@ import { SortIcon } from "../components/SortIcon";
 
 import type { Course } from "../@types";
 import { getCourses } from "../lib/sanity";
+import { Toggle } from "../components/Toggle";
 
 interface HomePageProps {
   courses: Course[];
@@ -60,32 +61,50 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   const [minWorkload, setMinWorkload] = useState<number>();
   const [maxWorkload, setMaxWorkload] = useState<number>();
 
-  const current = courses
-    .filter(({ reviewCount, rating, difficulty, workload }) => {
-      function between(
-        value: number | null,
-        min: number,
-        max: number
-      ): boolean {
-        return value === null ? true : value >= min && value <= max;
-      }
+  const [hideDeprecated, setHideDeprecated] = useState(false);
+  const [onlyShowFoundational, setOnlyShowFoundational] = useState(false);
 
-      return (
-        between(reviewCount, minReviewCount || 0, maxReviewCount || Infinity) &&
-        between(rating, minRating || 1, maxRating || 5) &&
-        between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
-        between(workload, minWorkload || 1, maxWorkload || 100)
-      );
-    })
+  const current = courses
+    .filter(
+      ({
+        reviewCount,
+        rating,
+        difficulty,
+        workload,
+        isDeprecated,
+        isFoundational,
+      }) => {
+        function between(
+          value: number | null,
+          min: number,
+          max: number
+        ): boolean {
+          return value === null ? true : value >= min && value <= max;
+        }
+
+        return (
+          between(
+            reviewCount,
+            minReviewCount || 0,
+            maxReviewCount || Infinity
+          ) &&
+          between(rating, minRating || 1, maxRating || 5) &&
+          between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
+          between(workload, minWorkload || 1, maxWorkload || 100) &&
+          (hideDeprecated ? isDeprecated === false : true) &&
+          (onlyShowFoundational ? isFoundational === true : true)
+        );
+      }
+    )
     .sort((a, b) => {
       const ordering = sort.direction === "asc" ? 1 : -1;
       const { attribute } = sort;
 
       if (attribute === "name") {
         return a[attribute].localeCompare(b[attribute]) * ordering;
-      } else if (typeof a[attribute] === "undefined") {
+      } else if (a[attribute] === null) {
         return 1;
-      } else if (typeof b[attribute] === "undefined") {
+      } else if (b[attribute] === null) {
         return -1;
       } else {
         return ((a[attribute] as number) - (b[attribute] as number)) * ordering;
@@ -319,6 +338,23 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         }}
                                       />
                                     </fieldset>
+                                  </div>
+                                </div>
+                                <div className="mb-6">
+                                  <p className="mb-4 text-xs text-gray-500 uppercase">
+                                    Other Filters
+                                  </p>
+                                  <div className="flex flex-col gap-6">
+                                    <Toggle
+                                      enabled={onlyShowFoundational}
+                                      onChange={setOnlyShowFoundational}
+                                      label="Only show foundational courses?"
+                                    />
+                                    <Toggle
+                                      enabled={hideDeprecated}
+                                      onChange={setHideDeprecated}
+                                      label="Hide deprecated courses?"
+                                    />
                                   </div>
                                 </div>
                               </form>
