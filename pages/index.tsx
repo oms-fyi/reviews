@@ -62,12 +62,16 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
 
   const current = courses
     .filter(({ reviewCount, rating, difficulty, workload }) => {
-      function between(value: number, min: number, max: number): boolean {
-        return value >= min && value <= max;
+      function between(
+        value: number | null,
+        min: number,
+        max: number
+      ): boolean {
+        return value === null ? true : value >= min && value <= max;
       }
 
       return (
-        between(reviewCount, 0, maxReviewCount || Infinity) &&
+        between(reviewCount, minReviewCount || 0, maxReviewCount || Infinity) &&
         between(rating, minRating || 1, maxRating || 5) &&
         between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
         between(workload, minWorkload || 1, maxWorkload || 100)
