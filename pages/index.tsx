@@ -204,6 +204,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         minReviewCount
                                       )}
                                       inputMode="decimal"
+                                      size={10}
                                       onBlur={(e) => {
                                         console.log("blur", e);
                                         setMinReviewCount(
@@ -216,6 +217,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                       type="text"
                                       label="Max Reviews"
                                       placeholder="100"
+                                      size={10}
                                       defaultValue={getDefaultInputValue(
                                         maxReviewCount
                                       )}
@@ -245,6 +247,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         defaultValue={getDefaultInputValue(
                                           minRating
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMinRating(
@@ -260,6 +263,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         defaultValue={getDefaultInputValue(
                                           maxRating
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMaxRating(
@@ -280,6 +284,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         defaultValue={getDefaultInputValue(
                                           minDifficulty
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMinDifficulty(
@@ -289,12 +294,13 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                       />
                                       <Input
                                         id="maxDifficulty"
-                                        type="number"
+                                        type="text"
                                         label="Max Difficulty"
                                         placeholder="5"
                                         defaultValue={getDefaultInputValue(
                                           maxDifficulty
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMaxDifficulty(
@@ -309,12 +315,13 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                       </legend>
                                       <Input
                                         id="minWorkload"
-                                        type="number"
+                                        type="text"
                                         label="Min Workload"
                                         placeholder="10"
                                         defaultValue={getDefaultInputValue(
                                           minWorkload
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMinWorkload(
@@ -324,12 +331,13 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                       />
                                       <Input
                                         id="maxWorkload"
-                                        type="number"
+                                        type="text"
                                         label="Max Workload"
                                         placeholder="20"
                                         defaultValue={getDefaultInputValue(
                                           maxWorkload
                                         )}
+                                        size={10}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMaxWorkload(
@@ -348,12 +356,12 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                     <Toggle
                                       enabled={onlyShowFoundational}
                                       onChange={setOnlyShowFoundational}
-                                      label="Only show foundational courses?"
+                                      label="Foundational only"
                                     />
                                     <Toggle
                                       enabled={hideDeprecated}
                                       onChange={setHideDeprecated}
-                                      label="Hide deprecated courses?"
+                                      label="Hide deprecated"
                                     />
                                   </div>
                                 </div>
