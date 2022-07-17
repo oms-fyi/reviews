@@ -1,7 +1,12 @@
 import { FC } from "react";
 import { SpeakerphoneIcon, XIcon } from "@heroicons/react/outline";
 
-export const Banner: FC<{ onDismiss: () => void }> = ({ onDismiss }) => {
+interface BannerProps {
+  onDismiss: () => void;
+  message: string;
+}
+
+export const Banner: FC<BannerProps> = ({ onDismiss, message }) => {
   return (
     <div className="fixed bottom-0 inset-x-0 pb-2 sm:pb-5">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -14,13 +19,8 @@ export const Banner: FC<{ onDismiss: () => void }> = ({ onDismiss }) => {
                   aria-hidden="true"
                 />
               </span>
-              <p className="ml-3 font-medium text-white truncate">
-                <span className="md:hidden">
-                  We are building as fast as possible!
-                </span>
-                <span className="hidden md:inline">
-                  Welcome back! We are building as fast as possible.
-                </span>
+              <p className="mx-3 font-medium text-white">
+                <span>{message}</span>
               </p>
             </div>
             <div className="order-3 mt-2 flex-shrink-0 w-full sm:order-2 sm:mt-0 sm:w-auto">
