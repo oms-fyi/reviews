@@ -1,15 +1,17 @@
-import { FC, useState } from "react";
+import { useState, FC } from "react";
 import { Switch } from "@headlessui/react";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export const Toggle: FC<{
-  label: string;
+interface ToggleProps {
   enabled: boolean;
-  onChange: () => void;
-}> = ({ label, enabled, onChange }) => {
+  onChange: (nextValue: boolean) => void;
+  label: string;
+}
+
+export const Toggle: FC<ToggleProps> = ({ enabled, onChange, label }) => {
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch

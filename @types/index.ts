@@ -22,10 +22,14 @@ export interface Course {
   url?: string;
   aliases: string[];
   reviewCount: number;
-  // A course with no reviews has undefined rating/workload/difficulty
-  rating?: number;
-  workload?: number;
-  difficulty?: number;
+  // Originally had these typed as 'number', using NaN to represent incomputable
+  // stats based on zero reviews, BUT `JSON.stringify({a: NaN}) == '{"a":null}';`
+  // Furthermore, NextJS throws an error trying to serialize objects with keys that
+  // point to `undefined`, which means that our only option is `number | null`,
+  // even though IMO the least semantic option of the three.
+  rating: number | null;
+  workload: number | null;
+  difficulty: number | null;
 }
 
 export interface CourseWithReviews extends Course {

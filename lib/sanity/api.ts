@@ -47,11 +47,10 @@ export const getCourses = async (): Promise<Course[]> => {
         id: `${department}-${number}`,
         department,
         number,
+        rating: avg(ratings),
+        difficulty: avg(difficulties),
+        workload: avg(workloads),
       };
-
-      if (ratings.length) course.rating = avg(ratings);
-      if (difficulties.length) course.difficulty = avg(difficulties);
-      if (workloads.length) course.workload = avg(workloads);
 
       return course;
     }
@@ -100,6 +99,9 @@ export const getReviews = async (
     id: `${department}-${number}`,
     department,
     number,
+    rating: avg(ratings),
+    difficulty: avg(difficulties),
+    workload: avg(workloads),
     reviews: reviews.map(({ semester, _createdAt, ...rest }) => {
       const review: Review = { ...rest, created: _createdAt };
       if (semester) review.semester = semester as Semester;
@@ -108,10 +110,6 @@ export const getReviews = async (
     }),
     reviewCount: reviews.length,
   };
-
-  if (ratings.length) course.rating = avg(ratings);
-  if (difficulties.length) course.difficulty = avg(difficulties);
-  if (workloads.length) course.workload = avg(workloads);
 
   return course;
 };
