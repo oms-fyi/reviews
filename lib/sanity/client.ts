@@ -8,11 +8,13 @@ if (!projectId || !dataset) {
 }
 
 const useCdn = true;
+const apiVersion = "v2021-10-21";
 
 const sanityClient = clientFactory({
   projectId,
   dataset,
   useCdn,
+  apiVersion,
 });
 
 export { sanityClient };
