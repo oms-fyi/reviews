@@ -10,6 +10,8 @@ import { SearchIcon, FilterIcon } from "@heroicons/react/outline";
 
 import Fuse from "fuse.js";
 
+import classNames from "classnames";
+
 import { Input } from "../components/Input";
 import { SortIcon } from "../components/SortIcon";
 
@@ -28,10 +30,6 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
     props: { courses },
   };
 };
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 interface PaginationProps {
   pageSize: number;
@@ -112,15 +110,16 @@ const Pagination: FC<PaginationProps> = ({
                 type="button"
                 onClick={() => size != pageSize && changePageSize(size)}
                 className={classNames(
-                  i == 0
-                    ? "rounded-l-md"
-                    : i === a.length - 1
-                    ? "-ml-px rounded-r-md"
-                    : "-ml-px",
+                  {
+                    "rounded-l-md": i === 0,
+                    "-ml-px": i > 0,
+                    "rounded-r-md": i === a.length - 1,
+                  },
                   "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  size === pageSize
-                    ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
-                    : ""
+                  {
+                    "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
+                      size === pageSize,
+                  }
                 )}
               >
                 {size}
@@ -152,9 +151,10 @@ const Pagination: FC<PaginationProps> = ({
                     {...(page === pageNumber && { "aria-current": "page" })}
                     onClick={() => onPageChange(page)}
                     className={classNames(
-                      page === pageNumber
-                        ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
-                        : "",
+                      {
+                        "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
+                          page === pageNumber,
+                      },
                       "relative inline-flex items-center px-4 py-2 border text-sm font-medium"
                     )}
                   >
@@ -303,7 +303,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
         }
       })
     );
-  }, [sort]);
+  }, [sort, view]);
 
   function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
