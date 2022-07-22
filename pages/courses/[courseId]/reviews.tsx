@@ -107,8 +107,8 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
         </div>
         <ul role="list" className="divide-y px-6 divide-gray-200">
           {reviews.map(
-            ({ created, body, rating, difficulty, workload, semester }) => (
-              <li key={created} className="py-4">
+            ({ id, created, body, rating, difficulty, workload, semester }) => (
+              <li key={id} className="py-4">
                 <p className="break-words">{body}</p>
                 <div className="py-2 flex flex-row gap-2 items-start">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
