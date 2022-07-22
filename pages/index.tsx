@@ -279,13 +279,14 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   ]);
 
   // SORTING
+  const [sorted, setSorted] = useState<Course[]>([]);
   const [sort, setSort] = useState<SortConfig>({
     attribute: "reviewCount",
     direction: "desc",
   });
 
   useEffect(() => {
-    setView((view) =>
+    setSorted(
       [...view].sort((a, b) => {
         const ordering = sort.direction === "asc" ? 1 : -1;
         const { attribute } = sort;
@@ -322,7 +323,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
 
   useEffect(() => {
     if (!searchInput) {
-      setSearchResults(view);
+      setSearchResults(sorted);
       return;
     }
 
@@ -330,15 +331,15 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
       const matches = searchIndex.search(searchInput);
       const ids = new Set(matches.map(({ item: { id } }) => id));
 
-      setSearchResults(view.filter(({ id }) => ids.has(id)));
+      setSearchResults(sorted.filter(({ id }) => ids.has(id)));
     }, 500);
 
     return function () {
       clearTimeout(debounceId);
     };
-  }, [searchInput, searchIndex, searchResults, view]);
+  }, [searchInput, searchIndex, searchResults, sorted]);
 
-  const collection = searchInput ? searchResults : view;
+  const collection = searchResults;
 
   // PAGINATION
   const [pageSize, setPageSize] = useState(10);
