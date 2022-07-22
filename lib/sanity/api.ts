@@ -114,8 +114,10 @@ export const getReviews = async (
     rating: avg(ratings),
     difficulty: avg(difficulties),
     workload: avg(workloads),
-    reviews: reviews.map(({ semester, _createdAt, ...rest }) => {
-      const review: Review = { ...rest, created: _createdAt };
+    reviewCount: reviews.length,
+    reviews: reviews.map(({ semester, _createdAt, _id: id, ...rest }) => {
+      const review: Review = { ...rest, created: _createdAt, id };
+
       if (semester && "startDate" in semester)
         review.semester = {
           ...semester,
@@ -125,7 +127,6 @@ export const getReviews = async (
 
       return review;
     }),
-    reviewCount: reviews.length,
   };
 
   return course;

@@ -4,6 +4,7 @@ export interface Semester {
 }
 
 export interface Review {
+  id: string;
   body: string;
   semester?: Semester;
   created: string; // ISO Datetime string
