@@ -303,7 +303,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
         }
       })
     );
-  }, [sort]);
+  }, [sort, view]);
 
   function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
