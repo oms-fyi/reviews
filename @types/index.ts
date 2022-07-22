@@ -1,6 +1,6 @@
 export interface Semester {
   startDate: string; // ISO Date string
-  term: "spring" | "summer" | "fall";
+  term: "Spring" | "Summer" | "Fall";
 }
 
 export interface Review {
