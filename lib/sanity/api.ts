@@ -1,5 +1,5 @@
 import { sanityClient } from "./client";
-import { ApiCourse, ApiReview } from "./types";
+import { ApiCourse, ApiReview, ApiSemester } from "./types";
 import { avg } from "./utils";
 import { Course, CourseWithReviews, Review, Semester } from "../../@types";
 
@@ -85,7 +85,7 @@ export const getReviews = async (
       "workloads": *[_type == 'review' && references(^._id) && workload != null].workload,
       "reviews": *[_type == 'review' && references(^._id)]{
         ...,
-        semester->{year, term}
+        semester->{startDate, term}
       } | order(_createdAt desc)
     }[0]
   `,
@@ -104,7 +104,11 @@ export const getReviews = async (
     workload: avg(workloads),
     reviews: reviews.map(({ semester, _createdAt, ...rest }) => {
       const review: Review = { ...rest, created: _createdAt };
-      if (semester) review.semester = semester as Semester;
+      if (semester && "startDate" in semester)
+        review.semester = {
+          ...semester,
+          startDate: semester.startDate,
+        };
 
       return review;
     }),

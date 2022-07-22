@@ -128,15 +128,13 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                 {semester && (
                   <p className="text-gray-500 mt-2 flex items-center text-xs">
                     <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Semester: {capitalize(semester.term)} {semester.year}
+                    Semester: {capitalize(semester.term)}{" "}
+                    {new Date(semester.startDate).getFullYear()}
                   </p>
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
                   <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  Review submitted: {format(
-                    new Date(created),
-                    "MMMM dd, yyyy"
-                  )}{" "}
+                  Review submitted: {format(new Date(created), "MMMM dd, yyyy")}
                 </p>
               </li>
             )
