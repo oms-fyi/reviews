@@ -49,7 +49,7 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
   return (
     <>
       <Head>
-        <title>{id} | OMSCentral</title>
+        <title>{`${id} | OMSCentral`}</title>
       </Head>
       <main className="max-w-3xl m-auto pb-5 bg-white">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">
