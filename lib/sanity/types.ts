@@ -5,8 +5,8 @@ interface SanityDocument<T> {
 }
 
 export interface ApiSemester extends SanityDocument<"semester"> {
-  year: number;
   term: "spring" | "summer" | "fall";
+  startDate: string;
 }
 
 // Some reviews do not have a recorded difficulty/workload/rating
