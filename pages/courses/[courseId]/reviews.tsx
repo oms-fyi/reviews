@@ -43,10 +43,6 @@ export const getStaticProps: GetStaticProps<
   return { props: { course } };
 };
 
-const capitalize = (word: string): string => {
-  return word[0].toUpperCase() + word.slice(1);
-};
-
 const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
   const { id, name, rating, difficulty, workload, reviews } = course;
 
@@ -128,7 +124,7 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                 {semester && (
                   <p className="text-gray-500 mt-2 flex items-center text-xs">
                     <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Semester: {capitalize(semester.term)}{" "}
+                    Semester: {semester.term}{" "}
                     {new Date(semester.startDate).getFullYear()}
                   </p>
                 )}

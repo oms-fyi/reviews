@@ -1,7 +1,19 @@
 import { sanityClient } from "./client";
 import { ApiCourse, ApiReview, ApiSemester } from "./types";
-import { avg } from "./utils";
 import { Course, CourseWithReviews, Review, Semester } from "../../@types";
+
+// Will return NaN if items == [], which gets JSON-serialized to `null`
+const avg = (items: number[]): number => {
+  return items.reduce((sum, el) => el + sum, 0) / items.length;
+};
+
+const capitalizedSemesters: {
+  [Property in ApiSemester["term"]]: Capitalize<Property>;
+} = {
+  spring: "Spring",
+  summer: "Summer",
+  fall: "Fall",
+};
 
 export const getCourseIds = async (): Promise<Pick<Course, "id">[]> => {
   type SanityResponse = Array<Pick<Course, "department" | "number">>;
@@ -107,6 +119,7 @@ export const getReviews = async (
       if (semester && "startDate" in semester)
         review.semester = {
           ...semester,
+          term: capitalizedSemesters[semester.term],
           startDate: semester.startDate,
         };
 
