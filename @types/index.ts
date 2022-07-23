@@ -1,4 +1,5 @@
 export interface Semester {
+  id: string;
   startDate: string; // ISO Date string
   term: "Spring" | "Summer" | "Fall";
 }
