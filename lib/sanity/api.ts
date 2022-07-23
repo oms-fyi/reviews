@@ -94,7 +94,7 @@ export const getReviews = async (
       "workloads": *[_type == 'review' && references(^._id) && workload != null].workload,
       "reviews": *[_type == 'review' && references(^._id)]{
         ...,
-        semester->{startDate, term}
+        semester->{_id, startDate, term}
       } | order(_createdAt desc)
     }[0]
   `,
@@ -122,12 +122,10 @@ export const getReviews = async (
     reviews: reviews.map(({ semester, _createdAt, _id: id, ...rest }) => {
       const review: Review = { ...rest, created: _createdAt, id };
 
-      if (semester && "startDate" in semester)
-        review.semester = {
-          ...semester,
-          term: capitalizedSemesters[semester.term],
-          startDate: semester.startDate,
-        };
+      if (semester && "startDate" in semester) {
+        const { _id: id, term, startDate } = semester;
+        review.semester = { id, startDate, term: capitalizedSemesters[term] };
+      }
 
       return review;
     }),
