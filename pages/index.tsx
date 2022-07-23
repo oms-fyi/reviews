@@ -742,9 +742,12 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                               </span>
                               <dl className="font-normal">
                                 <dt className="sr-only">Title</dt>
-                                <dd className="mt-1">
+                                <dd className="mt-1 w-60 whitespace-nowrap truncate">
                                   <Link href={`/courses/${code}/reviews`}>
-                                    <a className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900">
+                                    <a
+                                      title={name}
+                                      className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900"
+                                    >
                                       {name}
                                       <span className="sr-only"> reviews</span>
                                     </a>
