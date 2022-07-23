@@ -1,13 +1,12 @@
 export interface Semester {
   id: string;
   startDate: string; // ISO Date string
-  term: "Spring" | "Summer" | "Fall";
+  term: "spring" | "summer" | "fall";
 }
 
 export interface Review {
   id: string;
   body: string;
-  semester?: Semester;
   created: string; // ISO Datetime string
   rating?: number;
   workload?: number;
@@ -24,17 +23,12 @@ export interface Course {
   isDeprecated: boolean;
   url?: string;
   aliases: string[];
-  reviewCount: number;
-  // Originally had these typed as 'number', using NaN to represent incomputable
-  // stats based on zero reviews, BUT `JSON.stringify({a: NaN}) == '{"a":null}';`
-  // Furthermore, NextJS throws an error trying to serialize objects with keys that
-  // point to `undefined`, which means that our only option is `number | null`,
-  // even though IMO the least semantic option of the three.
-  rating: number | null;
-  workload: number | null;
-  difficulty: number | null;
 }
 
-export interface CourseWithReviews extends Course {
-  reviews: Review[];
-}
+export type CourseWithReviewsStats = Course & {
+  reviews: Pick<Review, "difficulty" | "workload" | "rating">[];
+};
+
+export type CourseWithReviewsFull = Course & {
+  reviews: (Review & { semester: Semester })[];
+};

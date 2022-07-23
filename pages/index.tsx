@@ -15,16 +15,17 @@ import classNames from "classnames";
 import { Input } from "../components/Input";
 import { SortIcon } from "../components/SortIcon";
 
-import type { Course } from "../@types";
-import { getCourses } from "../lib/sanity";
+import type { CourseWithReviewsStats, Course, Review } from "../@types";
+import { COURSE_ENRICHMENT_OPTION, getCourses } from "../lib/sanity";
 import { Toggle } from "../components/Toggle";
+import { average } from "../lib/stats";
 
 interface HomePageProps {
-  courses: Course[];
+  courses: CourseWithReviewsStats[];
 }
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const courses = await getCourses();
+  const courses = await getCourses(COURSE_ENRICHMENT_OPTION.STATS);
 
   return {
     props: { courses },
@@ -190,10 +191,10 @@ const Pagination: FC<PaginationProps> = ({
 };
 
 interface SortConfig {
-  attribute: keyof Pick<
-    Course,
-    "name" | "difficulty" | "reviewCount" | "rating" | "workload"
-  >;
+  attribute:
+    | keyof Pick<Course, "name">
+    | keyof Pick<Review, "rating" | "difficulty" | "workload">
+    | "reviewCount";
   direction: "desc" | "asc";
 }
 
@@ -205,7 +206,29 @@ function getDefaultInputValue(value: number | undefined): string {
   }
 }
 
+type CourseStats = {
+  [code: string]: {
+    rating: number;
+    difficulty: number;
+    workload: number;
+  };
+};
+
 const Home: NextPage<HomePageProps> = ({ courses }) => {
+  const stats = useMemo<CourseStats>(() => {
+    return courses.reduce(
+      (d, { reviews, code }) => ({
+        ...d,
+        [code]: {
+          rating: average(reviews, "rating"),
+          difficulty: average(reviews, "difficulty"),
+          workload: average(reviews, "workload"),
+        },
+      }),
+      {}
+    );
+  }, [courses]);
+
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
@@ -215,7 +238,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
     [courses]
   );
 
-  const [view, setView] = useState<Course[]>([]);
+  const [view, setView] = useState<CourseWithReviewsStats[]>([]);
 
   // FILTERING
   // By default only show courses with 1+ review
@@ -236,36 +259,30 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
 
   useEffect(() => {
     setView(
-      courses.filter(
-        ({
-          reviewCount: count,
-          rating,
-          difficulty,
-          workload,
-          isDeprecated,
-          isFoundational,
-        }) => {
-          function between(
-            value: number | null,
-            min: number,
-            max: number
-          ): boolean {
-            return value === null ? true : value >= min && value <= max;
-          }
-
-          return (
-            between(count, minReviewCount || 0, maxReviewCount || Infinity) &&
-            between(rating, minRating || 1, maxRating || 5) &&
-            between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
-            between(workload, minWorkload || 1, maxWorkload || 100) &&
-            (hideDeprecated ? isDeprecated === false : true) &&
-            (onlyShowFoundational ? isFoundational === true : true)
-          );
+      courses.filter(({ code, reviews, isDeprecated, isFoundational }) => {
+        function between(value: number, min: number, max: number): boolean {
+          return isNaN(value) ? true : value >= min && value <= max;
         }
-      )
+
+        const { rating, difficulty, workload } = stats[code];
+
+        return (
+          between(
+            reviews.length,
+            minReviewCount || 0,
+            maxReviewCount || Infinity
+          ) &&
+          between(rating, minRating || 1, maxRating || 5) &&
+          between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
+          between(workload, minWorkload || 1, maxWorkload || 100) &&
+          (hideDeprecated ? isDeprecated === false : true) &&
+          (onlyShowFoundational ? isFoundational === true : true)
+        );
+      })
     );
   }, [
     courses,
+    stats,
     minReviewCount,
     maxReviewCount,
     minRating,
@@ -279,7 +296,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   ]);
 
   // SORTING
-  const [sorted, setSorted] = useState<Course[]>([]);
+  const [sorted, setSorted] = useState<CourseWithReviewsStats[]>([]);
   const [sort, setSort] = useState<SortConfig>({
     attribute: "reviewCount",
     direction: "desc",
@@ -288,23 +305,25 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   useEffect(() => {
     setSorted(
       [...view].sort((a, b) => {
-        const ordering = sort.direction === "asc" ? 1 : -1;
-        const { attribute } = sort;
+        const comp = ((attribute) => {
+          switch (attribute) {
+            case "name":
+              return a.name.localeCompare(b.name);
+            case "reviewCount":
+              return a.reviews.length - b.reviews.length;
+            case "rating":
+              return stats[a.code].rating - stats[b.code].rating;
+            case "difficulty":
+              return stats[a.code].difficulty - stats[b.code].difficulty;
+            case "workload":
+              return stats[a.code].workload - stats[b.code].workload;
+          }
+        })(sort.attribute);
 
-        if (attribute === "name") {
-          return a[attribute].localeCompare(b[attribute]) * ordering;
-        } else if (a[attribute] === null) {
-          return 1;
-        } else if (b[attribute] === null) {
-          return -1;
-        } else {
-          return (
-            ((a[attribute] as number) - (b[attribute] as number)) * ordering
-          );
-        }
+        return comp * (sort.direction === "asc" ? 1 : -1);
       })
     );
-  }, [sort, view]);
+  }, [sort, view, stats]);
 
   function toggleSort(attribute: SortConfig["attribute"]) {
     if (sort.attribute !== attribute) {
@@ -319,7 +338,9 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
 
   // SEARCHING
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [searchResults, setSearchResults] = useState<CourseWithReviewsStats[]>(
+    []
+  );
 
   useEffect(() => {
     if (!searchInput) {
@@ -717,59 +738,50 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {page.map(
-                        (
-                          {
-                            id,
-                            code,
-                            name,
-                            reviewCount,
-                            difficulty,
-                            rating,
-                            workload,
-                          },
-                          index
-                        ) => (
-                          <tr
-                            key={id}
-                            className={
-                              index % 2 === 0 ? undefined : "bg-gray-50"
-                            }
-                          >
-                            <td className=" px-2 py-2 md:px-3 md:py-4 text-sm font-medium text-gray-500 sm:pl-6 ">
-                              <span className="text-xs hidden sm:block">
-                                {code}
-                              </span>
-                              <dl className="font-normal">
-                                <dt className="sr-only">Title</dt>
-                                <dd className="mt-1 w-60 whitespace-nowrap truncate">
-                                  <Link href={`/courses/${code}/reviews`}>
-                                    <a
-                                      title={name}
-                                      className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900"
-                                    >
-                                      {name}
-                                      <span className="sr-only"> reviews</span>
-                                    </a>
-                                  </Link>
-                                </dd>
-                              </dl>
-                            </td>
-                            <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {rating ? rating.toFixed(2) : "N/A"}
-                            </td>
-                            <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {difficulty ? difficulty.toFixed(2) : "N/A"}
-                            </td>
-                            <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {workload ? workload.toFixed(2) : "N/A"}
-                            </td>
-                            <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                              {reviewCount}
-                            </td>
-                          </tr>
-                        )
-                      )}
+                      {page.map(({ id, code, name, reviews }, index) => (
+                        <tr
+                          key={id}
+                          className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                        >
+                          <td className=" px-2 py-2 md:px-3 md:py-4 text-sm font-medium text-gray-500 sm:pl-6 ">
+                            <span className="text-xs hidden sm:block">
+                              {code}
+                            </span>
+                            <dl className="font-normal">
+                              <dt className="sr-only">Title</dt>
+                              <dd className="mt-1 w-60 whitespace-nowrap truncate">
+                                <Link href={`/courses/${code}/reviews`}>
+                                  <a
+                                    title={name}
+                                    className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900"
+                                  >
+                                    {name}
+                                    <span className="sr-only"> reviews</span>
+                                  </a>
+                                </Link>
+                              </dd>
+                            </dl>
+                          </td>
+                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
+                            {stats[code].rating
+                              ? stats[code].rating.toFixed(2)
+                              : "N/A"}
+                          </td>
+                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
+                            {stats[code].difficulty
+                              ? stats[code].difficulty.toFixed(2)
+                              : "N/A"}
+                          </td>
+                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
+                            {stats[code].workload
+                              ? stats[code].workload.toFixed(2)
+                              : "N/A"}
+                          </td>
+                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
+                            {reviews.length}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
