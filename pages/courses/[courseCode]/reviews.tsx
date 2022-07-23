@@ -10,10 +10,10 @@ import {
 } from "@heroicons/react/outline";
 
 import type { Course, CourseWithReviews } from "../../../@types";
-import { getCourseIds, getReviews } from "../../../lib/sanity";
+import { getCourseCodes, getReviews } from "../../../lib/sanity";
 
 interface ReviewsPathParams {
-  courseId: Course["id"];
+  courseCode: Course["code"];
   [key: string]: any;
 }
 
@@ -22,8 +22,10 @@ interface ReviewsPageProps {
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
-  const courseIds = await getCourseIds();
-  const paths = courseIds.map(({ id: courseId }) => ({ params: { courseId } }));
+  const courseCodes = await getCourseCodes();
+  const paths = courseCodes.map(({ code }) => ({
+    params: { courseCode: code },
+  }));
 
   return {
     paths,
@@ -34,22 +36,22 @@ export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
 export const getStaticProps: GetStaticProps<
   ReviewsPageProps,
   ReviewsPathParams
-> = async ({ params: { courseId } = {} }) => {
-  if (!courseId) {
-    throw new Error("No courseId passed to `getStaticProps`");
+> = async ({ params: { courseCode } = {} }) => {
+  if (!courseCode) {
+    throw new Error("No code passed to `getStaticProps`");
   }
 
-  const course = await getReviews(courseId);
+  const course = await getReviews(courseCode);
   return { props: { course } };
 };
 
 const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
-  const { id, name, rating, difficulty, workload, reviews } = course;
+  const { code, name, rating, difficulty, workload, reviews } = course;
 
   return (
     <>
       <Head>
-        <title>{`${id} | OMSCentral`}</title>
+        <title>{`${code} | OMSCentral`}</title>
       </Head>
       <main className="max-w-3xl m-auto pb-5 bg-white">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">

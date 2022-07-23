@@ -209,7 +209,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
-        keys: ["name", "aliases", "id"],
+        keys: ["name", "aliases", "code"],
         threshold: 0.4,
       }),
     [courses]
@@ -721,6 +721,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                         (
                           {
                             id,
+                            code,
                             name,
                             reviewCount,
                             difficulty,
@@ -737,12 +738,12 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           >
                             <td className=" px-2 py-2 md:px-3 md:py-4 text-sm font-medium text-gray-500 sm:pl-6 ">
                               <span className="text-xs hidden sm:block">
-                                {id}
+                                {code}
                               </span>
                               <dl className="font-normal">
                                 <dt className="sr-only">Title</dt>
                                 <dd className="mt-1">
-                                  <Link href={`/courses/${id}/reviews`}>
+                                  <Link href={`/courses/${code}/reviews`}>
                                     <a className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900">
                                       {name}
                                       <span className="sr-only"> reviews</span>

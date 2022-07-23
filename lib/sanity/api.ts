@@ -15,26 +15,22 @@ const capitalizedSemesters: {
   fall: "Fall",
 };
 
-export const getCourseIds = async (): Promise<Pick<Course, "id">[]> => {
-  type SanityResponse = Array<Pick<Course, "department" | "number">>;
+export const getCourseCodes = async (): Promise<Pick<Course, "code">[]> => {
+  type SanityResponse = Array<Pick<Course, "code">>;
 
   const response = await sanityClient.fetch<SanityResponse>(`
     *[_type == 'course'] {
-      department,
-      number
+      "code": department + '-' + number
     }
   `);
 
-  return response.map(({ department, number }) => {
-    return {
-      id: `${department}-${number}`,
-    };
-  });
+  return response;
 };
 
 export const getCourses = async (): Promise<Course[]> => {
   type SanityResponse = Array<
     ApiCourse & {
+      code: string;
       ratings: number[];
       difficulties: number[];
       workloads: number[];
@@ -45,6 +41,7 @@ export const getCourses = async (): Promise<Course[]> => {
   const response = await sanityClient.fetch<SanityResponse>(`
     *[_type == 'course'] {
       ...,
+      "code": department + '-' + number,
       "ratings": *[_type == 'review' && references(^._id) && rating != null].rating,
       "difficulties": *[_type == 'review' && references(^._id) && difficulty != null].difficulty,
       "workloads": *[_type == 'review' && references(^._id) && workload != null].workload,
@@ -53,12 +50,10 @@ export const getCourses = async (): Promise<Course[]> => {
   `);
 
   return response.map(
-    ({ department, number, ratings, difficulties, workloads, ...rest }) => {
+    ({ ratings, difficulties, workloads, _id: id, ...rest }) => {
       const course: Course = {
         ...rest,
-        id: `${department}-${number}`,
-        department,
-        number,
+        id,
         rating: avg(ratings),
         difficulty: avg(difficulties),
         workload: avg(workloads),
@@ -70,9 +65,10 @@ export const getCourses = async (): Promise<Course[]> => {
 };
 
 export const getReviews = async (
-  courseId: string
+  courseCode: string
 ): Promise<CourseWithReviews> => {
   type SanityResponse = ApiCourse & {
+    code: string;
     ratings: number[];
     difficulties: number[];
     workloads: number[];
@@ -80,10 +76,10 @@ export const getReviews = async (
     reviews: Array<ApiReview>;
   };
 
-  const match = courseId.match(/^([A-z]+)-(.+)$/);
+  const match = courseCode.match(/^([A-z]+)-(.+)$/);
 
   if (!match) {
-    throw new Error(`Cannot parse courseId: ${courseId}`);
+    throw new Error(`Cannot parse courseId: ${courseCode}`);
   }
 
   const [_src, department, number] = match;
@@ -92,6 +88,7 @@ export const getReviews = async (
     `
     *[_type == 'course' && department == $department && number == $number] {
       ...,
+      "code": department + '-' + number,
       "ratings": *[_type == 'review' && references(^._id) && rating != null].rating,
       "difficulties": *[_type == 'review' && references(^._id) && difficulty != null].difficulty,
       "workloads": *[_type == 'review' && references(^._id) && workload != null].workload,
@@ -104,11 +101,18 @@ export const getReviews = async (
     { department, number }
   );
 
-  const { reviews, ratings, difficulties, workloads, ...rest } = response;
+  const {
+    reviews,
+    ratings,
+    difficulties,
+    workloads,
+    _id: id,
+    ...rest
+  } = response;
 
   const course: CourseWithReviews = {
     ...rest,
-    id: `${department}-${number}`,
+    id,
     department,
     number,
     rating: avg(ratings),
