@@ -1,8 +1,6 @@
 import { sanityClient } from "./client";
 import {
   Course,
-  Review,
-  Semester,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
 } from "../../@types";
