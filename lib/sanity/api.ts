@@ -5,6 +5,32 @@ import {
   CourseWithReviewsStats,
 } from "../../@types";
 
+export enum CourseEnrichmentOption {
+  NONE, // just course data
+  STATS, // get review stats data (rating, difficulty, workload)
+  REVIEWS, // get full review data (including body + semester)
+}
+
+function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
+  if (enrichmentOption === CourseEnrichmentOption.NONE) return "";
+
+  return `"reviews": *[_type == 'review' && references(^._id)]{
+    "id": _id,
+    "created": _createdAt,
+    rating,
+    difficulty,
+    workload,
+    ${
+      enrichmentOption === CourseEnrichmentOption.REVIEWS
+        ? `
+      ...,
+      semester->
+    `
+        : ""
+    }
+  } | order(created desc)`;
+}
+
 type CourseCodes = Pick<Course, "code">[];
 
 export async function getCourseCodes(): Promise<CourseCodes> {
@@ -18,27 +44,21 @@ export async function getCourseCodes(): Promise<CourseCodes> {
   return response;
 }
 
-export enum COURSE_ENRICHMENT_OPTION {
-  NONE, // just course data
-  STATS, // get review stats data (rating, difficulty, workload)
-  REVIEWS, // get full review data (including body + semester)
-}
-
 export async function getCourse(
   code: Course["code"],
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.NONE
+  enrichmentOption: CourseEnrichmentOption.NONE
 ): Promise<Course>;
 export async function getCourse(
   code: Course["code"],
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.STATS
+  enrichmentOption: CourseEnrichmentOption.STATS
 ): Promise<CourseWithReviewsStats>;
 export async function getCourse(
   code: Course["code"],
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.REVIEWS
+  enrichmentOption: CourseEnrichmentOption.REVIEWS
 ): Promise<CourseWithReviewsFull>;
 export async function getCourse(
   code: Course["code"],
-  enrichmentOption: COURSE_ENRICHMENT_OPTION = COURSE_ENRICHMENT_OPTION.NONE
+  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
 ): Promise<Course | CourseWithReviewsStats | CourseWithReviewsFull> {
   const match = code.match(/^(?<department>[A-z]+)-(?<number>.+)$/);
 
@@ -67,16 +87,16 @@ export async function getCourse(
 }
 
 export async function getCourses(
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.NONE
+  enrichmentOption: CourseEnrichmentOption.NONE
 ): Promise<Course[]>;
 export async function getCourses(
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.STATS
+  enrichmentOption: CourseEnrichmentOption.STATS
 ): Promise<CourseWithReviewsStats[]>;
 export async function getCourses(
-  enrichmentOption: COURSE_ENRICHMENT_OPTION.REVIEWS
+  enrichmentOption: CourseEnrichmentOption.REVIEWS
 ): Promise<CourseWithReviewsFull[]>;
 export async function getCourses(
-  enrichmentOption: COURSE_ENRICHMENT_OPTION = COURSE_ENRICHMENT_OPTION.NONE
+  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
 ): Promise<(Course | CourseWithReviewsStats | CourseWithReviewsFull)[]> {
   const query = `
     *[_type == 'course']{
@@ -89,24 +109,4 @@ export async function getCourses(
 
   const response = sanityClient.fetch(query);
   return response;
-}
-
-function getReviewPair(enrichmentOption: COURSE_ENRICHMENT_OPTION): string {
-  if (enrichmentOption === COURSE_ENRICHMENT_OPTION.NONE) return "";
-
-  return `"reviews": *[_type == 'review' && references(^._id)]{
-    "id": _id,
-    "created": _createdAt,
-    rating,
-    difficulty,
-    workload,
-    ${
-      enrichmentOption === COURSE_ENRICHMENT_OPTION.REVIEWS
-        ? `
-      ...,
-      semester->
-    `
-        : ""
-    }
-  } | order(created desc)`;
 }

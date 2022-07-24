@@ -16,7 +16,7 @@ import { Input } from "../components/Input";
 import { SortIcon } from "../components/SortIcon";
 
 import type { CourseWithReviewsStats, Course, Review } from "../@types";
-import { COURSE_ENRICHMENT_OPTION, getCourses } from "../lib/sanity";
+import { CourseEnrichmentOption, getCourses } from "../lib/sanity";
 import { Toggle } from "../components/Toggle";
 import { average } from "../lib/stats";
 
@@ -25,7 +25,7 @@ interface HomePageProps {
 }
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const courses = await getCourses(COURSE_ENRICHMENT_OPTION.STATS);
+  const courses = await getCourses(CourseEnrichmentOption.STATS);
 
   return {
     props: { courses },
@@ -56,10 +56,10 @@ const Pagination: FC<PaginationProps> = ({
   const hasPrevPage = pageNumber !== 0;
 
   function incrementPageNumber(): void {
-    hasNextPage && onPageChange(pageNumber + 1);
+    if (hasNextPage) onPageChange(pageNumber + 1);
   }
   function decrementPageNumber(): void {
-    hasPrevPage && onPageChange(pageNumber - 1);
+    if (hasPrevPage) onPageChange(pageNumber - 1);
   }
 
   function changePageSize(nextPageSize: number): void {
@@ -104,29 +104,27 @@ const Pagination: FC<PaginationProps> = ({
       </p>
       <div className="md:grow">
         <span className="relative z-0 inline-flex items-center rounded-md">
-          {pageSizes.map((size, i, a) => {
-            return (
-              <button
-                key={size}
-                type="button"
-                onClick={() => size != pageSize && changePageSize(size)}
-                className={classNames(
-                  {
-                    "rounded-l-md": i === 0,
-                    "-ml-px": i > 0,
-                    "rounded-r-md": i === a.length - 1,
-                  },
-                  "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  {
-                    "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
-                      size === pageSize,
-                  }
-                )}
-              >
-                {size}
-              </button>
-            );
-          })}
+          {pageSizes.map((size, i, a) => (
+            <button
+              key={size}
+              type="button"
+              onClick={() => size !== pageSize && changePageSize(size)}
+              className={classNames(
+                {
+                  "rounded-l-md": i === 0,
+                  "-ml-px": i > 0,
+                  "rounded-r-md": i === a.length - 1,
+                },
+                "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
+                {
+                  "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
+                    size === pageSize,
+                }
+              )}
+            >
+              {size}
+            </button>
+          ))}
           <span className="ml-2 text-sm text-gray-700">courses per page</span>
         </span>
       </div>
@@ -137,32 +135,32 @@ const Pagination: FC<PaginationProps> = ({
         >
           <button
             {...(hasPrevPage ? {} : { disabled: true })}
+            type="button"
             onClick={decrementPageNumber}
             className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
           >
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
-          {paginationChunks.map((chunks, i, a) => {
-            return chunks
-              .map((page) => {
-                return (
-                  <button
-                    key={page}
-                    {...(page === pageNumber && { "aria-current": "page" })}
-                    onClick={() => onPageChange(page)}
-                    className={classNames(
-                      {
-                        "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
-                          page === pageNumber,
-                      },
-                      "relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                    )}
-                  >
-                    {page + 1}
-                  </button>
-                );
-              })
+          {paginationChunks.map((chunks, i, a) =>
+            chunks
+              .map((page) => (
+                <button
+                  type="button"
+                  key={page}
+                  {...(page === pageNumber && { "aria-current": "page" })}
+                  onClick={() => onPageChange(page)}
+                  className={classNames(
+                    {
+                      "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
+                        page === pageNumber,
+                    },
+                    "relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  )}
+                >
+                  {page + 1}
+                </button>
+              ))
               .concat(
                 i + 1 === a.length
                   ? []
@@ -174,9 +172,10 @@ const Pagination: FC<PaginationProps> = ({
                         ...
                       </span>,
                     ]
-              );
-          })}
+              )
+          )}
           <button
+            type="button"
             {...(hasNextPage ? {} : { disabled: true })}
             onClick={incrementPageNumber}
             className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
@@ -198,13 +197,8 @@ interface SortConfig {
   direction: "desc" | "asc";
 }
 
-function getDefaultInputValue(value: number | undefined): string {
-  if (typeof value === "undefined" || isNaN(value)) {
-    return "";
-  } else {
-    return value.toString();
-  }
-}
+const getDefaultInputValue = (value: number | undefined): string =>
+  typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
 
 type CourseStats = {
   [code: string]: {
@@ -215,19 +209,21 @@ type CourseStats = {
 };
 
 const Home: NextPage<HomePageProps> = ({ courses }) => {
-  const stats = useMemo<CourseStats>(() => {
-    return courses.reduce(
-      (d, { reviews, code }) => ({
-        ...d,
-        [code]: {
-          rating: average(reviews, "rating"),
-          difficulty: average(reviews, "difficulty"),
-          workload: average(reviews, "workload"),
-        },
-      }),
-      {}
-    );
-  }, [courses]);
+  const stats = useMemo<CourseStats>(
+    () =>
+      courses.reduce(
+        (d, { reviews, code }) => ({
+          ...d,
+          [code]: {
+            rating: average(reviews, "rating"),
+            difficulty: average(reviews, "difficulty"),
+            workload: average(reviews, "workload"),
+          },
+        }),
+        {}
+      ),
+    [courses]
+  );
 
   const searchIndex = useMemo(
     () =>
@@ -261,7 +257,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
     setView(
       courses.filter(({ code, reviews, isDeprecated, isFoundational }) => {
         function between(value: number, min: number, max: number): boolean {
-          return isNaN(value) ? true : value >= min && value <= max;
+          return Number.isNaN(value) ? true : value >= min && value <= max;
         }
 
         const { rating, difficulty, workload } = stats[code];
@@ -317,6 +313,8 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
               return stats[a.code].difficulty - stats[b.code].difficulty;
             case "workload":
               return stats[a.code].workload - stats[b.code].workload;
+            default:
+              throw new Error(`can't sort by ${attribute}`);
           }
         })(sort.attribute);
 
@@ -345,7 +343,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
   useEffect(() => {
     if (!searchInput) {
       setSearchResults(sorted);
-      return;
+      return () => {};
     }
 
     const debounceId = setTimeout(() => {
@@ -355,7 +353,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
       setSearchResults(sorted.filter(({ id }) => ids.has(id)));
     }, 500);
 
-    return function () {
+    return function cleanup() {
       clearTimeout(debounceId);
     };
   }, [searchInput, searchIndex, searchResults, sorted]);
@@ -664,6 +662,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <button
+                            type="button"
                             className="group inline-flex"
                             onClick={() => toggleSort("name")}
                           >
@@ -671,7 +670,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <SortIcon
                               active={sort.attribute === "name"}
                               direction={sort.direction}
-                            ></SortIcon>
+                            />
                           </button>
                         </th>
                         <th
@@ -679,6 +678,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <button
+                            type="button"
                             className="group inline-flex"
                             onClick={() => toggleSort("rating")}
                           >
@@ -686,7 +686,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <SortIcon
                               active={sort.attribute === "rating"}
                               direction={sort.direction}
-                            ></SortIcon>
+                            />
                           </button>
                         </th>
                         <th
@@ -694,6 +694,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <button
+                            type="button"
                             className="group inline-flex"
                             onClick={() => toggleSort("difficulty")}
                           >
@@ -701,7 +702,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <SortIcon
                               active={sort.attribute === "difficulty"}
                               direction={sort.direction}
-                            ></SortIcon>
+                            />
                           </button>
                         </th>
                         <th
@@ -709,6 +710,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <button
+                            type="button"
                             className="group inline-flex"
                             onClick={() => toggleSort("workload")}
                           >
@@ -716,7 +718,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <SortIcon
                               active={sort.attribute === "workload"}
                               direction={sort.direction}
-                            ></SortIcon>
+                            />
                           </button>
                         </th>
                         <th
@@ -724,6 +726,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
                           <button
+                            type="button"
                             className="group inline-flex"
                             onClick={() => toggleSort("reviewCount")}
                           >
@@ -731,7 +734,7 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <SortIcon
                               active={sort.attribute === "reviewCount"}
                               direction={sort.direction}
-                            ></SortIcon>
+                            />
                           </button>
                         </th>
                       </tr>
@@ -749,8 +752,12 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                             <dl className="font-normal">
                               <dt className="sr-only">Title</dt>
                               <dd className="mt-1 w-60 whitespace-nowrap truncate">
-                                <Link href={`/courses/${code}/reviews`}>
+                                <Link
+                                  href={`/courses/${code}/reviews`}
+                                  passHref
+                                >
                                   <a
+                                    href="replace"
                                     title={name}
                                     className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900"
                                   >

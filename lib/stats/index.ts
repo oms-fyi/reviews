@@ -8,14 +8,14 @@ export const average = (
   let sum = 0;
   let count = 0;
 
-  for (const review of reviews) {
+  reviews.forEach((review) => {
     const value = review[key];
 
     if (value !== null) {
-      count++;
+      count += 1;
       sum += value;
     }
-  }
+  });
 
   return sum / count;
 };

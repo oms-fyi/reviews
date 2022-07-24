@@ -13,7 +13,7 @@ import {
 
 import type { Course, CourseWithReviewsFull } from "../../../@types";
 import {
-  COURSE_ENRICHMENT_OPTION,
+  CourseEnrichmentOption,
   getCourse,
   getCourseCodes,
 } from "../../../lib/sanity";
@@ -48,16 +48,19 @@ export const getStaticProps: GetStaticProps<
     throw new Error("No code passed to `getStaticProps`");
   }
 
-  const course = await getCourse(courseCode, COURSE_ENRICHMENT_OPTION.REVIEWS);
+  const course = await getCourse(courseCode, CourseEnrichmentOption.REVIEWS);
   return { props: { course } };
 };
 
 const Reviews: NextPage<ReviewsPageProps> = ({
   course: { code, name, reviews },
 }) => {
-  const rating = useMemo(() => average(reviews, "rating"), [reviews]);
-  const difficulty = useMemo(() => average(reviews, "difficulty"), [reviews]);
-  const workload = useMemo(() => average(reviews, "workload"), [reviews]);
+  const avgRating = useMemo(() => average(reviews, "rating"), [reviews]);
+  const avgDifficulty = useMemo(
+    () => average(reviews, "difficulty"),
+    [reviews]
+  );
+  const avgWorkload = useMemo(() => average(reviews, "workload"), [reviews]);
 
   return (
     <>
@@ -66,8 +69,11 @@ const Reviews: NextPage<ReviewsPageProps> = ({
       </Head>
       <main className="max-w-3xl m-auto pb-5 bg-white">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">
-          <Link href="/">
-            <a className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900 flex">
+          <Link href="/" passHref>
+            <a
+              href="replace"
+              className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900 flex"
+            >
               <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
               Home
             </a>
@@ -94,7 +100,9 @@ const Reviews: NextPage<ReviewsPageProps> = ({
                   <span className="hidden sm:inline">Average</span> Rating
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {isNaN(rating) ? "N/A" : `${rating.toFixed(2)} / 5`}
+                  {Number.isNaN(avgRating)
+                    ? "N/A"
+                    : `${avgRating.toFixed(2)} / 5`}
                 </dd>
               </div>
 
@@ -103,7 +111,9 @@ const Reviews: NextPage<ReviewsPageProps> = ({
                   <span className="hidden sm:inline">Average</span> Difficulty
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {isNaN(difficulty) ? "N/A" : `${difficulty.toFixed(2)} / 5`}
+                  {Number.isNaN(avgDifficulty)
+                    ? "N/A"
+                    : `${avgDifficulty.toFixed(2)} / 5`}
                 </dd>
               </div>
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
@@ -112,13 +122,15 @@ const Reviews: NextPage<ReviewsPageProps> = ({
                   Workload
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {isNaN(workload) ? "N/A" : `${workload.toFixed(2)} hours`}
+                  {Number.isNaN(avgWorkload)
+                    ? "N/A"
+                    : `${avgWorkload.toFixed(2)} hours`}
                 </dd>
               </div>
             </dl>
           </div>
         </div>
-        <ul role="list" className="divide-y px-6 divide-gray-200">
+        <ul className="divide-y px-6 divide-gray-200">
           {reviews.map(
             ({ id, created, body, rating, difficulty, workload, semester }) => (
               <li key={id} className="py-4">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 import type { AppProps } from "next/app";
 import Script from "next/script";
@@ -14,7 +14,7 @@ const newFeatureAnnouncementMessage =
 const newFeatureAnnouncementKey =
   process.env.NEXT_PUBLIC_NEW_FEATURE_ANNOUNCEMENT_KEY;
 
-function MyApp({ Component, pageProps }: AppProps) {
+const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   const [showBanner, setShowBanner] = useState<boolean>();
 
   useEffect(() => {
@@ -61,6 +61,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       )}
     </>
   );
-}
+};
 
 export default MyApp;
