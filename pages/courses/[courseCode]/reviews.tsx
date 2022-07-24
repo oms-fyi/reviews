@@ -137,9 +137,10 @@ const Reviews: NextPage<ReviewsPageProps> = ({
                 {semester && (
                   <p className="text-gray-500 mt-2 flex items-center text-xs">
                     <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Semester:{" "}
-                    <span className="capitalize">{semester.term}</span>
-                    {new Date(semester.startDate).getFullYear()}
+                    <span className="capitalize">
+                      Semester: {semester.term}{" "}
+                      {new Date(semester.startDate).getFullYear()}
+                    </span>
                   </p>
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
