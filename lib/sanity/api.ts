@@ -94,27 +94,21 @@ export async function getCourses(
 }
 
 function getReviewPair(enrichmentOption: COURSE_ENRICHMENT_OPTION): string {
-  switch (enrichmentOption) {
-    case COURSE_ENRICHMENT_OPTION.NONE:
-      return "";
-    case COURSE_ENRICHMENT_OPTION.STATS:
-      return `"reviews": *[_type == 'review' && references(^._id)]{
-        "id": _id,
-        "created": _createdAt,
-        rating,
-        difficulty,
-        workload
-      },`;
-    case COURSE_ENRICHMENT_OPTION.REVIEWS: {
-      return `"reviews": *[_type == 'review' && references(^._id)]{
-        ...,
-        "id": _id,
-        "created": _createdAt,
-        rating,
-        difficulty,
-        workload,
-        semester->
-      },`;
+  if (enrichmentOption === COURSE_ENRICHMENT_OPTION.NONE) return "";
+
+  return `"reviews": *[_type == 'review' && references(^._id)]{
+    "id": _id,
+    "created": _createdAt,
+    rating,
+    difficulty,
+    workload,
+    ${
+      enrichmentOption === COURSE_ENRICHMENT_OPTION.REVIEWS
+        ? `
+      ...,
+      semester->
+    `
+        : ""
     }
-  }
+  }`;
 }
