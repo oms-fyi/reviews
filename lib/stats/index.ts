@@ -11,11 +11,11 @@ export const average = (
   for (const review of reviews) {
     const value = review[key];
 
-    if (typeof value !== "undefined") {
+    if (value !== null) {
       count++;
       sum += value;
     }
   }
 
-  return count / sum;
+  return sum / count;
 };

@@ -58,9 +58,10 @@ export async function getCourse(
     *[_type == 'course' && department == $department && number == $number]{
       ...,
       "id": _id,
+      "created": _createdAt,
       "code": department + "-" + number,
       ${getReviewPair(enrichmentOption)}
-    }
+    }[0]
   `;
 
   const response = sanityClient.fetch(query, { department, number });
@@ -98,6 +99,8 @@ function getReviewPair(enrichmentOption: COURSE_ENRICHMENT_OPTION): string {
       return "";
     case COURSE_ENRICHMENT_OPTION.STATS:
       return `"reviews": *[_type == 'review' && references(^._id)]{
+        "id": _id,
+        "created": _createdAt,
         rating,
         difficulty,
         workload
@@ -105,6 +108,11 @@ function getReviewPair(enrichmentOption: COURSE_ENRICHMENT_OPTION): string {
     case COURSE_ENRICHMENT_OPTION.REVIEWS: {
       return `"reviews": *[_type == 'review' && references(^._id)]{
         ...,
+        "id": _id,
+        "created": _createdAt,
+        rating,
+        difficulty,
+        workload,
         semester->
       },`;
     }

@@ -474,7 +474,6 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                                         inputMode="decimal"
                                         size={10}
                                         onBlur={(e) => {
-                                          console.log("blur", e);
                                           setMinReviewCount(
                                             parseFloat(e.currentTarget.value)
                                           );

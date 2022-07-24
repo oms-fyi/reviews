@@ -8,9 +8,9 @@ export interface Review {
   id: string;
   body: string;
   created: string; // ISO Datetime string
-  rating?: number;
-  workload?: number;
-  difficulty?: number;
+  rating: number | null;
+  workload: number | null;
+  difficulty: number | null;
 }
 
 export interface Course {

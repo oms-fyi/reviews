@@ -49,7 +49,6 @@ export const getStaticProps: GetStaticProps<
   }
 
   const course = await getCourse(courseCode, COURSE_ENRICHMENT_OPTION.REVIEWS);
-
   return { props: { course } };
 };
 
