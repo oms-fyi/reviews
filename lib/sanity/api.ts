@@ -110,5 +110,5 @@ function getReviewPair(enrichmentOption: COURSE_ENRICHMENT_OPTION): string {
     `
         : ""
     }
-  }`;
+  } | order(created desc)`;
 }
