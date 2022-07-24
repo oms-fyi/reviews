@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import Head from "next/head";
@@ -9,8 +11,13 @@ import {
   PencilAltIcon,
 } from "@heroicons/react/outline";
 
-import type { Course, CourseWithReviews } from "../../../@types";
-import { getCourseCodes, getReviews } from "../../../lib/sanity";
+import type { Course, CourseWithReviewsFull } from "../../../@types";
+import {
+  COURSE_ENRICHMENT_OPTION,
+  getCourse,
+  getCourseCodes,
+} from "../../../lib/sanity";
+import { average } from "../../../lib/stats";
 
 interface ReviewsPathParams {
   courseCode: Course["code"];
@@ -18,7 +25,7 @@ interface ReviewsPathParams {
 }
 
 interface ReviewsPageProps {
-  course: CourseWithReviews;
+  course: CourseWithReviewsFull;
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
@@ -41,12 +48,16 @@ export const getStaticProps: GetStaticProps<
     throw new Error("No code passed to `getStaticProps`");
   }
 
-  const course = await getReviews(courseCode);
+  const course = await getCourse(courseCode, COURSE_ENRICHMENT_OPTION.REVIEWS);
   return { props: { course } };
 };
 
-const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
-  const { code, name, rating, difficulty, workload, reviews } = course;
+const Reviews: NextPage<ReviewsPageProps> = ({
+  course: { code, name, reviews },
+}) => {
+  const rating = useMemo(() => average(reviews, "rating"), [reviews]);
+  const difficulty = useMemo(() => average(reviews, "difficulty"), [reviews]);
+  const workload = useMemo(() => average(reviews, "workload"), [reviews]);
 
   return (
     <>
@@ -83,7 +94,7 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                   <span className="hidden sm:inline">Average</span> Rating
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {rating ? `${rating.toFixed(2)} / 5` : "N/A"}
+                  {isNaN(rating) ? "N/A" : `${rating.toFixed(2)} / 5`}
                 </dd>
               </div>
 
@@ -92,7 +103,7 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                   <span className="hidden sm:inline">Average</span> Difficulty
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {difficulty ? `${difficulty.toFixed(2)} / 5` : "N/A"}
+                  {isNaN(difficulty) ? "N/A" : `${difficulty.toFixed(2)} / 5`}
                 </dd>
               </div>
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
@@ -101,7 +112,7 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                   Workload
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {workload ? `${workload.toFixed(2)} hours` : "N/A"}
+                  {isNaN(workload) ? "N/A" : `${workload.toFixed(2)} hours`}
                 </dd>
               </div>
             </dl>
@@ -126,8 +137,10 @@ const Reviews: NextPage<ReviewsPageProps> = ({ course }) => {
                 {semester && (
                   <p className="text-gray-500 mt-2 flex items-center text-xs">
                     <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Semester: {semester.term}{" "}
-                    {new Date(semester.startDate).getFullYear()}
+                    <span className="capitalize">
+                      Semester: {semester.term}{" "}
+                      {new Date(semester.startDate).getFullYear()}
+                    </span>
                   </p>
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
