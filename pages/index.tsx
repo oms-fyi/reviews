@@ -392,14 +392,6 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                   <p className="mt-2 text-sm text-gray-700">
                     Pick the best course for you this semester.
                   </p>
-                  <a
-                    target="_blank"
-                    href="https://github.com/oms-tech/reviews"
-                    className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900 flex"
-                    rel="noreferrer"
-                  >
-                    View on Github
-                  </a>
                 </div>
               </div>
               <div className="flex justify-between items-end">
