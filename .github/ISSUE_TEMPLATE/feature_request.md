@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest a new feature for OMS Reviews
-title: ''
+title: "[FEATURE REQUEST]"
 labels: enhancement
 assignees: m4ttsch
 
