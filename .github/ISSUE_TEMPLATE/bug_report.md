@@ -2,8 +2,8 @@
 name: Bug report
 about: Create a report to help us improve OMS Reviews
 title: ''
-labels: ''
-assignees: ''
+labels: bug
+assignees: m4ttsch
 
 ---
 
