@@ -631,15 +631,6 @@ const Home: NextPage<HomePageProps> = ({ courses }) => {
                     </Popover>
                   </div>
                 </div>
-                <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                  <button
-                    type="button"
-                    disabled
-                    className="inline-flex items-center px-4 py-2 border border-dotted border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-300 hover:blur-sm hover:cursor-not-allowed"
-                  >
-                    Add Review
-                  </button>
-                </div>
               </div>
               <div className="inline-block min-w-full py-4 align-middle">
                 <div className="shadow-sm ring-1 ring-black ring-opacity-5">

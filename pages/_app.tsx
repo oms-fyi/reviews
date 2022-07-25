@@ -4,11 +4,13 @@ import type { AppProps } from "next/app";
 import Script from "next/script";
 
 import "../styles/globals.css";
+import { Header } from "../components/Header";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }) => (
+const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => (
   <>
+    <Header router={router} />
     <Component {...pageProps} />
     {analyticsId && (
       <>
