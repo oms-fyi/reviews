@@ -1,15 +1,10 @@
 import { useMemo } from "react";
 
 import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
-import Link from "next/link";
 import Head from "next/head";
 
 import format from "date-fns/format";
-import {
-  CalendarIcon,
-  ArrowLeftIcon,
-  PencilAltIcon,
-} from "@heroicons/react/outline";
+import { CalendarIcon, PencilAltIcon } from "@heroicons/react/outline";
 
 import type { Course, CourseWithReviewsFull } from "../../../@types";
 import {
@@ -67,31 +62,12 @@ const Reviews: NextPage<ReviewsPageProps> = ({
       <Head>
         <title>{`${code} | OMSCentral`}</title>
       </Head>
-      <main className="max-w-3xl m-auto pb-5 bg-white">
+      <main className="max-w-3xl m-auto pb-5 bg-white mt-10">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">
-          <Link href="/" passHref>
-            <a
-              href="replace"
-              className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900 flex"
-            >
-              <ArrowLeftIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-              Home
-            </a>
-          </Link>
           <div className="sm:flex sm:items-center sm:justify-between">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               {name}
             </h3>
-            <div className="mt-3 sm:mt-0 sm:ml-4">
-              <button
-                type="button"
-                disabled
-                // className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                className="inline-flex items-center px-4 py-2 border border-dotted border-indigo-600 rounded-md shadow-sm text-sm font-medium text-indigo-300 hover:blur-sm hover:cursor-not-allowed"
-              >
-                Add Review
-              </button>
-            </div>
           </div>
           <div>
             <dl className="mt-5 grid gap-5 grid-cols-3">
