@@ -13,20 +13,23 @@ const MyApp: FC<AppProps> = function MyApp({ Component, pageProps, router }) {
   const [isDarkModePreferred, setIsDarkModePreferred] = useState<boolean>();
 
   useEffect(() => {
+    const queryList = window.matchMedia("(prefers-color-scheme: dark)");
+
+    if (typeof isDarkModePreferred === "undefined") {
+      setIsDarkModePreferred(queryList.matches);
+      return function cleanup() {};
+    }
+
     function listener(e: MediaQueryListEvent): void {
       setIsDarkModePreferred(e.matches);
     }
 
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", listener);
+    queryList.addEventListener("change", listener);
 
     return function cleanup() {
-      window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .removeEventListener("change", listener);
+      queryList.removeEventListener("change", listener);
     };
-  });
+  }, [isDarkModePreferred]);
 
   return (
     <>
