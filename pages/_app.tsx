@@ -8,18 +8,19 @@ import { Header } from "../components/Header";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
-const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => (
-  <>
-    <Header router={router} />
-    <Component {...pageProps} />
-    {analyticsId && (
-      <>
-        <Script
-          defer
-          src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
+const MyApp: FC<AppProps> = function MyApp({ Component, pageProps, router }) {
+  return (
+    <>
+      <Header router={router} />
+      <Component {...pageProps} />
+      {analyticsId && (
+        <>
+          <Script
+            defer
+            src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
             window.dataLayer = window.dataLayer || [];
 
             function gtag(){ dataLayer.push(arguments); }
@@ -27,10 +28,11 @@ const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => (
             gtag("js", new Date());
             gtag("config", "${analyticsId}");
           `}
-        </Script>
-      </>
-    )}
-  </>
-);
+          </Script>
+        </>
+      )}
+    </>
+  );
+};
 
 export default MyApp;

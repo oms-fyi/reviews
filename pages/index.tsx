@@ -41,14 +41,14 @@ interface PaginationProps {
   pageSizes: number[];
 }
 
-const Pagination: FC<PaginationProps> = ({
+const Pagination: FC<PaginationProps> = function Pagination({
   pageSize,
   pageNumber,
   resultCount,
   onPageChange,
   onPageSizeChange,
   pageSizes,
-}) => {
+}) {
   const rangeStart = pageNumber * pageSize;
   const rangeEnd = Math.min(rangeStart + pageSize, resultCount);
 
@@ -208,7 +208,7 @@ type CourseStats = {
   };
 };
 
-const Home: NextPage<HomePageProps> = ({ courses }) => {
+const Home: NextPage<HomePageProps> = function Home({ courses }) {
   const stats = useMemo<CourseStats>(
     () =>
       courses.reduce(
