@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 
 import type { AppProps } from "next/app";
 import Script from "next/script";
+import Head from "next/head";
 
 import "../styles/globals.css";
 import { Header } from "../components/Header";
@@ -9,8 +10,49 @@ import { Header } from "../components/Header";
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
 const MyApp: FC<AppProps> = function MyApp({ Component, pageProps, router }) {
+  const [isDarkModePreferred, setIsDarkModePreferred] = useState<boolean>();
+
+  useEffect(() => {
+    function listener(e: MediaQueryListEvent): void {
+      setIsDarkModePreferred(e.matches);
+    }
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", listener);
+
+    return function cleanup() {
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .removeEventListener("change", listener);
+    };
+  });
+
   return (
     <>
+      <Head>
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href={`/favicon-32x32${isDarkModePreferred ? "-dark" : ""}.png`}
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href={`/favicon-16x16${isDarkModePreferred ? "-dark" : ""}.png`}
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
+      </Head>
       <Header router={router} />
       <Component {...pageProps} />
       {analyticsId && (
