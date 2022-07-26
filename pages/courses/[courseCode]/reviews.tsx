@@ -47,9 +47,9 @@ export const getStaticProps: GetStaticProps<
   return { props: { course } };
 };
 
-const Reviews: NextPage<ReviewsPageProps> = ({
+const Reviews: NextPage<ReviewsPageProps> = function Reviews({
   course: { code, name, reviews },
-}) => {
+}) {
   const avgRating = useMemo(() => average(reviews, "rating"), [reviews]);
   const avgDifficulty = useMemo(
     () => average(reviews, "difficulty"),
