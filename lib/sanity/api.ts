@@ -3,7 +3,10 @@ import {
   Course,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
+  Semester,
+  Review,
 } from "../../@types";
+import { encrypt } from "../encryption";
 
 export enum CourseEnrichmentOption {
   NONE, // just course data
@@ -41,6 +44,87 @@ export async function getCourseCodes(): Promise<CourseCodes> {
   `;
 
   const response = await sanityClient.fetch<CourseCodes>(query);
+  return response;
+}
+
+type CourseNames = Pick<Course, "id" | "code" | "name">[];
+
+export async function getCourseNames(): Promise<CourseNames> {
+  const query = `
+  *[_type == 'course'] {
+      "id": _id,
+      "code": department + '-' + number,
+      name
+    } | order(name)
+  `;
+
+  const response = await sanityClient.fetch<CourseNames>(query);
+  return response;
+}
+
+type SanityReference = {
+  _ref: string;
+};
+
+export type CreateReviewRequest = {
+  rating: NonNullable<Review["rating"]>;
+  difficulty: NonNullable<Review["difficulty"]>;
+  workload: NonNullable<Review["workload"]>;
+  body: Review["body"];
+  courseId: Course["id"];
+  semesterId: Semester["id"];
+  username: string;
+};
+
+export async function createReview({
+  semesterId,
+  courseId,
+  username,
+  ...review
+}: CreateReviewRequest) {
+  type CreateReviewSanityRequest = Omit<
+    CreateReviewRequest,
+    "courseId" | "semesterId" | "username"
+  > & {
+    course: SanityReference;
+    semester: SanityReference;
+  } & {
+    authorId: NonNullable<Review["authorId"]>;
+  };
+
+  const authorId = encrypt(username);
+
+  const request = {
+    _type: "review",
+    authorId,
+    ...review,
+    course: {
+      _ref: courseId,
+      _type: "reference",
+    },
+    semester: {
+      _ref: semesterId,
+      _type: "reference",
+    },
+  };
+
+  const response = sanityClient.create<CreateReviewSanityRequest>(request);
+  return response;
+}
+
+export async function getRecentSemesters(
+  limit: number = 3
+): Promise<Semester[]> {
+  const query = `
+  *[_type == 'semester' && startDate <= now()]{
+    "id": _id,
+    ...
+  } | order(startDate desc)[0...$limit]
+  `;
+
+  const response = await sanityClient.fetch<Semester[]>(query, {
+    limit,
+  });
   return response;
 }
 

@@ -6,6 +6,7 @@ export interface Semester {
 
 export interface Review {
   id: string;
+  authorId?: string; // encrypted GATech account username
   body: string;
   created: string; // ISO Datetime string
   rating: number | null;
