@@ -3,6 +3,9 @@ import { useMemo } from "react";
 import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
+
 import format from "date-fns/format";
 import { CalendarIcon, PencilAltIcon } from "@heroicons/react/outline";
 
@@ -110,7 +113,11 @@ const Reviews: NextPage<ReviewsPageProps> = function Reviews({
           {reviews.map(
             ({ id, created, body, rating, difficulty, workload, semester }) => (
               <li key={id} className="py-4">
-                <p className="break-words">{body}</p>
+                <div className="prose prose-sm">
+                  <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
+                    {body}
+                  </ReactMarkdown>
+                </div>
                 <div className="py-2 flex flex-row gap-2 items-start">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     Rating: {rating ? `${rating} / 5` : "N/A"}
