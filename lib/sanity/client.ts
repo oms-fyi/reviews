@@ -7,7 +7,7 @@ if (!projectId || !dataset) {
   throw new Error("Sanity config not found!");
 }
 
-const useCdn = true;
+const useCdn = false;
 const apiVersion = "v2021-10-21";
 
 const sanityClient = clientFactory({
