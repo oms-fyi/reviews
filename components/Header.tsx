@@ -1,4 +1,4 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useState, useEffect } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -6,12 +6,33 @@ import type { NextRouter } from "next/router";
 
 import classNames from "classnames";
 
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure, Menu, Transition, Popover } from "@headlessui/react";
 
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import {
+  MenuIcon,
+  XIcon,
+  DeviceMobileIcon,
+  InboxIcon,
+  ClipboardCopyIcon,
+  CheckCircleIcon,
+} from "@heroicons/react/outline";
 import { PlusSmIcon } from "@heroicons/react/solid";
 
 import logo from "../public/logo.svg";
+import { PHONE_NUMBER, EMAIL_ADDRESS } from "../constants";
+
+const contactMenuItems = [
+  {
+    contact: EMAIL_ADDRESS,
+    type: "email address",
+    Icon: InboxIcon,
+  },
+  {
+    contact: PHONE_NUMBER,
+    type: "phone number",
+    Icon: DeviceMobileIcon,
+  },
+];
 
 const githubMenuItems = [
   {
@@ -33,6 +54,23 @@ interface HeaderProps {
 }
 
 export const Header: FC<HeaderProps> = function Header({ router }) {
+  const [copiedContactInfo, setCopiedContactInfo] = useState<string>();
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCopiedContactInfo(undefined);
+    }, 2000);
+
+    return function cleanup() {
+      clearTimeout(timeoutId);
+    };
+  }, [copiedContactInfo]);
+
+  async function copyContactInfoToClipboard(contactInfo: string) {
+    await window.navigator.clipboard.writeText(contactInfo);
+    setCopiedContactInfo(contactInfo);
+  }
+
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -65,7 +103,7 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                     </div>
                   </a>
                 </Link>
-                <div className="hidden md:ml-6 md:flex md:space-x-8">
+                <div className="hidden md:ml-6 md:flex justify-center gap-6">
                   <Link href="/" passHref>
                     <a
                       href="replace"
@@ -76,7 +114,7 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                           "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
                             router.pathname !== "/",
                         },
-                        "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                        "inline-flex items-center px-1 pt-1 border-b-2"
                       )}
                     >
                       Courses
@@ -84,10 +122,64 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                   </Link>
                   <a
                     href="https://omscs-notes.com"
-                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                    className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2"
                   >
                     OMSCS Notes
                   </a>
+                  <Popover
+                    as="div"
+                    className="relative border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2"
+                  >
+                    <Popover.Button>Contact</Popover.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-200"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Popover.Panel className="origin-bottom-right absolute left-1/2 -translate-x-1/2 m-auto top-full rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {contactMenuItems.map(({ contact, Icon, type }) => (
+                          <div className="flex items-center justify-between px-4 py-3 text-gray-700 gap-10">
+                            <span className="flex items-center gap-2">
+                              <span>
+                                <span className="sr-only">{type}</span>
+                                <Icon className="h-5 w-5" />
+                              </span>
+                              {contact}
+                            </span>
+                            <button
+                              {...(copiedContactInfo === contact
+                                ? { disabled: true }
+                                : {})}
+                              type="button"
+                              onClick={() =>
+                                copyContactInfoToClipboard(contact)
+                              }
+                              className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            >
+                              <span className="sr-only">
+                                Copy {type} to clipboard
+                              </span>
+                              {copiedContactInfo === contact ? (
+                                <CheckCircleIcon
+                                  className="text-green-600 h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <ClipboardCopyIcon
+                                  className="text-indigo-500 h-5 w-5"
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </Popover.Panel>
+                    </Transition>
+                  </Popover>
                 </div>
               </div>
               <div className="flex items-center">
@@ -106,10 +198,9 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                   </button>
                 </div>
                 <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
-                  {/* Profile dropdown */}
                   <Menu as="div" className="ml-3 relative">
-                    <div>
-                      <Menu.Button className="bg-white p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <div className="flex">
+                      <Menu.Button className="bg-white p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-gray-400 hover:text-gray-500 focus:text-gray-500">
                         <span className="sr-only">Open GitHub menu</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +212,7 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          className="h-6 w-6 stroke-gray-400 hover:stroke-gray-500"
+                          className="h-6 w-6"
                         >
                           <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
                         </svg>
@@ -146,7 +237,7 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                                   {
                                     "bg-gray-100": active,
                                   },
-                                  "block px-4 py-2 text-sm text-gray-700"
+                                  "block px-4 py-2 text-gray-700"
                                 )}
                               >
                                 {text}
@@ -185,6 +276,42 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
               >
                 OMSCS Notes
               </Disclosure.Button>
+            </div>
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <div className="space-y-1">
+                {contactMenuItems.map(({ contact, Icon, type }) => (
+                  <div className="flex items-center px-4 py-3 justify-between text-gray-700 gap-10 w-72">
+                    <span className="flex items-center gap-2">
+                      <span>
+                        <span className="sr-only">{type}</span>
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      {contact}
+                    </span>
+                    <button
+                      {...(copiedContactInfo === contact
+                        ? { disabled: true }
+                        : {})}
+                      type="button"
+                      onClick={() => copyContactInfoToClipboard(contact)}
+                      className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <span className="sr-only">Copy {type} to clipboard</span>
+                      {copiedContactInfo === contact ? (
+                        <CheckCircleIcon
+                          className="text-green-600 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      ) : (
+                        <ClipboardCopyIcon
+                          className="text-indigo-500 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                      )}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="space-y-1">
