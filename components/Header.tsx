@@ -2,7 +2,7 @@ import { FC, Fragment, useState, useEffect } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
-import type { NextRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import classNames from "classnames";
 
@@ -49,11 +49,8 @@ const githubMenuItems = [
   },
 ];
 
-interface HeaderProps {
-  router: NextRouter;
-}
-
-export const Header: FC<HeaderProps> = function Header({ router }) {
+export const Header: FC = function Header() {
+  const router = useRouter();
   const [copiedContactInfo, setCopiedContactInfo] = useState<string>();
 
   useEffect(() => {

@@ -9,7 +9,7 @@ import { Header } from "../components/Header";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
-const MyApp: FC<AppProps> = function MyApp({ Component, pageProps, router }) {
+const MyApp: FC<AppProps> = function MyApp({ Component, pageProps }) {
   const [isDarkModePreferred, setIsDarkModePreferred] = useState<boolean>();
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const MyApp: FC<AppProps> = function MyApp({ Component, pageProps, router }) {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <Header router={router} />
+      <Header />
       <Component {...pageProps} />
       {analyticsId && (
         <>
