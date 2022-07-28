@@ -21,7 +21,8 @@
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.3",
     "react-use": "^17.4.0",
-    "rehype-sanitize": "^5.0.1"
+    "rehype-sanitize": "^5.0.1",
+    "twilio": "^3.80.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",
