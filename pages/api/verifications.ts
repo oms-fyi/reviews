@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { createVerification } from "../../lib/twilio/api";
+import { sendCodeToUser } from "../../lib/twilio/api";
 
 const TWILIO_VERIFY_ERROR_CODES = {
   INVALID_PARAMETER: 60200, // https://www.twilio.com/docs/api/errors/60200
@@ -29,7 +29,7 @@ export default async function handler(
   }
 
   try {
-    await createVerification(username);
+    await sendCodeToUser(username);
     res.status(201).json({});
   } catch (error: any) {
     switch (error.code) {
