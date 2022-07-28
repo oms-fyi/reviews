@@ -142,7 +142,10 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
                     >
                       <Popover.Panel className="origin-bottom-right absolute left-1/2 -translate-x-1/2 m-auto top-full rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {contactMenuItems.map(({ contact, Icon, type }) => (
-                          <div className="flex items-center justify-between px-4 py-3 text-gray-700 gap-10">
+                          <div
+                            key={contact}
+                            className="flex items-center justify-between px-4 py-3 text-gray-700 gap-10"
+                          >
                             <span className="flex items-center gap-2">
                               <span>
                                 <span className="sr-only">{type}</span>
@@ -280,7 +283,10 @@ export const Header: FC<HeaderProps> = function Header({ router }) {
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="space-y-1">
                 {contactMenuItems.map(({ contact, Icon, type }) => (
-                  <div className="flex items-center px-4 py-3 justify-between text-gray-700 gap-10 w-72">
+                  <div
+                    key={contact}
+                    className="flex items-center px-4 py-3 justify-between text-gray-700 gap-10 w-72"
+                  >
                     <span className="flex items-center gap-2">
                       <span>
                         <span className="sr-only">{type}</span>
