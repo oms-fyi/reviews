@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createVerification } from "../../lib/twilio/api";
-import { EDU_DOMAIN } from "../../constants";
 
 const TWILIO_VERIFY_ERROR_CODES = {
   INVALID_PARAMETER: 60200, // https://www.twilio.com/docs/api/errors/60200
@@ -29,17 +28,15 @@ export default async function handler(
     return;
   }
 
-  const email = `${username}@${EDU_DOMAIN}`;
-
   try {
-    await createVerification(email);
+    await createVerification(username);
     res.status(201).json({});
   } catch (error: any) {
     switch (error.code) {
       case TWILIO_VERIFY_ERROR_CODES.INVALID_PARAMETER:
-        res
-          .status(400)
-          .json({ error: `${email} does not seem to be a valid email` });
+        res.status(400).json({
+          error: `${username}@gatech.edu isn't a valid email`,
+        });
         break;
       case TWILIO_VERIFY_ERROR_CODES.MAX_ATTEMPTS_REACHED:
         res.status(400).json({
