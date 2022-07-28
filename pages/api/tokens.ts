@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createVerification } from "../../lib/twilio/api";
+import { EDU_DOMAIN } from "../../constants";
 
 const TWILIO_VERIFY_ERROR_CODES = {
   INVALID_PARAMETER: 60200, // https://www.twilio.com/docs/api/errors/60200
@@ -9,7 +10,7 @@ const TWILIO_VERIFY_ERROR_CODES = {
 
 type ResponseData = {} | { error: string };
 type Payload = {
-  email?: string;
+  username?: string;
 };
 
 export default async function handler(
@@ -21,12 +22,14 @@ export default async function handler(
     res.status(405).json({});
   }
 
-  const { email } = req.body as Payload;
+  const { username } = req.body as Payload;
 
-  if (typeof email === "undefined") {
-    res.status(400).json({ error: "Email required" });
+  if (typeof username === "undefined") {
+    res.status(400).json({ error: "GATech username required" });
     return;
   }
+
+  const email = `${username}@${EDU_DOMAIN}`;
 
   try {
     await createVerification(email);
@@ -45,7 +48,7 @@ export default async function handler(
         break;
       default:
         res
-          .status(400)
+          .status(500)
           .json({ error: `Unknown Error: ${(error as Error).message}` });
     }
   }
