@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { sendCodeToUser } from "../../lib/twilio/api";
+import sendCodeToUser from "../../lib/twilio/api";
 
 const TWILIO_VERIFY_ERROR_CODES = {
   INVALID_PARAMETER: 60200, // https://www.twilio.com/docs/api/errors/60200
@@ -40,7 +40,7 @@ export default async function handler(
         break;
       case TWILIO_VERIFY_ERROR_CODES.MAX_ATTEMPTS_REACHED:
         res.status(400).json({
-          error: `Max send attempts reached. Please try again later.`,
+          error: "Max send attempts reached. Please try again later.",
         });
         break;
       default:

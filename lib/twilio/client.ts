@@ -9,4 +9,4 @@ if (!accountSid || !authToken) {
 
 const twilioClient = clientFactory(accountSid, authToken);
 
-export { twilioClient };
+export default twilioClient;

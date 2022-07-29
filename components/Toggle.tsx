@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { Switch } from "@headlessui/react";
 import classNames from "classnames";
 
@@ -8,11 +7,11 @@ interface ToggleProps {
   label: string;
 }
 
-export const Toggle: FC<ToggleProps> = function Toggle({
+export default function Toggle({
   enabled,
   onChange,
   label,
-}) {
+}: ToggleProps): JSX.Element {
   return (
     <Switch.Group as="div" className="flex items-center">
       <Switch
@@ -36,4 +35,4 @@ export const Toggle: FC<ToggleProps> = function Toggle({
       </Switch.Label>
     </Switch.Group>
   );
-};
+}

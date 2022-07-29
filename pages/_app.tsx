@@ -1,15 +1,15 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import type { AppProps } from "next/app";
 import Script from "next/script";
 import Head from "next/head";
 
 import "../styles/globals.css";
-import { Header } from "../components/Header";
+import Header from "../components/Header";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
-const MyApp: FC<AppProps> = function MyApp({ Component, pageProps }) {
+export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [isDarkModePreferred, setIsDarkModePreferred] = useState<boolean>();
 
   useEffect(() => {
@@ -78,6 +78,4 @@ const MyApp: FC<AppProps> = function MyApp({ Component, pageProps }) {
       )}
     </>
   );
-};
-
-export default MyApp;
+}

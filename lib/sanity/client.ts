@@ -17,4 +17,4 @@ const sanityClient = clientFactory({
   apiVersion,
 });
 
-export { sanityClient };
+export default sanityClient;

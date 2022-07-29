@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
+import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 
 import ReactMarkdown from "react-markdown";
@@ -15,7 +15,7 @@ import {
   getCourse,
   getCourseCodes,
 } from "../../../lib/sanity";
-import { average } from "../../../lib/stats";
+import average from "../../../lib/stats";
 
 interface ReviewsPathParams {
   courseCode: Course["code"];
@@ -50,9 +50,9 @@ export const getStaticProps: GetStaticProps<
   return { props: { course } };
 };
 
-const Reviews: NextPage<ReviewsPageProps> = function Reviews({
+export default function Reviews({
   course: { code, name, reviews },
-}) {
+}: ReviewsPageProps): JSX.Element {
   const avgRating = useMemo(() => average(reviews, "rating"), [reviews]);
   const avgDifficulty = useMemo(
     () => average(reviews, "difficulty"),
@@ -149,6 +149,4 @@ const Reviews: NextPage<ReviewsPageProps> = function Reviews({
       </main>
     </>
   );
-};
-
-export default Reviews;
+}

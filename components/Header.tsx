@@ -1,4 +1,4 @@
-import { FC, Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -49,7 +49,7 @@ const githubMenuItems = [
   },
 ];
 
-export const Header: FC = function Header() {
+export default function Header(): JSX.Element {
   const router = useRouter();
   const [copiedContactInfo, setCopiedContactInfo] = useState<string>();
 
@@ -300,7 +300,10 @@ export const Header: FC = function Header() {
                       onClick={() => copyContactInfoToClipboard(contact)}
                       className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
-                      <span className="sr-only">Copy {type} to clipboard</span>
+                      <span className="sr-only">
+                        Copy
+                        {type} to clipboard
+                      </span>
                       {copiedContactInfo === contact ? (
                         <CheckCircleIcon
                           className="text-green-600 h-5 w-5"
@@ -336,4 +339,4 @@ export const Header: FC = function Header() {
       )}
     </Disclosure>
   );
-};
+}

@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 
@@ -7,10 +6,10 @@ interface SortIconProps {
   direction: "asc" | "desc";
 }
 
-export const SortIcon: FC<SortIconProps> = function SortIcon({
+export default function SortIcon({
   active,
   direction,
-}) {
+}: SortIconProps): JSX.Element {
   return (
     <span
       className={classNames("ml-2 flex-none rounded", {
@@ -26,4 +25,4 @@ export const SortIcon: FC<SortIconProps> = function SortIcon({
       )}
     </span>
   );
-};
+}

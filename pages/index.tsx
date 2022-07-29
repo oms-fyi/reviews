@@ -1,6 +1,6 @@
 import { Fragment, FC, useState, useEffect, useMemo } from "react";
 
-import type { NextPage, GetStaticProps } from "next";
+import type { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -12,13 +12,13 @@ import Fuse from "fuse.js";
 
 import classNames from "classnames";
 
-import { Input } from "../components/Input";
-import { SortIcon } from "../components/SortIcon";
+import Input from "../components/Input";
+import SortIcon from "../components/SortIcon";
 
 import type { CourseWithReviewsStats, Course, Review } from "../@types";
 import { CourseEnrichmentOption, getCourses } from "../lib/sanity";
-import { Toggle } from "../components/Toggle";
-import { average } from "../lib/stats";
+import Toggle from "../components/Toggle";
+import average from "../lib/stats";
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];
@@ -208,7 +208,7 @@ type CourseStats = {
   };
 };
 
-const Home: NextPage<HomePageProps> = function Home({ courses }) {
+export default function Home({ courses }: HomePageProps): JSX.Element {
   const stats = useMemo<CourseStats>(
     () =>
       courses.reduce(
@@ -401,235 +401,249 @@ const Home: NextPage<HomePageProps> = function Home({ courses }) {
                     className="block text-sm font-medium text-gray-700"
                   >
                     Search courses
-                  </label>
-                  <div className="mt-1 flex rounded-md shadow-sm">
-                    <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <SearchIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
+                    <div className="mt-1 flex rounded-md shadow-sm">
+                      <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <SearchIcon
+                            className="h-5 w-5 text-gray-400"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          name="search"
+                          id="search"
+                          value={searchInput}
+                          onChange={(e) =>
+                            setSearchInput(e.currentTarget.value)
+                          }
+                          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
+                          placeholder="HPCA"
                         />
                       </div>
-                      <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        value={searchInput}
-                        onChange={(e) => setSearchInput(e.currentTarget.value)}
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
-                        placeholder="HPCA"
-                      />
+                      <Popover className="relative">
+                        {({ open }) => (
+                          <>
+                            <Popover.Button
+                              type="button"
+                              className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                            >
+                              <FilterIcon
+                                className="h-5 w-5 text-gray-400"
+                                aria-hidden="true"
+                              />
+                              <span>{open ? "Done" : "Filter"}</span>
+                            </Popover.Button>
+                            <Transition
+                              as={Fragment}
+                              enter="transition ease-out duration-200"
+                              enterFrom="opacity-0 translate-y-1"
+                              enterTo="opacity-100 translate-y-0"
+                              leave="transition ease-in duration-150"
+                              leaveFrom="opacity-100 translate-y-0"
+                              leaveTo="opacity-0 translate-y-1"
+                            >
+                              <Popover.Panel className="absolute right-0 z-10 mt-3 px-4 sm:px-0">
+                                <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                                  <form className="bg-white p-7">
+                                    <div className="mb-6">
+                                      <p className="mb-4 text-xs text-gray-500 uppercase">
+                                        Filter by review count
+                                      </p>
+                                      <fieldset className="flex gap-2">
+                                        <legend className="sr-only">
+                                          Review Count
+                                        </legend>
+                                        <Input
+                                          id="minReview"
+                                          type="text"
+                                          label="Min Reviews"
+                                          placeholder="1"
+                                          defaultValue={getDefaultInputValue(
+                                            minReviewCount
+                                          )}
+                                          inputMode="decimal"
+                                          size={10}
+                                          onBlur={(e) => {
+                                            setMinReviewCount(
+                                              parseFloat(e.currentTarget.value)
+                                            );
+                                          }}
+                                        />
+                                        <Input
+                                          id="maxReview"
+                                          type="text"
+                                          label="Max Reviews"
+                                          placeholder="100"
+                                          size={10}
+                                          defaultValue={getDefaultInputValue(
+                                            maxReviewCount
+                                          )}
+                                          inputMode="decimal"
+                                          onBlur={(e) => {
+                                            setMaxReviewCount(
+                                              parseFloat(e.currentTarget.value)
+                                            );
+                                          }}
+                                        />
+                                      </fieldset>
+                                    </div>
+                                    <div className="mb-6">
+                                      <p className="mb-4 text-xs text-gray-500 uppercase">
+                                        Filter by stats
+                                      </p>
+                                      <div className="flex flex-col gap-6">
+                                        <fieldset className="flex gap-2">
+                                          <legend className="sr-only">
+                                            Rating
+                                          </legend>
+                                          <Input
+                                            id="minRating"
+                                            type="text"
+                                            label="Min Rating"
+                                            placeholder="1"
+                                            defaultValue={getDefaultInputValue(
+                                              minRating
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMinRating(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                          <Input
+                                            id="maxRating"
+                                            type="text"
+                                            label="Max Rating"
+                                            placeholder="5"
+                                            defaultValue={getDefaultInputValue(
+                                              maxRating
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMaxRating(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                        </fieldset>
+                                        <fieldset className="flex gap-2">
+                                          <legend className="sr-only">
+                                            Difficulty
+                                          </legend>
+                                          <Input
+                                            id="minDifficulty"
+                                            type="text"
+                                            label="Min Difficulty"
+                                            placeholder="1"
+                                            defaultValue={getDefaultInputValue(
+                                              minDifficulty
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMinDifficulty(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                          <Input
+                                            id="maxDifficulty"
+                                            type="text"
+                                            label="Max Difficulty"
+                                            placeholder="5"
+                                            defaultValue={getDefaultInputValue(
+                                              maxDifficulty
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMaxDifficulty(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                        </fieldset>
+                                        <fieldset className="flex gap-2">
+                                          <legend className="sr-only">
+                                            Workload
+                                          </legend>
+                                          <Input
+                                            id="minWorkload"
+                                            type="text"
+                                            label="Min Workload"
+                                            placeholder="10"
+                                            defaultValue={getDefaultInputValue(
+                                              minWorkload
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMinWorkload(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                          <Input
+                                            id="maxWorkload"
+                                            type="text"
+                                            label="Max Workload"
+                                            placeholder="20"
+                                            defaultValue={getDefaultInputValue(
+                                              maxWorkload
+                                            )}
+                                            size={10}
+                                            inputMode="decimal"
+                                            onBlur={(e) => {
+                                              setMaxWorkload(
+                                                parseFloat(
+                                                  e.currentTarget.value
+                                                )
+                                              );
+                                            }}
+                                          />
+                                        </fieldset>
+                                      </div>
+                                    </div>
+                                    <div className="mb-6">
+                                      <p className="mb-4 text-xs text-gray-500 uppercase">
+                                        Other Filters
+                                      </p>
+                                      <div className="flex flex-col gap-6">
+                                        <Toggle
+                                          enabled={onlyShowFoundational}
+                                          onChange={setOnlyShowFoundational}
+                                          label="Foundational only"
+                                        />
+                                        <Toggle
+                                          enabled={hideDeprecated}
+                                          onChange={setHideDeprecated}
+                                          label="Hide deprecated"
+                                        />
+                                      </div>
+                                    </div>
+                                  </form>
+                                </article>
+                              </Popover.Panel>
+                            </Transition>
+                          </>
+                        )}
+                      </Popover>
                     </div>
-                    <Popover className="relative">
-                      {({ open }) => (
-                        <>
-                          <Popover.Button
-                            type="button"
-                            className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                          >
-                            <FilterIcon
-                              className="h-5 w-5 text-gray-400"
-                              aria-hidden="true"
-                            />
-                            <span>{open ? "Done" : "Filter"}</span>
-                          </Popover.Button>
-                          <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0 translate-y-1"
-                            enterTo="opacity-100 translate-y-0"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100 translate-y-0"
-                            leaveTo="opacity-0 translate-y-1"
-                          >
-                            <Popover.Panel className="absolute right-0 z-10 mt-3 px-4 sm:px-0">
-                              <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                <form className="bg-white p-7">
-                                  <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
-                                      Filter by review count
-                                    </p>
-                                    <fieldset className="flex gap-2">
-                                      <legend className="sr-only">
-                                        Review Count
-                                      </legend>
-                                      <Input
-                                        id="minReview"
-                                        type="text"
-                                        label="Min Reviews"
-                                        placeholder="1"
-                                        defaultValue={getDefaultInputValue(
-                                          minReviewCount
-                                        )}
-                                        inputMode="decimal"
-                                        size={10}
-                                        onBlur={(e) => {
-                                          setMinReviewCount(
-                                            parseFloat(e.currentTarget.value)
-                                          );
-                                        }}
-                                      />
-                                      <Input
-                                        id="maxReview"
-                                        type="text"
-                                        label="Max Reviews"
-                                        placeholder="100"
-                                        size={10}
-                                        defaultValue={getDefaultInputValue(
-                                          maxReviewCount
-                                        )}
-                                        inputMode="decimal"
-                                        onBlur={(e) => {
-                                          setMaxReviewCount(
-                                            parseFloat(e.currentTarget.value)
-                                          );
-                                        }}
-                                      />
-                                    </fieldset>
-                                  </div>
-                                  <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
-                                      Filter by stats
-                                    </p>
-                                    <div className="flex flex-col gap-6">
-                                      <fieldset className="flex gap-2">
-                                        <legend className="sr-only">
-                                          Rating
-                                        </legend>
-                                        <Input
-                                          id="minRating"
-                                          type="text"
-                                          label="Min Rating"
-                                          placeholder="1"
-                                          defaultValue={getDefaultInputValue(
-                                            minRating
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMinRating(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                        <Input
-                                          id="maxRating"
-                                          type="text"
-                                          label="Max Rating"
-                                          placeholder="5"
-                                          defaultValue={getDefaultInputValue(
-                                            maxRating
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMaxRating(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                      </fieldset>
-                                      <fieldset className="flex gap-2">
-                                        <legend className="sr-only">
-                                          Difficulty
-                                        </legend>
-                                        <Input
-                                          id="minDifficulty"
-                                          type="text"
-                                          label="Min Difficulty"
-                                          placeholder="1"
-                                          defaultValue={getDefaultInputValue(
-                                            minDifficulty
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMinDifficulty(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                        <Input
-                                          id="maxDifficulty"
-                                          type="text"
-                                          label="Max Difficulty"
-                                          placeholder="5"
-                                          defaultValue={getDefaultInputValue(
-                                            maxDifficulty
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMaxDifficulty(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                      </fieldset>
-                                      <fieldset className="flex gap-2">
-                                        <legend className="sr-only">
-                                          Workload
-                                        </legend>
-                                        <Input
-                                          id="minWorkload"
-                                          type="text"
-                                          label="Min Workload"
-                                          placeholder="10"
-                                          defaultValue={getDefaultInputValue(
-                                            minWorkload
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMinWorkload(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                        <Input
-                                          id="maxWorkload"
-                                          type="text"
-                                          label="Max Workload"
-                                          placeholder="20"
-                                          defaultValue={getDefaultInputValue(
-                                            maxWorkload
-                                          )}
-                                          size={10}
-                                          inputMode="decimal"
-                                          onBlur={(e) => {
-                                            setMaxWorkload(
-                                              parseFloat(e.currentTarget.value)
-                                            );
-                                          }}
-                                        />
-                                      </fieldset>
-                                    </div>
-                                  </div>
-                                  <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
-                                      Other Filters
-                                    </p>
-                                    <div className="flex flex-col gap-6">
-                                      <Toggle
-                                        enabled={onlyShowFoundational}
-                                        onChange={setOnlyShowFoundational}
-                                        label="Foundational only"
-                                      />
-                                      <Toggle
-                                        enabled={hideDeprecated}
-                                        onChange={setHideDeprecated}
-                                        label="Hide deprecated"
-                                      />
-                                    </div>
-                                  </div>
-                                </form>
-                              </article>
-                            </Popover.Panel>
-                          </Transition>
-                        </>
-                      )}
-                    </Popover>
-                  </div>
+                  </label>
                 </div>
               </div>
               <div className="inline-block min-w-full py-4 align-middle">
@@ -789,6 +803,4 @@ const Home: NextPage<HomePageProps> = function Home({ courses }) {
       </main>
     </>
   );
-};
-
-export default Home;
+}
