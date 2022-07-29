@@ -12,6 +12,7 @@ if (SECRET === "") {
 
 async function readBody(readable: NextApiRequest): Promise<string> {
   const chunks = [];
+
   // eslint-disable-next-line no-restricted-syntax
   for await (const chunk of readable) {
     chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
@@ -44,18 +45,8 @@ export default async function handler(
       return;
     }
 
-    const payload: SanityWebhookPayload = JSON.parse(body);
-    const { _type: type } = payload;
-
-    switch (type) {
-      case "review":
-        await res.revalidate(`/courses/${payload.course.code}/reviews`);
-        break;
-      default:
-        res.status(400).json({ error: `Can't handle changes to type ${type}` });
-        return;
-    }
-
+    const payload = JSON.parse(body) as SanityWebhookPayload;
+    await res.revalidate(`/courses/${payload.course.code}/reviews`);
     res.json({ revalidated: true });
   } catch (err) {
     const errorMessage = (err as Error).message;
