@@ -63,11 +63,6 @@ export default function Header(): JSX.Element {
     };
   }, [copiedContactInfo]);
 
-  async function copyContactInfoToClipboard(contactInfo: string) {
-    await window.navigator.clipboard.writeText(contactInfo);
-    setCopiedContactInfo(contactInfo);
-  }
-
   return (
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
@@ -90,7 +85,8 @@ export default function Header(): JSX.Element {
                   <a href="replace" className="flex-shrink-0 flex items-center">
                     <div className="flex items-center gap-2">
                       <Image
-                        src={logo}
+                        // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
+                        src={logo as string}
                         alt="OMS Tech Logo"
                         width={32}
                         height={32}
@@ -155,9 +151,12 @@ export default function Header(): JSX.Element {
                                 ? { disabled: true }
                                 : {})}
                               type="button"
-                              onClick={() =>
-                                copyContactInfoToClipboard(contact)
-                              }
+                              onClick={() => {
+                                window.navigator.clipboard
+                                  .writeText(contact)
+                                  .then(() => setCopiedContactInfo(contact))
+                                  .catch(() => {});
+                              }}
                               className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                               <span className="sr-only">
@@ -297,7 +296,12 @@ export default function Header(): JSX.Element {
                         ? { disabled: true }
                         : {})}
                       type="button"
-                      onClick={() => copyContactInfoToClipboard(contact)}
+                      onClick={() => {
+                        window.navigator.clipboard
+                          .writeText(contact)
+                          .then(() => setCopiedContactInfo(contact))
+                          .catch(() => {});
+                      }}
                       className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       <span className="sr-only">
