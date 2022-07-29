@@ -44,6 +44,12 @@ export async function getCourseCodes(): Promise<CourseCodes> {
   return response;
 }
 
+type ResponseType = {
+  [CourseEnrichmentOption.NONE]: Course;
+  [CourseEnrichmentOption.STATS]: CourseWithReviewsStats;
+  [CourseEnrichmentOption.REVIEWS]: CourseWithReviewsFull;
+};
+
 export async function getCourse(
   code: Course["code"],
   enrichmentOption: CourseEnrichmentOption.NONE
@@ -69,7 +75,7 @@ export async function getCourse(
   const { department, number } = match.groups ?? {};
 
   if (!department || !number) {
-    throw new Error(`Can't parse department or number: ${match}`);
+    throw new Error(`Can't parse department or number from code: ${code}`);
   }
 
   const query = `
@@ -82,7 +88,13 @@ export async function getCourse(
     }[0]
   `;
 
-  const response = sanityClient.fetch(query, { department, number });
+  const response = sanityClient.fetch<ResponseType[typeof enrichmentOption]>(
+    query,
+    {
+      department,
+      number,
+    }
+  );
   return response;
 }
 
@@ -97,7 +109,7 @@ export async function getCourses(
 ): Promise<CourseWithReviewsFull[]>;
 export async function getCourses(
   enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
-): Promise<(Course | CourseWithReviewsStats | CourseWithReviewsFull)[]> {
+): Promise<ResponseType[typeof enrichmentOption][]> {
   const query = `
     *[_type == 'course']{
       ...,
@@ -107,6 +119,7 @@ export async function getCourses(
     }
   `;
 
-  const response = sanityClient.fetch(query);
+  const response =
+    sanityClient.fetch<ResponseType[typeof enrichmentOption][]>(query);
   return response;
 }
