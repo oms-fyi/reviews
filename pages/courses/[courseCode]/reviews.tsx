@@ -19,7 +19,7 @@ import average from "../../../lib/stats";
 
 interface ReviewsPathParams {
   courseCode: Course["code"];
-  [key: string]: any;
+  [key: string]: string | string[];
 }
 
 interface ReviewsPageProps {
