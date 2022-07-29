@@ -311,10 +311,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
               return stats[a.code].rating - stats[b.code].rating;
             case "difficulty":
               return stats[a.code].difficulty - stats[b.code].difficulty;
-            case "workload":
-              return stats[a.code].workload - stats[b.code].workload;
             default:
-              throw new Error(`can't sort by ${attribute}`);
+              return stats[a.code].workload - stats[b.code].workload;
           }
         })(sort.attribute);
 
