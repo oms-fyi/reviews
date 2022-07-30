@@ -1,38 +1,39 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
+import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 
-import { Course } from "../../@types";
+import { Course } from '../../@types';
 
-const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";
+const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? '';
 
-if (SECRET === "") {
-  throw new Error("Cannot read Sanity Webhook Secret!");
+if (SECRET === '') {
+  throw new Error('Cannot read Sanity Webhook Secret!');
 }
 
 async function readBody(readable: NextApiRequest): Promise<string> {
   const chunks = [];
+
   // eslint-disable-next-line no-restricted-syntax
   for await (const chunk of readable) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   }
 
-  return Buffer.concat(chunks).toString("utf8");
+  return Buffer.concat(chunks).toString('utf8');
 }
 
 type SanityWebhookPayload = {
-  _type: "review";
-  course: Pick<Course, "code">;
+  _type: 'review';
+  course: Pick<Course, 'code'>;
 };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ revalidated: true } | { error: string }>
+  res: NextApiResponse<{ revalidated: true } | { error: string }>,
 ) {
   const signature = req.headers[SIGNATURE_HEADER_NAME];
 
-  if (typeof signature !== "string") {
-    res.status(401).json({ error: "Invalid signature" });
+  if (typeof signature !== 'string') {
+    res.status(401).json({ error: 'Invalid signature' });
     return;
   }
 
@@ -40,22 +41,12 @@ export default async function handler(
     const body = await readBody(req);
 
     if (!isValidSignature(body, signature, SECRET)) {
-      res.status(401).json({ error: "Invalid signature" });
+      res.status(401).json({ error: 'Invalid signature' });
       return;
     }
 
-    const payload: SanityWebhookPayload = JSON.parse(body);
-    const { _type: type } = payload;
-
-    switch (type) {
-      case "review":
-        await res.revalidate(`/courses/${payload.course.code}/reviews`);
-        break;
-      default:
-        res.status(400).json({ error: `Can't handle changes to type ${type}` });
-        return;
-    }
-
+    const payload = JSON.parse(body) as SanityWebhookPayload;
+    await res.revalidate(`/courses/${payload.course.code}/reviews`);
     res.json({ revalidated: true });
   } catch (err) {
     const errorMessage = (err as Error).message;

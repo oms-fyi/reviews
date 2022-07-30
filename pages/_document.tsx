@@ -1,6 +1,8 @@
-import { Html, Head, Main, NextScript } from "next/document";
+import {
+  Html, Head, Main, NextScript,
+} from 'next/document';
 
-const MyDocument = function MyDocument(): JSX.Element {
+export default function Document(): JSX.Element {
   return (
     <Html className="h-full">
       <Head />
@@ -10,6 +12,4 @@ const MyDocument = function MyDocument(): JSX.Element {
       </body>
     </Html>
   );
-};
-
-export default MyDocument;
+}
