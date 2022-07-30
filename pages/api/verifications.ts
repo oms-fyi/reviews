@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry, captureException } from '@sentry/nextjs';
 
 import { sendCodeToUser, SendCodeResponse } from '../../src/twilio';
 
@@ -7,7 +8,7 @@ type Payload = {
   username?: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
@@ -34,6 +35,9 @@ export default async function handler(
       res.status(400).json({ error: 'Too many send attempts' });
     }
   } catch (error: unknown) {
-    res.status(500).json({ error: `Unknown error: ${String(error)}` });
+    res.status(500).json({ error: 'Error generating token. Try again later.' });
+    captureException(error);
   }
 }
+
+export default withSentry(handler);

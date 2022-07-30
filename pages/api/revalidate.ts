@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry, captureException } from '@sentry/nextjs';
 
 import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 
@@ -26,7 +27,7 @@ type SanityWebhookPayload = {
   course: Pick<Course, 'code'>;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ revalidated: true } | { error: string }>,
 ) {
@@ -49,9 +50,8 @@ export default async function handler(
     await res.revalidate(`/courses/${payload.course.code}/reviews`);
     res.json({ revalidated: true });
   } catch (err) {
-    const errorMessage = (err as Error).message;
-
-    res.status(500).json({ error: `Error revalidating: ${errorMessage}` });
+    res.status(500).json({ error: 'Error revalidating. Try again later.' });
+    captureException(err);
   }
 }
 
@@ -60,3 +60,5 @@ export const config = {
     bodyParser: false,
   },
 };
+
+export default withSentry(handler);
