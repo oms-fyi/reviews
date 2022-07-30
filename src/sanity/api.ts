@@ -3,7 +3,7 @@ import {
   Course,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
-} from '../../@types';
+} from '../@types';
 
 export enum CourseEnrichmentOption {
   NONE, // just course data
