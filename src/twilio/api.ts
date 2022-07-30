@@ -9,7 +9,7 @@ export enum SendCodeResponse {
   MAX_ATTEMPTS_REACHED,
 }
 
-export default async function sendCodeToUser(
+export async function sendCodeToUser(
   username: string,
 ): Promise<SendCodeResponse> {
   const email = `${username}@gatech.edu`;

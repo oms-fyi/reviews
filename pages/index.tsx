@@ -17,10 +17,10 @@ import classNames from 'classnames';
 import Input from '../components/Input';
 import SortIcon from '../components/SortIcon';
 
-import type { CourseWithReviewsStats, Course, Review } from '../@types';
-import { CourseEnrichmentOption, getCourses } from '../lib/sanity';
+import type { CourseWithReviewsStats, Course, Review } from '../src/@types';
+import { CourseEnrichmentOption, getCourses } from '../src/sanity';
 import Toggle from '../components/Toggle';
-import average from '../lib/stats';
+import average from '../src/stats';
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];

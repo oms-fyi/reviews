@@ -1,3 +1,1 @@
-import sendCodeToUser from './api';
-
-export default sendCodeToUser;
+export * from './api';

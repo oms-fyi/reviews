@@ -21,7 +21,7 @@ import {
 import { PlusSmIcon } from '@heroicons/react/solid';
 
 import logo from '../public/logo.svg';
-import { PHONE_NUMBER, EMAIL_ADDRESS } from '../constants';
+import { PHONE_NUMBER, EMAIL_ADDRESS } from '../src/constants';
 
 const contactMenuItems = [
   {

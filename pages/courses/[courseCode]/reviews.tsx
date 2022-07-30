@@ -9,13 +9,13 @@ import rehypeSanitize from 'rehype-sanitize';
 import format from 'date-fns/format';
 import { CalendarIcon, PencilAltIcon } from '@heroicons/react/outline';
 
-import type { Course, CourseWithReviewsFull } from '../../../@types';
+import type { Course, CourseWithReviewsFull } from '../../../src/@types';
 import {
   CourseEnrichmentOption,
   getCourse,
   getCourseCodes,
-} from '../../../lib/sanity';
-import average from '../../../lib/stats';
+} from '../../../src/sanity';
+import average from '../../../src/stats';
 
 interface ReviewsPathParams {
   courseCode: Course['code'];
