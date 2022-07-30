@@ -1,9 +1,9 @@
-import { Review } from "../../@types";
+import { Review } from '../../@types';
 
 // MAY RETURN NaN
 const average = (
-  reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
-  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
+  reviews: Pick<Review, 'rating' | 'difficulty' | 'workload'>[],
+  key: keyof Pick<Review, 'rating' | 'difficulty' | 'workload'>,
 ): number => {
   let sum = 0;
   let count = 0;

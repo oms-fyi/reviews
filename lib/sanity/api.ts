@@ -1,9 +1,9 @@
-import sanityClient from "./client";
+import sanityClient from './client';
 import {
   Course,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
-} from "../../@types";
+} from '../../@types';
 
 export enum CourseEnrichmentOption {
   NONE, // just course data
@@ -12,7 +12,7 @@ export enum CourseEnrichmentOption {
 }
 
 function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
-  if (enrichmentOption === CourseEnrichmentOption.NONE) return "";
+  if (enrichmentOption === CourseEnrichmentOption.NONE) return '';
 
   return `"reviews": *[_type == 'review' && references(^._id)]{
     "id": _id,
@@ -21,17 +21,17 @@ function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
     difficulty,
     workload,
     ${
-      enrichmentOption === CourseEnrichmentOption.REVIEWS
-        ? `
+  enrichmentOption === CourseEnrichmentOption.REVIEWS
+    ? `
       ...,
       semester->
     `
-        : ""
-    }
+    : ''
+}
   } | order(created desc)`;
 }
 
-type CourseCodes = Pick<Course, "code">[];
+type CourseCodes = Pick<Course, 'code'>[];
 
 export async function getCourseCodes(): Promise<CourseCodes> {
   const query = `
@@ -51,21 +51,21 @@ type ResponseType = {
 };
 
 export async function getCourse(
-  code: Course["code"],
+  code: Course['code'],
   enrichmentOption: CourseEnrichmentOption.NONE
 ): Promise<Course>;
 export async function getCourse(
-  code: Course["code"],
+  code: Course['code'],
   enrichmentOption: CourseEnrichmentOption.STATS
 ): Promise<CourseWithReviewsStats>;
 export async function getCourse(
-  code: Course["code"],
+  code: Course['code'],
   enrichmentOption: CourseEnrichmentOption.REVIEWS
 ): Promise<CourseWithReviewsFull>;
 export async function getCourse(
-  code: Course["code"],
-  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
-): Promise<Course | CourseWithReviewsStats | CourseWithReviewsFull> {
+  code: Course['code'],
+  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE,
+): Promise<ResponseType[typeof enrichmentOption]> {
   const match = code.match(/^(?<department>[A-z]+)-(?<number>.+)$/);
 
   if (!match) {
@@ -93,7 +93,7 @@ export async function getCourse(
     {
       department,
       number,
-    }
+    },
   );
   return response;
 }
@@ -108,7 +108,7 @@ export async function getCourses(
   enrichmentOption: CourseEnrichmentOption.REVIEWS
 ): Promise<CourseWithReviewsFull[]>;
 export async function getCourses(
-  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
+  enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE,
 ): Promise<ResponseType[typeof enrichmentOption][]> {
   const query = `
     *[_type == 'course']{
@@ -119,7 +119,6 @@ export async function getCourses(
     }
   `;
 
-  const response =
-    sanityClient.fetch<ResponseType[typeof enrichmentOption][]>(query);
+  const response = sanityClient.fetch<ResponseType[typeof enrichmentOption][]>(query);
   return response;
 }

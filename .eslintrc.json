@@ -1,18 +1,23 @@
 {
+  "root": true,
   "extends": [
     "next/core-web-vitals",
-    "airbnb",
-    "airbnb-typescript",
-    "airbnb/hooks",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:react/jsx-runtime",
-    "plugin:prettier/recommended"
+    "airbnb"
   ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "rules": {
-    "react/jsx-props-no-spreading": "off"
-  }
+  "overrides": [{
+    "files": ["**/*.ts", "**/*.tsx"],
+    "extends": [
+      "airbnb-typescript",
+      "airbnb/hooks",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      "plugin:react/jsx-runtime"
+    ],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    },
+    "rules": {
+      "react/jsx-props-no-spreading": "off"
+    }
+  }]
 }

@@ -1,7 +1,7 @@
-import RestException from "twilio/lib/base/RestException";
-import twilioClient from "./client";
+import RestException from 'twilio/lib/base/RestException';
+import twilioClient from './client';
 
-const VERIFY_SERVICE_SID = "VA8fe01f6ccca6c198aaaf592da51ad99c";
+const VERIFY_SERVICE_SID = 'VA8fe01f6ccca6c198aaaf592da51ad99c';
 
 export enum SendCodeResponse {
   SUCCESS,
@@ -10,7 +10,7 @@ export enum SendCodeResponse {
 }
 
 export default async function sendCodeToUser(
-  username: string
+  username: string,
 ): Promise<SendCodeResponse> {
   const email = `${username}@gatech.edu`;
 
@@ -18,7 +18,7 @@ export default async function sendCodeToUser(
     // https://www.twilio.com/docs/verify/email
     await twilioClient.verify.v2
       .services(VERIFY_SERVICE_SID)
-      .verifications.create({ to: email, channel: "email" });
+      .verifications.create({ to: email, channel: 'email' });
 
     return SendCodeResponse.SUCCESS;
   } catch (error: unknown) {

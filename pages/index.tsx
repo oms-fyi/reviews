@@ -1,24 +1,26 @@
-import { Fragment, FC, useState, useEffect, useMemo } from "react";
+import {
+  Fragment, FC, useState, useEffect, useMemo,
+} from 'react';
 
-import type { GetStaticProps } from "next";
-import Head from "next/head";
-import Link from "next/link";
+import type { GetStaticProps } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
 
-import { Popover, Transition } from "@headlessui/react";
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/solid";
-import { SearchIcon, FilterIcon } from "@heroicons/react/outline";
+import { Popover, Transition } from '@headlessui/react';
+import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/solid';
+import { SearchIcon, FilterIcon } from '@heroicons/react/outline';
 
-import Fuse from "fuse.js";
+import Fuse from 'fuse.js';
 
-import classNames from "classnames";
+import classNames from 'classnames';
 
-import Input from "../components/Input";
-import SortIcon from "../components/SortIcon";
+import Input from '../components/Input';
+import SortIcon from '../components/SortIcon';
 
-import type { CourseWithReviewsStats, Course, Review } from "../@types";
-import { CourseEnrichmentOption, getCourses } from "../lib/sanity";
-import Toggle from "../components/Toggle";
-import average from "../lib/stats";
+import type { CourseWithReviewsStats, Course, Review } from '../@types';
+import { CourseEnrichmentOption, getCourses } from '../lib/sanity';
+import Toggle from '../components/Toggle';
+import average from '../lib/stats';
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];
@@ -91,16 +93,25 @@ const Pagination: FC<PaginationProps> = function Pagination({
   return (
     <div className="bg-white px-4 py-3 flex flex-wrap items-center justify-center border-t border-gray-200 sm:px-6 gap-4">
       <p className="text-sm text-gray-700 md:w-full">
-        Showing{" "}
+        Showing
+        {' '}
         {resultCount ? (
           <>
-            <span className="font-medium">{rangeStart + 1}</span> to{" "}
-            <span className="font-medium">{rangeEnd}</span> of{" "}
+            <span className="font-medium">{rangeStart + 1}</span>
+            {' '}
+            to
+            {' '}
+            <span className="font-medium">{rangeEnd}</span>
+            {' '}
+            of
+            {' '}
           </>
         ) : (
-          ""
+          ''
         )}
-        <span className="font-medium">{resultCount}</span> courses
+        <span className="font-medium">{resultCount}</span>
+        {' '}
+        courses
       </p>
       <div className="md:grow">
         <span className="relative z-0 inline-flex items-center rounded-md">
@@ -111,15 +122,15 @@ const Pagination: FC<PaginationProps> = function Pagination({
               onClick={() => size !== pageSize && changePageSize(size)}
               className={classNames(
                 {
-                  "rounded-l-md": i === 0,
-                  "-ml-px": i > 0,
-                  "rounded-r-md": i === a.length - 1,
+                  'rounded-l-md': i === 0,
+                  '-ml-px': i > 0,
+                  'rounded-r-md': i === a.length - 1,
                 },
-                "relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
+                'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                 {
-                  "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
+                  'z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50':
                     size === pageSize,
-                }
+                },
               )}
             >
               {size}
@@ -142,38 +153,36 @@ const Pagination: FC<PaginationProps> = function Pagination({
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
-          {paginationChunks.map((chunks, i, a) =>
-            chunks
-              .map((page) => (
-                <button
-                  type="button"
-                  key={page}
-                  {...(page === pageNumber && { "aria-current": "page" })}
-                  onClick={() => onPageChange(page)}
-                  className={classNames(
-                    {
-                      "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
+          {paginationChunks.map((chunks, i, a) => chunks
+            .map((page) => (
+              <button
+                type="button"
+                key={page}
+                {...(page === pageNumber && { 'aria-current': 'page' })}
+                onClick={() => onPageChange(page)}
+                className={classNames(
+                  {
+                    'z-10 bg-indigo-50 border-indigo-500 text-indigo-600':
                         page === pageNumber,
-                    },
-                    "relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                  )}
-                >
-                  {page + 1}
-                </button>
-              ))
-              .concat(
-                i + 1 === a.length
-                  ? []
-                  : [
-                      <span
-                        key="..."
-                        className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium text-gray-700"
-                      >
-                        ...
-                      </span>,
-                    ]
-              )
-          )}
+                  },
+                  'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
+                )}
+              >
+                {page + 1}
+              </button>
+            ))
+            .concat(
+              i + 1 === a.length
+                ? []
+                : [
+                  <span
+                    key="..."
+                    className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium text-gray-700"
+                  >
+                    ...
+                  </span>,
+                ],
+            ))}
           <button
             type="button"
             {...(hasNextPage ? {} : { disabled: true })}
@@ -191,14 +200,13 @@ const Pagination: FC<PaginationProps> = function Pagination({
 
 interface SortConfig {
   attribute:
-    | keyof Pick<Course, "name">
-    | keyof Pick<Review, "rating" | "difficulty" | "workload">
-    | "reviewCount";
-  direction: "desc" | "asc";
+  | keyof Pick<Course, 'name'>
+  | keyof Pick<Review, 'rating' | 'difficulty' | 'workload'>
+  | 'reviewCount';
+  direction: 'desc' | 'asc';
 }
 
-const getDefaultInputValue = (value: number | undefined): string =>
-  typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
+const getDefaultInputValue = (value: number | undefined): string => (typeof value === 'undefined' || Number.isNaN(value) ? '' : value.toString());
 
 type CourseStats = {
   [code: string]: {
@@ -210,28 +218,26 @@ type CourseStats = {
 
 export default function Home({ courses }: HomePageProps): JSX.Element {
   const stats = useMemo<CourseStats>(
-    () =>
-      courses.reduce(
-        (d, { reviews, code }) => ({
-          ...d,
-          [code]: {
-            rating: average(reviews, "rating"),
-            difficulty: average(reviews, "difficulty"),
-            workload: average(reviews, "workload"),
-          },
-        }),
-        {}
-      ),
-    [courses]
+    () => courses.reduce(
+      (d, { reviews, code }) => ({
+        ...d,
+        [code]: {
+          rating: average(reviews, 'rating'),
+          difficulty: average(reviews, 'difficulty'),
+          workload: average(reviews, 'workload'),
+        },
+      }),
+      {},
+    ),
+    [courses],
   );
 
   const searchIndex = useMemo(
-    () =>
-      new Fuse(courses, {
-        keys: ["name", "aliases", "code"],
-        threshold: 0.4,
-      }),
-    [courses]
+    () => new Fuse(courses, {
+      keys: ['name', 'aliases', 'code'],
+      threshold: 0.4,
+    }),
+    [courses],
   );
 
   const [view, setView] = useState<CourseWithReviewsStats[]>([]);
@@ -255,7 +261,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   useEffect(() => {
     setView(
-      courses.filter(({ code, reviews, isDeprecated, isFoundational }) => {
+      courses.filter(({
+        code, reviews, isDeprecated, isFoundational,
+      }) => {
         function between(value: number, min: number, max: number): boolean {
           return Number.isNaN(value) ? true : value >= min && value <= max;
         }
@@ -266,15 +274,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
           between(
             reviews.length,
             minReviewCount || 0,
-            maxReviewCount || Infinity
-          ) &&
-          between(rating, minRating || 1, maxRating || 5) &&
-          between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
-          between(workload, minWorkload || 1, maxWorkload || 100) &&
-          (hideDeprecated ? isDeprecated === false : true) &&
-          (onlyShowFoundational ? isFoundational === true : true)
+            maxReviewCount || Infinity,
+          )
+          && between(rating, minRating || 1, maxRating || 5)
+          && between(difficulty, minDifficulty || 1, maxDifficulty || 5)
+          && between(workload, minWorkload || 1, maxWorkload || 100)
+          && (hideDeprecated ? isDeprecated === false : true)
+          && (onlyShowFoundational ? isFoundational === true : true)
         );
-      })
+      }),
     );
   }, [
     courses,
@@ -294,8 +302,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   // SORTING
   const [sorted, setSorted] = useState<CourseWithReviewsStats[]>([]);
   const [sort, setSort] = useState<SortConfig>({
-    attribute: "reviewCount",
-    direction: "desc",
+    attribute: 'reviewCount',
+    direction: 'desc',
   });
 
   useEffect(() => {
@@ -303,39 +311,39 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       [...view].sort((a, b) => {
         const comp = ((attribute) => {
           switch (attribute) {
-            case "name":
+            case 'name':
               return a.name.localeCompare(b.name);
-            case "reviewCount":
+            case 'reviewCount':
               return a.reviews.length - b.reviews.length;
-            case "rating":
+            case 'rating':
               return stats[a.code].rating - stats[b.code].rating;
-            case "difficulty":
+            case 'difficulty':
               return stats[a.code].difficulty - stats[b.code].difficulty;
             default:
               return stats[a.code].workload - stats[b.code].workload;
           }
         })(sort.attribute);
 
-        return comp * (sort.direction === "asc" ? 1 : -1);
-      })
+        return comp * (sort.direction === 'asc' ? 1 : -1);
+      }),
     );
   }, [sort, view, stats]);
 
-  function toggleSort(attribute: SortConfig["attribute"]) {
+  function toggleSort(attribute: SortConfig['attribute']) {
     if (sort.attribute !== attribute) {
-      setSort({ attribute, direction: "asc" });
+      setSort({ attribute, direction: 'asc' });
     } else {
       setSort({
         attribute,
-        direction: sort.direction === "asc" ? "desc" : "asc",
+        direction: sort.direction === 'asc' ? 'desc' : 'asc',
       });
     }
   }
 
   // SEARCHING
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState<CourseWithReviewsStats[]>(
-    []
+    [],
   );
 
   useEffect(() => {
@@ -370,7 +378,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   const page = collection.slice(
     pageNumber * pageSize,
-    pageNumber * pageSize + pageSize
+    pageNumber * pageSize + pageSize,
   );
 
   return (
@@ -412,9 +420,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           name="search"
                           id="search"
                           value={searchInput}
-                          onChange={(e) =>
-                            setSearchInput(e.currentTarget.value)
-                          }
+                          onChange={(e) => setSearchInput(e.currentTarget.value)}
                           className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
                           placeholder="HPCA"
                         />
@@ -430,7 +436,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 className="h-5 w-5 text-gray-400"
                                 aria-hidden="true"
                               />
-                              <span>{open ? "Done" : "Filter"}</span>
+                              <span>{open ? 'Done' : 'Filter'}</span>
                             </Popover.Button>
                             <Transition
                               as={Fragment}
@@ -458,13 +464,13 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Reviews"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minReviewCount
+                                            minReviewCount,
                                           )}
                                           inputMode="decimal"
                                           size={10}
                                           onBlur={(e) => {
                                             setMinReviewCount(
-                                              parseFloat(e.currentTarget.value)
+                                              parseFloat(e.currentTarget.value),
                                             );
                                           }}
                                         />
@@ -475,12 +481,12 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           placeholder="100"
                                           size={10}
                                           defaultValue={getDefaultInputValue(
-                                            maxReviewCount
+                                            maxReviewCount,
                                           )}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxReviewCount(
-                                              parseFloat(e.currentTarget.value)
+                                              parseFloat(e.currentTarget.value),
                                             );
                                           }}
                                         />
@@ -501,15 +507,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Min Rating"
                                             placeholder="1"
                                             defaultValue={getDefaultInputValue(
-                                              minRating
+                                              minRating,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMinRating(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -519,15 +525,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Max Rating"
                                             placeholder="5"
                                             defaultValue={getDefaultInputValue(
-                                              maxRating
+                                              maxRating,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMaxRating(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -542,15 +548,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Min Difficulty"
                                             placeholder="1"
                                             defaultValue={getDefaultInputValue(
-                                              minDifficulty
+                                              minDifficulty,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMinDifficulty(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -560,15 +566,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Max Difficulty"
                                             placeholder="5"
                                             defaultValue={getDefaultInputValue(
-                                              maxDifficulty
+                                              maxDifficulty,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMaxDifficulty(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -583,15 +589,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Min Workload"
                                             placeholder="10"
                                             defaultValue={getDefaultInputValue(
-                                              minWorkload
+                                              minWorkload,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMinWorkload(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -601,15 +607,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                             label="Max Workload"
                                             placeholder="20"
                                             defaultValue={getDefaultInputValue(
-                                              maxWorkload
+                                              maxWorkload,
                                             )}
                                             size={10}
                                             inputMode="decimal"
                                             onBlur={(e) => {
                                               setMaxWorkload(
                                                 parseFloat(
-                                                  e.currentTarget.value
-                                                )
+                                                  e.currentTarget.value,
+                                                ),
                                               );
                                             }}
                                           />
@@ -659,11 +665,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <button
                             type="button"
                             className="group inline-flex"
-                            onClick={() => toggleSort("name")}
+                            onClick={() => toggleSort('name')}
                           >
                             Name
                             <SortIcon
-                              active={sort.attribute === "name"}
+                              active={sort.attribute === 'name'}
                               direction={sort.direction}
                             />
                           </button>
@@ -675,11 +681,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <button
                             type="button"
                             className="group inline-flex"
-                            onClick={() => toggleSort("rating")}
+                            onClick={() => toggleSort('rating')}
                           >
                             Rating
                             <SortIcon
-                              active={sort.attribute === "rating"}
+                              active={sort.attribute === 'rating'}
                               direction={sort.direction}
                             />
                           </button>
@@ -691,11 +697,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <button
                             type="button"
                             className="group inline-flex"
-                            onClick={() => toggleSort("difficulty")}
+                            onClick={() => toggleSort('difficulty')}
                           >
                             Difficulty
                             <SortIcon
-                              active={sort.attribute === "difficulty"}
+                              active={sort.attribute === 'difficulty'}
                               direction={sort.direction}
                             />
                           </button>
@@ -707,11 +713,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <button
                             type="button"
                             className="group inline-flex"
-                            onClick={() => toggleSort("workload")}
+                            onClick={() => toggleSort('workload')}
                           >
                             Workload
                             <SortIcon
-                              active={sort.attribute === "workload"}
+                              active={sort.attribute === 'workload'}
                               direction={sort.direction}
                             />
                           </button>
@@ -723,11 +729,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <button
                             type="button"
                             className="group inline-flex"
-                            onClick={() => toggleSort("reviewCount")}
+                            onClick={() => toggleSort('reviewCount')}
                           >
                             Reviews
                             <SortIcon
-                              active={sort.attribute === "reviewCount"}
+                              active={sort.attribute === 'reviewCount'}
                               direction={sort.direction}
                             />
                           </button>
@@ -735,10 +741,12 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {page.map(({ id, code, name, reviews }, index) => (
+                      {page.map(({
+                        id, code, name, reviews,
+                      }, index) => (
                         <tr
                           key={id}
-                          className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                          className={index % 2 === 0 ? undefined : 'bg-gray-50'}
                         >
                           <td className=" px-2 py-2 md:px-3 md:py-4 text-sm font-medium text-gray-500 sm:pl-6 ">
                             <span className="text-xs hidden sm:block">
@@ -766,17 +774,17 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
                             {stats[code].rating
                               ? stats[code].rating.toFixed(2)
-                              : "N/A"}
+                              : 'N/A'}
                           </td>
                           <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
                             {stats[code].difficulty
                               ? stats[code].difficulty.toFixed(2)
-                              : "N/A"}
+                              : 'N/A'}
                           </td>
                           <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
                             {stats[code].workload
                               ? stats[code].workload.toFixed(2)
-                              : "N/A"}
+                              : 'N/A'}
                           </td>
                           <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
                             {reviews.length}

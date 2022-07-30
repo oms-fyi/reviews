@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import type { AppProps } from "next/app";
-import Script from "next/script";
-import Head from "next/head";
+import type { AppProps } from 'next/app';
+import Script from 'next/script';
+import Head from 'next/head';
 
-import "../styles/globals.css";
-import Header from "../components/Header";
+import '../styles/globals.css';
+import Header from '../components/Header';
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
@@ -13,9 +13,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [isDarkModePreferred, setIsDarkModePreferred] = useState<boolean>();
 
   useEffect(() => {
-    const queryList = window.matchMedia("(prefers-color-scheme: dark)");
+    const queryList = window.matchMedia('(prefers-color-scheme: dark)');
 
-    if (typeof isDarkModePreferred === "undefined") {
+    if (typeof isDarkModePreferred === 'undefined') {
       setIsDarkModePreferred(queryList.matches);
       return function cleanup() {};
     }
@@ -24,10 +24,10 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       setIsDarkModePreferred(e.matches);
     }
 
-    queryList.addEventListener("change", listener);
+    queryList.addEventListener('change', listener);
 
     return function cleanup() {
-      queryList.removeEventListener("change", listener);
+      queryList.removeEventListener('change', listener);
     };
   }, [isDarkModePreferred]);
 
@@ -43,13 +43,13 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href={`/favicon-32x32${isDarkModePreferred ? "-dark" : ""}.png`}
+          href={`/favicon-32x32${isDarkModePreferred ? '-dark' : ''}.png`}
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href={`/favicon-16x16${isDarkModePreferred ? "-dark" : ""}.png`}
+          href={`/favicon-16x16${isDarkModePreferred ? '-dark' : ''}.png`}
         />
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
