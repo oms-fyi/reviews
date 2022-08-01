@@ -119,7 +119,13 @@ export default function Reviews({
             ({
               id, created, body, rating, difficulty, workload, semester,
             }) => (
-              <li key={id} className="py-4" />
+              <li key={id} className="py-4">
+                <div className="prose prose-sm">
+                  <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
+                    {body}
+                  </ReactMarkdown>
+                </div>
+              </li>
             ),
           )}
         </ul>
