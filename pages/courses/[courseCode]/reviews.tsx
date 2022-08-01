@@ -114,6 +114,15 @@ export default function Reviews({
             </dl>
           </div>
         </div>
+        <ul className="divide-y px-6 divide-gray-200">
+          {reviews.map(
+            ({
+              id, created, body, rating, difficulty, workload, semester,
+            }) => (
+              <li key={id} className="py-4" />
+            ),
+          )}
+        </ul>
       </main>
     </>
   );
