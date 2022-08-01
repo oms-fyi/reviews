@@ -71,7 +71,7 @@ export default function Reviews({
       <Head>
         <title>{`${code} | OMSCentral`}</title>
       </Head>
-      <main className="max-w-3xl m-auto pb-5 bg-white mt-10">
+      <main className="max-w-2xl m-auto pb-5 bg-white mt-10">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">
           <div className="sm:flex sm:items-center sm:justify-between">
             <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -120,13 +120,13 @@ export default function Reviews({
             </dl>
           </div>
         </div>
-        <ul className="divide-y px-6 divide-gray-200">
+        <ul className="divide-y px-6 divide-gray-200 prose prose-sm mx-auto">
           {reviews.map(
             ({
               id, created, body, rating, difficulty, workload, semester,
             }) => (
               <li key={id} className="py-4">
-                <div className="prose prose-sm">
+                <div>
                   <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
                     {body}
                   </ReactMarkdown>
