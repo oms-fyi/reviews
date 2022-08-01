@@ -61,28 +61,16 @@ export default function Reviews({
   const avgWorkload = useMemo(() => average(reviews, 'workload'), [reviews]);
 
   return (
-    <>
-      <Head>
-        <title>{`${code} | OMSCentral`}</title>
-      </Head>
-      <main className="max-w-3xl m-auto pb-5 bg-white mt-10">
-        <ul className="divide-y px-6 divide-gray-200">
-          {reviews.map(
-            ({
-              id, created, body, rating, difficulty, workload, semester,
-            }) => (
-              <li key={id} className="py-4">
-                <p className="text-gray-500 mt-2 flex items-center text-xs">
-                  <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  Review submitted:
-                  {' '}
-                  {format(new Date(created), 'MMMM dd, yyyy')}
-                </p>
-              </li>
-            ),
-          )}
-        </ul>
-      </main>
-    </>
+    <ul>
+      {reviews.map(
+        ({
+          id, created, body, rating, difficulty, workload, semester,
+        }) => (
+          <li key={id}>
+            {format(new Date(created), 'MMMM dd, yyyy')}
+          </li>
+        ),
+      )}
+    </ul>
   );
 }

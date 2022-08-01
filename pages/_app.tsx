@@ -56,7 +56,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
-      <Header />
       <Component {...pageProps} />
       {analyticsId && (
         <>
