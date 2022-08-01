@@ -33,7 +33,7 @@ export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
   }));
 
   return {
-    paths,
+    paths: [{ params: { courseCode: 'CS-6150' } }],
     fallback: false,
   };
 };
