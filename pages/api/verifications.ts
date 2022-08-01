@@ -15,6 +15,7 @@ async function handler(
   if (req.method !== 'POST') {
     // Method Not Allowed, only accepting POST.
     res.status(405).json({});
+    return;
   }
 
   const { username } = req.body as Payload;
