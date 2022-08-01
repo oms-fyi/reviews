@@ -36,3 +36,41 @@ export async function sendCodeToUser(
     }
   }
 }
+
+export enum CheckCodeResponse {
+  SUCCESS,
+  NO_MATCH,
+  NOT_FOUND,
+}
+
+export async function doesUserCodeMatch(
+  username: string,
+  code: string,
+): Promise<CheckCodeResponse> {
+  const email = `${username}@gatech.edu`;
+
+  try {
+    // https://www.twilio.com/docs/verify/api/verification-check
+    const verificationCheck = await twilioClient.verify.v2
+      .services(VERIFY_SERVICE_SID)
+      .verificationChecks.create({ to: email, code });
+
+    // Unfortunately, `status` is typed only as string, but the API docs give us
+    // more clarity on the expected values.
+    // > The status of the verification. Can be: pending, approved, or canceled.
+    if (verificationCheck.status === 'approved') {
+      return CheckCodeResponse.SUCCESS;
+    }
+
+    return CheckCodeResponse.NO_MATCH;
+  } catch (error: unknown) {
+    if (error instanceof RestException) {
+      // https://www.twilio.com/docs/verify/api/verification-check#check-a-verification
+      if (error.status === 404) {
+        return CheckCodeResponse.NOT_FOUND;
+      }
+    }
+
+    throw error;
+  }
+}

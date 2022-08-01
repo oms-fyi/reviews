@@ -3,7 +3,11 @@ import {
   Course,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
+  Review,
+  Semester,
 } from '../@types';
+
+import encrypt from '../encryption';
 
 export enum CourseEnrichmentOption {
   NONE, // just course data
@@ -41,6 +45,58 @@ export async function getCourseCodes(): Promise<CourseCodes> {
   `;
 
   const response = await sanityClient.fetch<CourseCodes>(query);
+  return response;
+}
+
+type SanityReference = {
+  _ref: string;
+};
+
+export type CreateReviewRequest = {
+  rating: NonNullable<Review['rating']>;
+  difficulty: NonNullable<Review['difficulty']>;
+  workload: NonNullable<Review['workload']>;
+  body: Review['body'];
+  courseId: Course['id'];
+  semesterId: Semester['id'];
+  username: string;
+};
+
+export async function createReview({
+  semesterId,
+  courseId,
+  username,
+  ...review
+}: CreateReviewRequest) {
+  type CreateReviewSanityRequest = Omit<
+  CreateReviewRequest,
+  'courseId' | 'semesterId' | 'username'
+  > & {
+    course: SanityReference;
+    semester: SanityReference;
+  } & {
+    authorId: NonNullable<Review['authorId']>;
+  };
+
+  const authorId = encrypt(username);
+
+  const request = {
+    _type: 'review',
+    authorId,
+    ...review,
+    course: {
+      _ref: courseId,
+      _type: 'reference',
+    },
+    semester: {
+      _ref: semesterId,
+      _type: 'reference',
+    },
+  };
+
+  // Will throw ClientError if references are non-existent.
+  // Will not catch at this time.
+  const response = sanityClient.create<CreateReviewSanityRequest>(request);
   return response;
 }
 
