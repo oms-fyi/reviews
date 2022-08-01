@@ -142,6 +142,18 @@ export default function Reviews({
                     {workload ? `${workload} hours / week` : 'N/A'}
                   </span>
                 </div>
+                {semester && (
+                <p className="text-gray-500 mt-2 flex items-center text-xs">
+                  <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                  <span className="capitalize">
+                    Semester:
+                    {' '}
+                    {semester.term}
+                    {' '}
+                    {new Date(semester.startDate).getFullYear()}
+                  </span>
+                </p>
+                )}
               </li>
             ),
           )}
