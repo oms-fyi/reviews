@@ -114,56 +114,6 @@ export default function Reviews({
             </dl>
           </div>
         </div>
-        <ul className="divide-y px-6 divide-gray-200">
-          {reviews.map(
-            ({
-              id, created, body, rating, difficulty, workload, semester,
-            }) => (
-              <li key={id} className="py-4">
-                <div className="prose prose-sm">
-                  <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-                    {body}
-                  </ReactMarkdown>
-                </div>
-                <div className="py-2 flex flex-row gap-2 items-start">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Rating:
-                    {' '}
-                    {rating ? `${rating} / 5` : 'N/A'}
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Difficulty:
-                    {' '}
-                    {difficulty ? `${difficulty} / 5` : 'N/A'}
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Workload:
-                    {' '}
-                    {workload ? `${workload} hours / week` : 'N/A'}
-                  </span>
-                </div>
-                {semester && (
-                <p className="text-gray-500 mt-2 flex items-center text-xs">
-                  <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  <span className="capitalize">
-                    Semester:
-                    {' '}
-                    {semester.term}
-                    {' '}
-                    {new Date(semester.startDate).getFullYear()}
-                  </span>
-                </p>
-                )}
-                <p className="text-gray-500 mt-2 flex items-center text-xs">
-                  <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  Review submitted:
-                  {' '}
-                  {format(new Date(created), 'MMMM dd, yyyy')}
-                </p>
-              </li>
-            ),
-          )}
-        </ul>
       </main>
     </>
   );
