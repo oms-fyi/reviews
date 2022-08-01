@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
@@ -59,6 +59,12 @@ export default function Reviews({
     [reviews],
   );
   const avgWorkload = useMemo(() => average(reviews, 'workload'), [reviews]);
+
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   return (
     <>
@@ -156,9 +162,7 @@ export default function Reviews({
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
                   <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  Review submitted:
-                  {' '}
-                  {format(new Date(created), 'MMMM dd, yyyy')}
+                  {`Review submitted: ${hasMounted ? format(new Date(created), 'MMMM dd, yyyy') : created}`}
                 </p>
               </li>
             ),
