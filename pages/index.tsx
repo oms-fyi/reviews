@@ -6,16 +6,17 @@ import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import { Popover, Transition } from '@headlessui/react';
-import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/solid';
-import { SearchIcon, FilterIcon } from '@heroicons/react/outline';
+import { Popover, Transition, Listbox } from '@headlessui/react';
+import { ChevronRightIcon, ChevronLeftIcon, SelectorIcon } from '@heroicons/react/solid';
+import {
+  SearchIcon, FilterIcon, ChevronUpIcon, ChevronDownIcon,
+} from '@heroicons/react/outline';
 
 import Fuse from 'fuse.js';
 
 import classNames from 'classnames';
 
 import Input from '../components/Input';
-import SortIcon from '../components/SortIcon';
 
 import type { CourseWithReviewsStats, Course, Review } from '../src/@types';
 import { CourseEnrichmentOption, getCourses } from '../src/sanity';
@@ -198,14 +199,6 @@ const Pagination: FC<PaginationProps> = function Pagination({
   );
 };
 
-interface SortConfig {
-  attribute:
-  | keyof Pick<Course, 'name'>
-  | keyof Pick<Review, 'rating' | 'difficulty' | 'workload'>
-  | 'reviewCount';
-  direction: 'desc' | 'asc';
-}
-
 const getDefaultInputValue = (value: number | undefined): string => (typeof value === 'undefined' || Number.isNaN(value) ? '' : value.toString());
 
 type CourseStats = {
@@ -214,6 +207,22 @@ type CourseStats = {
     difficulty: number;
     workload: number;
   };
+};
+
+type SortableField = keyof Pick<Course, 'name'> | keyof Pick<Review, 'rating' | 'difficulty' | 'workload'> | 'reviewCount';
+type SortConfig = {
+  field: SortableField;
+  direction: 'desc' | 'asc'
+};
+
+const sortFieldsToLabels: {
+  [Property in SortableField]: string;
+} = {
+  name: 'Name',
+  rating: 'Rating',
+  difficulty: 'Difficulty',
+  workload: 'Workload',
+  reviewCount: '# of Reviews',
 };
 
 export default function Home({ courses }: HomePageProps): JSX.Element {
@@ -302,7 +311,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   // SORTING
   const [sorted, setSorted] = useState<CourseWithReviewsStats[]>([]);
   const [sort, setSort] = useState<SortConfig>({
-    attribute: 'reviewCount',
+    field: 'reviewCount',
     direction: 'desc',
   });
 
@@ -322,19 +331,19 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
             default:
               return stats[a.code].workload - stats[b.code].workload;
           }
-        })(sort.attribute);
+        })(sort.field);
 
         return comp * (sort.direction === 'asc' ? 1 : -1);
       }),
     );
   }, [sort, view, stats]);
 
-  function toggleSort(attribute: SortConfig['attribute']) {
-    if (sort.attribute !== attribute) {
-      setSort({ attribute, direction: 'asc' });
+  function toggleSort(field: SortableField) {
+    if (sort.field !== field) {
+      setSort({ field, direction: 'asc' });
     } else {
       setSort({
-        attribute,
+        field,
         direction: sort.direction === 'asc' ? 'desc' : 'asc',
       });
     }
@@ -400,7 +409,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                   </p>
                 </div>
               </div>
-              <div className="flex justify-between items-end">
+              <div className="flex justify-between items-end gap-2">
                 <div>
                   <label
                     htmlFor="search"
@@ -411,7 +420,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       <div className="relative flex items-stretch flex-grow focus-within:z-10">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                           <SearchIcon
-                            className="h-5 w-5 text-gray-400"
+                            className="h-5 w-5 text-gray-400 hidden sm:block"
                             aria-hidden="true"
                           />
                         </div>
@@ -421,7 +430,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           id="search"
                           value={searchInput}
                           onChange={(e) => setSearchInput(e.currentTarget.value)}
-                          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full rounded-none rounded-l-md pl-10 sm:text-sm border-gray-300"
+                          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm sm:pl-10 border-gray-300"
                           placeholder="HPCA"
                         />
                       </div>
@@ -430,13 +439,13 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           <>
                             <Popover.Button
                               type="button"
-                              className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                              className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2.5 sm:py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             >
                               <FilterIcon
                                 className="h-5 w-5 text-gray-400"
                                 aria-hidden="true"
                               />
-                              <span>{open ? 'Done' : 'Filter'}</span>
+                              <span className="sr-only sm:not-sr-only">{open ? 'Done' : 'Filter'}</span>
                             </Popover.Button>
                             <Transition
                               as={Fragment}
@@ -649,6 +658,57 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                     </div>
                   </label>
                 </div>
+                <div>
+                  <Listbox value={sort.field} onChange={(field) => toggleSort(field)}>
+                    {({ open }) => (
+                      <>
+                        <Listbox.Label className="block text-sm font-medium text-gray-700">Sort by</Listbox.Label>
+                        <div className="mt-1 relative">
+                          <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <div className="flex gap-1 items-center">
+                              <span className="block truncate">{sortFieldsToLabels[sort.field]}</span>
+                              {sort.direction === 'asc' ? <ChevronUpIcon className="h-5 w-5" aria-hidden="true" /> : <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />}
+                            </div>
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                              <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </span>
+                          </Listbox.Button>
+
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            leave="transition ease-in duration-100"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                          >
+                            <Listbox.Options className="absolute right-0 z-10 mt-1 w-40 bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                              {Object.entries(sortFieldsToLabels).map(([field, label]) => (
+                                <Listbox.Option
+                                  key={field}
+                                  className={({ active }) => classNames({
+                                    'text-white bg-indigo-600': active,
+                                    'text-gray-900': !active,
+                                  }, 'cursor-default select-none relative py-2 pl-3 pr-9')}
+                                  value={field}
+                                >
+                                  {({ selected }) => (
+                                    <span className={classNames({
+                                      'font-semibold': selected,
+                                      'font-normal': !selected,
+                                    }, 'block truncate')}
+                                    >
+                                      {label}
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              ))}
+                            </Listbox.Options>
+                          </Transition>
+                        </div>
+                      </>
+                    )}
+                  </Listbox>
+                </div>
               </div>
               <div className="inline-block min-w-full py-4 align-middle">
                 <div className="shadow-sm ring-1 ring-black ring-opacity-5">
@@ -662,81 +722,31 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           scope="col"
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
-                          <button
-                            type="button"
-                            className="group inline-flex"
-                            onClick={() => toggleSort('name')}
-                          >
-                            Name
-                            <SortIcon
-                              active={sort.attribute === 'name'}
-                              direction={sort.direction}
-                            />
-                          </button>
+                          Name
                         </th>
                         <th
                           scope="col"
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
-                          <button
-                            type="button"
-                            className="group inline-flex"
-                            onClick={() => toggleSort('rating')}
-                          >
-                            Rating
-                            <SortIcon
-                              active={sort.attribute === 'rating'}
-                              direction={sort.direction}
-                            />
-                          </button>
+                          Rating
                         </th>
                         <th
                           scope="col"
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
-                          <button
-                            type="button"
-                            className="group inline-flex"
-                            onClick={() => toggleSort('difficulty')}
-                          >
-                            Difficulty
-                            <SortIcon
-                              active={sort.attribute === 'difficulty'}
-                              direction={sort.direction}
-                            />
-                          </button>
+                          Difficulty
                         </th>
                         <th
                           scope="col"
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
-                          <button
-                            type="button"
-                            className="group inline-flex"
-                            onClick={() => toggleSort('workload')}
-                          >
-                            Workload
-                            <SortIcon
-                              active={sort.attribute === 'workload'}
-                              direction={sort.direction}
-                            />
-                          </button>
+                          Workload
                         </th>
                         <th
                           scope="col"
                           className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                         >
-                          <button
-                            type="button"
-                            className="group inline-flex"
-                            onClick={() => toggleSort('reviewCount')}
-                          >
-                            Reviews
-                            <SortIcon
-                              active={sort.attribute === 'reviewCount'}
-                              direction={sort.direction}
-                            />
-                          </button>
+                          Reviews
                         </th>
                       </tr>
                     </thead>
