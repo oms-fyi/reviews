@@ -127,7 +127,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                   '-ml-px': i > 0,
                   'rounded-r-md': i === a.length - 1,
                 },
-                'relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                'relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                 {
                   'z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50':
                     size === pageSize,
@@ -149,7 +149,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
             {...(hasPrevPage ? {} : { disabled: true })}
             type="button"
             onClick={decrementPageNumber}
-            className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
+            className="relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
           >
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -166,7 +166,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                     'z-10 bg-indigo-50 border-indigo-500 text-indigo-600':
                         page === pageNumber,
                   },
-                  'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
+                  'relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border text-sm font-medium',
                 )}
               >
                 {page + 1}
@@ -178,7 +178,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                 : [
                   <span
                     key="..."
-                    className="relative inline-flex items-center px-4 py-2 border bg-white text-sm font-medium text-gray-700"
+                    className=" relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border bg-white text-sm font-medium text-gray-700"
                   >
                     ...
                   </span>,
@@ -188,7 +188,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
             type="button"
             {...(hasNextPage ? {} : { disabled: true })}
             onClick={incrementPageNumber}
-            className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
+            className="relative inline-flex items-center rounded-r-md px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
           >
             <span className="sr-only">Next</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -395,424 +395,412 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       <Head>
         <title>Home | OMSCentral</title>
       </Head>
-      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 mt-10">
+      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 py-10">
         <div className="px-4 sm:px-6 lg:px-8">
-          <div className="mt-8 flex flex-col">
-            <div className="-my-2 -mx-4 sm:-mx-6 lg:-mx-8">
-              <div className="sm:flex sm:items-center mb-10">
-                <div className="sm:flex-auto">
-                  <h1 className="text-2xl font-semibold text-gray-900">
-                    OMS Reviews
-                  </h1>
-                  <p className="mt-2 text-sm text-gray-700">
-                    Pick the best course for you this semester.
-                  </p>
-                </div>
-              </div>
-              <div className="flex justify-between items-end gap-2">
-                <div>
-                  <label
-                    htmlFor="search"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Search courses
-                    <div className="mt-1 flex rounded-md shadow-sm">
-                      <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <SearchIcon
-                            className="h-5 w-5 text-gray-400 hidden sm:block"
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          name="search"
-                          id="search"
-                          value={searchInput}
-                          onChange={(e) => setSearchInput(e.currentTarget.value)}
-                          className="focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm sm:pl-10 border-gray-300"
-                          placeholder="HPCA"
+          <div className="space-y-2 flex flex-col">
+            <div className="flex justify-between items-end gap-2">
+              <div>
+                <label
+                  htmlFor="search"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Search courses
+                  <div className="mt-1 flex rounded-md shadow-sm">
+                    <div className="relative flex items-stretch flex-grow focus-within:z-10">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <SearchIcon
+                          className="h-5 w-5 text-gray-400 hidden sm:block"
+                          aria-hidden="true"
                         />
                       </div>
-                      <Popover className="relative">
-                        {({ open }) => (
-                          <>
-                            <Popover.Button
-                              type="button"
-                              className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2.5 sm:py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                            >
-                              <FilterIcon
-                                className="h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              <span className="sr-only sm:not-sr-only">{open ? 'Done' : 'Filter'}</span>
-                            </Popover.Button>
-                            <Transition
-                              as={Fragment}
-                              enter="transition ease-out duration-200"
-                              enterFrom="opacity-0 translate-y-1"
-                              enterTo="opacity-100 translate-y-0"
-                              leave="transition ease-in duration-150"
-                              leaveFrom="opacity-100 translate-y-0"
-                              leaveTo="opacity-0 translate-y-1"
-                            >
-                              <Popover.Panel className="absolute right-0 z-10 mt-3 px-4 sm:px-0">
-                                <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                                  <form className="bg-white p-7">
-                                    <div className="mb-6">
-                                      <p className="mb-4 text-xs text-gray-500 uppercase">
-                                        Filter by review count
-                                      </p>
+                      <input
+                        type="text"
+                        name="search"
+                        id="search"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.currentTarget.value)}
+                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm sm:pl-10 border-gray-300"
+                        placeholder="HPCA"
+                      />
+                    </div>
+                    <Popover className="relative">
+                      {({ open }) => (
+                        <>
+                          <Popover.Button
+                            type="button"
+                            className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2.5 sm:py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            <FilterIcon
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
+                            <span className="sr-only sm:not-sr-only">{open ? 'Done' : 'Filter'}</span>
+                          </Popover.Button>
+                          <Transition
+                            as={Fragment}
+                            enter="transition ease-out duration-200"
+                            enterFrom="opacity-0 translate-y-1"
+                            enterTo="opacity-100 translate-y-0"
+                            leave="transition ease-in duration-150"
+                            leaveFrom="opacity-100 translate-y-0"
+                            leaveTo="opacity-0 translate-y-1"
+                          >
+                            <Popover.Panel className="absolute right-0 z-10 mt-3 px-4 sm:px-0">
+                              <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                                <form className="bg-white p-7">
+                                  <div className="mb-6">
+                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                      Filter by review count
+                                    </p>
+                                    <fieldset className="flex gap-2">
+                                      <legend className="sr-only">
+                                        Review Count
+                                      </legend>
+                                      <Input
+                                        id="minReview"
+                                        type="text"
+                                        label="Min Reviews"
+                                        placeholder="1"
+                                        defaultValue={getDefaultInputValue(
+                                          minReviewCount,
+                                        )}
+                                        inputMode="decimal"
+                                        size={10}
+                                        onBlur={(e) => {
+                                          setMinReviewCount(
+                                            parseFloat(e.currentTarget.value),
+                                          );
+                                        }}
+                                      />
+                                      <Input
+                                        id="maxReview"
+                                        type="text"
+                                        label="Max Reviews"
+                                        placeholder="100"
+                                        size={10}
+                                        defaultValue={getDefaultInputValue(
+                                          maxReviewCount,
+                                        )}
+                                        inputMode="decimal"
+                                        onBlur={(e) => {
+                                          setMaxReviewCount(
+                                            parseFloat(e.currentTarget.value),
+                                          );
+                                        }}
+                                      />
+                                    </fieldset>
+                                  </div>
+                                  <div className="mb-6">
+                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                      Filter by stats
+                                    </p>
+                                    <div className="flex flex-col gap-6">
                                       <fieldset className="flex gap-2">
                                         <legend className="sr-only">
-                                          Review Count
+                                          Rating
                                         </legend>
                                         <Input
-                                          id="minReview"
+                                          id="minRating"
                                           type="text"
-                                          label="Min Reviews"
+                                          label="Min Rating"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minReviewCount,
+                                            minRating,
                                           )}
-                                          inputMode="decimal"
                                           size={10}
+                                          inputMode="decimal"
                                           onBlur={(e) => {
-                                            setMinReviewCount(
-                                              parseFloat(e.currentTarget.value),
+                                            setMinRating(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
                                         <Input
-                                          id="maxReview"
+                                          id="maxRating"
                                           type="text"
-                                          label="Max Reviews"
-                                          placeholder="100"
-                                          size={10}
+                                          label="Max Rating"
+                                          placeholder="5"
                                           defaultValue={getDefaultInputValue(
-                                            maxReviewCount,
+                                            maxRating,
                                           )}
+                                          size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
-                                            setMaxReviewCount(
-                                              parseFloat(e.currentTarget.value),
+                                            setMaxRating(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
+                                            );
+                                          }}
+                                        />
+                                      </fieldset>
+                                      <fieldset className="flex gap-2">
+                                        <legend className="sr-only">
+                                          Difficulty
+                                        </legend>
+                                        <Input
+                                          id="minDifficulty"
+                                          type="text"
+                                          label="Min Difficulty"
+                                          placeholder="1"
+                                          defaultValue={getDefaultInputValue(
+                                            minDifficulty,
+                                          )}
+                                          size={10}
+                                          inputMode="decimal"
+                                          onBlur={(e) => {
+                                            setMinDifficulty(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
+                                            );
+                                          }}
+                                        />
+                                        <Input
+                                          id="maxDifficulty"
+                                          type="text"
+                                          label="Max Difficulty"
+                                          placeholder="5"
+                                          defaultValue={getDefaultInputValue(
+                                            maxDifficulty,
+                                          )}
+                                          size={10}
+                                          inputMode="decimal"
+                                          onBlur={(e) => {
+                                            setMaxDifficulty(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
+                                            );
+                                          }}
+                                        />
+                                      </fieldset>
+                                      <fieldset className="flex gap-2">
+                                        <legend className="sr-only">
+                                          Workload
+                                        </legend>
+                                        <Input
+                                          id="minWorkload"
+                                          type="text"
+                                          label="Min Workload"
+                                          placeholder="10"
+                                          defaultValue={getDefaultInputValue(
+                                            minWorkload,
+                                          )}
+                                          size={10}
+                                          inputMode="decimal"
+                                          onBlur={(e) => {
+                                            setMinWorkload(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
+                                            );
+                                          }}
+                                        />
+                                        <Input
+                                          id="maxWorkload"
+                                          type="text"
+                                          label="Max Workload"
+                                          placeholder="20"
+                                          defaultValue={getDefaultInputValue(
+                                            maxWorkload,
+                                          )}
+                                          size={10}
+                                          inputMode="decimal"
+                                          onBlur={(e) => {
+                                            setMaxWorkload(
+                                              parseFloat(
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
                                       </fieldset>
                                     </div>
-                                    <div className="mb-6">
-                                      <p className="mb-4 text-xs text-gray-500 uppercase">
-                                        Filter by stats
-                                      </p>
-                                      <div className="flex flex-col gap-6">
-                                        <fieldset className="flex gap-2">
-                                          <legend className="sr-only">
-                                            Rating
-                                          </legend>
-                                          <Input
-                                            id="minRating"
-                                            type="text"
-                                            label="Min Rating"
-                                            placeholder="1"
-                                            defaultValue={getDefaultInputValue(
-                                              minRating,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMinRating(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                          <Input
-                                            id="maxRating"
-                                            type="text"
-                                            label="Max Rating"
-                                            placeholder="5"
-                                            defaultValue={getDefaultInputValue(
-                                              maxRating,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMaxRating(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                        </fieldset>
-                                        <fieldset className="flex gap-2">
-                                          <legend className="sr-only">
-                                            Difficulty
-                                          </legend>
-                                          <Input
-                                            id="minDifficulty"
-                                            type="text"
-                                            label="Min Difficulty"
-                                            placeholder="1"
-                                            defaultValue={getDefaultInputValue(
-                                              minDifficulty,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMinDifficulty(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                          <Input
-                                            id="maxDifficulty"
-                                            type="text"
-                                            label="Max Difficulty"
-                                            placeholder="5"
-                                            defaultValue={getDefaultInputValue(
-                                              maxDifficulty,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMaxDifficulty(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                        </fieldset>
-                                        <fieldset className="flex gap-2">
-                                          <legend className="sr-only">
-                                            Workload
-                                          </legend>
-                                          <Input
-                                            id="minWorkload"
-                                            type="text"
-                                            label="Min Workload"
-                                            placeholder="10"
-                                            defaultValue={getDefaultInputValue(
-                                              minWorkload,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMinWorkload(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                          <Input
-                                            id="maxWorkload"
-                                            type="text"
-                                            label="Max Workload"
-                                            placeholder="20"
-                                            defaultValue={getDefaultInputValue(
-                                              maxWorkload,
-                                            )}
-                                            size={10}
-                                            inputMode="decimal"
-                                            onBlur={(e) => {
-                                              setMaxWorkload(
-                                                parseFloat(
-                                                  e.currentTarget.value,
-                                                ),
-                                              );
-                                            }}
-                                          />
-                                        </fieldset>
-                                      </div>
+                                  </div>
+                                  <div className="mb-6">
+                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                      Other Filters
+                                    </p>
+                                    <div className="flex flex-col gap-6">
+                                      <Toggle
+                                        enabled={onlyShowFoundational}
+                                        onChange={setOnlyShowFoundational}
+                                        label="Foundational only"
+                                      />
+                                      <Toggle
+                                        enabled={hideDeprecated}
+                                        onChange={setHideDeprecated}
+                                        label="Hide deprecated"
+                                      />
                                     </div>
-                                    <div className="mb-6">
-                                      <p className="mb-4 text-xs text-gray-500 uppercase">
-                                        Other Filters
-                                      </p>
-                                      <div className="flex flex-col gap-6">
-                                        <Toggle
-                                          enabled={onlyShowFoundational}
-                                          onChange={setOnlyShowFoundational}
-                                          label="Foundational only"
-                                        />
-                                        <Toggle
-                                          enabled={hideDeprecated}
-                                          onChange={setHideDeprecated}
-                                          label="Hide deprecated"
-                                        />
-                                      </div>
-                                    </div>
-                                  </form>
-                                </article>
-                              </Popover.Panel>
-                            </Transition>
-                          </>
-                        )}
-                      </Popover>
-                    </div>
-                  </label>
-                </div>
-                <div>
-                  <Listbox value={sort.field} onChange={(field) => toggleSort(field)}>
-                    {({ open }) => (
-                      <>
-                        <Listbox.Label className="block text-sm font-medium text-gray-700">Sort by</Listbox.Label>
-                        <div className="mt-1 relative">
-                          <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <div className="flex gap-1 items-center">
-                              <span className="block truncate">{sortFieldsToLabels[sort.field]}</span>
-                              {sort.direction === 'asc' ? <ChevronUpIcon className="h-5 w-5" aria-hidden="true" /> : <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />}
-                            </div>
-                            <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                              <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                            </span>
-                          </Listbox.Button>
-
-                          <Transition
-                            show={open}
-                            as={Fragment}
-                            leave="transition ease-in duration-100"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                          >
-                            <Listbox.Options className="absolute right-0 z-10 mt-1 w-40 bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                              {Object.entries(sortFieldsToLabels).map(([field, label]) => (
-                                <Listbox.Option
-                                  key={field}
-                                  className={({ active }) => classNames({
-                                    'text-white bg-indigo-600': active,
-                                    'text-gray-900': !active,
-                                  }, 'cursor-default select-none relative py-2 pl-3 pr-9')}
-                                  value={field}
-                                >
-                                  {({ selected }) => (
-                                    <span className={classNames({
-                                      'font-semibold': selected,
-                                      'font-normal': !selected,
-                                    }, 'block truncate')}
-                                    >
-                                      {label}
-                                    </span>
-                                  )}
-                                </Listbox.Option>
-                              ))}
-                            </Listbox.Options>
+                                  </div>
+                                </form>
+                              </article>
+                            </Popover.Panel>
                           </Transition>
-                        </div>
-                      </>
-                    )}
-                  </Listbox>
-                </div>
+                        </>
+                      )}
+                    </Popover>
+                  </div>
+                </label>
               </div>
-              <div className="inline-block min-w-full py-4 align-middle">
-                <div className="shadow-sm ring-1 ring-black ring-opacity-5">
-                  <table
-                    className="min-w-full border-separate"
-                    style={{ borderSpacing: 0 }}
-                  >
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th
-                          scope="col"
-                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+              <div>
+                <Listbox value={sort.field} onChange={(field) => toggleSort(field)}>
+                  {({ open }) => (
+                    <>
+                      <Listbox.Label className="block text-sm font-medium text-gray-700">Sort by</Listbox.Label>
+                      <div className="mt-1 relative">
+                        <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                          <div className="flex gap-1 items-center">
+                            <span className="block truncate">{sortFieldsToLabels[sort.field]}</span>
+                            {sort.direction === 'asc' ? <ChevronUpIcon className="h-5 w-5" aria-hidden="true" /> : <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />}
+                          </div>
+                          <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </span>
+                        </Listbox.Button>
+
+                        <Transition
+                          show={open}
+                          as={Fragment}
+                          leave="transition ease-in duration-100"
+                          leaveFrom="opacity-100"
+                          leaveTo="opacity-0"
                         >
-                          Name
-                        </th>
-                        <th
-                          scope="col"
-                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
-                        >
-                          Rating
-                        </th>
-                        <th
-                          scope="col"
-                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
-                        >
-                          Difficulty
-                        </th>
-                        <th
-                          scope="col"
-                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
-                        >
-                          Workload
-                        </th>
-                        <th
-                          scope="col"
-                          className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-2 py-2 md:px-3 md:py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
-                        >
-                          Reviews
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 bg-white">
-                      {page.map(({
-                        id, code, name, reviews,
-                      }, index) => (
-                        <tr
-                          key={id}
-                          className={index % 2 === 0 ? undefined : 'bg-gray-50'}
-                        >
-                          <td className=" px-2 py-2 md:px-3 md:py-4 text-sm font-medium text-gray-500 sm:pl-6 ">
-                            <span className="text-xs hidden sm:block">
-                              {code}
-                            </span>
-                            <dl className="font-normal">
-                              <dt className="sr-only">Title</dt>
-                              <dd className="mt-1 w-60 whitespace-nowrap truncate">
-                                <Link
-                                  href={`/courses/${code}/reviews`}
-                                  passHref
-                                >
-                                  <a
-                                    href="replace"
-                                    title={name}
-                                    className="text-indigo-600 text-xs md:text-sm hover:text-indigo-900"
+                          <Listbox.Options className="absolute right-0 z-10 mt-1 w-40 bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                            {Object.entries(sortFieldsToLabels).map(([field, label]) => (
+                              <Listbox.Option
+                                key={field}
+                                className={({ active }) => classNames({
+                                  'text-white bg-indigo-600': active,
+                                  'text-gray-900': !active,
+                                }, 'cursor-default select-none relative py-2 pl-3 pr-9')}
+                                value={field}
+                              >
+                                {({ selected }) => (
+                                  <span className={classNames({
+                                    'font-semibold': selected,
+                                    'font-normal': !selected,
+                                  }, 'block truncate')}
                                   >
-                                    {name}
-                                    <span className="sr-only"> reviews</span>
-                                  </a>
-                                </Link>
-                              </dd>
-                            </dl>
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                            {stats[code].rating
-                              ? stats[code].rating.toFixed(2)
-                              : 'N/A'}
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                            {stats[code].difficulty
-                              ? stats[code].difficulty.toFixed(2)
-                              : 'N/A'}
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                            {stats[code].workload
-                              ? stats[code].workload.toFixed(2)
-                              : 'N/A'}
-                          </td>
-                          <td className="whitespace-nowrap px-2 py-2 md:px-3 md:py-4 text-xs sm:text-sm text-gray-500">
-                            {reviews.length}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <Pagination
-                  resultCount={collection.length}
-                  pageSize={pageSize}
-                  pageNumber={pageNumber}
-                  onPageChange={setPageNumber}
-                  onPageSizeChange={setPageSize}
-                  pageSizes={[10, 25, 50]}
-                />
+                                    {label}
+                                  </span>
+                                )}
+                              </Listbox.Option>
+                            ))}
+                          </Listbox.Options>
+                        </Transition>
+                      </div>
+                    </>
+                  )}
+                </Listbox>
               </div>
+            </div>
+            <div className="shadow ring-1 overflow-hidden ring-black ring-opacity-5 md:mx-0 md:rounded-lg">
+              <div className="overflow-scroll">
+                <table
+                  className="min-w-full border-separate"
+                  style={{ borderSpacing: 0 }}
+                >
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Name
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Rating
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Difficulty
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Workload
+                      </th>
+                      <th
+                        scope="col"
+                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Reviews
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {page.map(({
+                      id, code, name, reviews,
+                    }, index) => (
+                      <tr
+                        key={id}
+                        className={index % 2 === 0 ? undefined : 'bg-gray-50'}
+                      >
+                        <td className="px-2 py-2 px-3 py-4 text-sm font-medium text-gray-500 sm:pl-6">
+                          <span className="text-xs block">
+                            {code}
+                          </span>
+                          <dl className="font-normal">
+                            <dt className="sr-only">Title</dt>
+                            <dd className="mt-1">
+                              <Link
+                                href={`/courses/${code}/reviews`}
+                                passHref
+                              >
+                                <a
+                                  href="replace"
+                                  title={name}
+                                  className="text-indigo-600 text-sm hover:text-indigo-900"
+                                >
+                                  <span className="w-60 whitespace-nowrap truncate block">{name}</span>
+                                  <span className="sr-only"> reviews</span>
+                                </a>
+                              </Link>
+                            </dd>
+                          </dl>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {stats[code].rating
+                            ? stats[code].rating.toFixed(2)
+                            : 'N/A'}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {stats[code].difficulty
+                            ? stats[code].difficulty.toFixed(2)
+                            : 'N/A'}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {stats[code].workload
+                            ? stats[code].workload.toFixed(2)
+                            : 'N/A'}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {reviews.length}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pagination
+                resultCount={collection.length}
+                pageSize={pageSize}
+                pageNumber={pageNumber}
+                onPageChange={setPageNumber}
+                onPageSizeChange={setPageSize}
+                pageSizes={[10, 25, 50]}
+              />
             </div>
           </div>
         </div>
