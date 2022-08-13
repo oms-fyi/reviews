@@ -20,8 +20,8 @@ import {
 } from '@heroicons/react/outline';
 import { PlusSmIcon } from '@heroicons/react/solid';
 
-import logo from '../public/logo.svg';
-import { PHONE_NUMBER, EMAIL_ADDRESS } from '../src/constants';
+import { PHONE_NUMBER, EMAIL_ADDRESS } from 'src/constants';
+import logo from 'public/logo.svg';
 
 const contactMenuItems = [
   {

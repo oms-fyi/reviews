@@ -3,7 +3,7 @@ import { withSentry, captureException } from '@sentry/nextjs';
 
 import { isValidSignature, SIGNATURE_HEADER_NAME } from '@sanity/webhook';
 
-import { Course } from '../../src/@types';
+import { Course } from 'src/@types';
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? '';
 

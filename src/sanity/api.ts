@@ -1,13 +1,12 @@
-import sanityClient from './client';
 import {
   Course,
   CourseWithReviewsFull,
   CourseWithReviewsStats,
   Review,
   Semester,
-} from '../@types';
-
-import encrypt from '../encryption';
+} from 'src/@types';
+import encrypt from 'src/encryption';
+import sanityClient from './client';
 
 export enum CourseEnrichmentOption {
   NONE, // just course data
