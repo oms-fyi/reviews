@@ -24,6 +24,7 @@ import Toggle from '../components/Toggle';
 import average from '../src/stats';
 
 import styles from '../styles/Home.module.css';
+import formatNumber from '../src/utils';
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];
@@ -202,9 +203,6 @@ const Pagination: FC<PaginationProps> = function Pagination({
 };
 
 const getDefaultInputValue = (value: number | undefined): string => (typeof value === 'undefined' || Number.isNaN(value) ? '' : value.toString());
-const formatPossiblyNaNValue = (value: number): string => (
-  Number.isNaN(value) ? 'N/A' : value.toFixed(2)
-);
 
 type CourseStats = {
   [code: string]: {
@@ -779,18 +777,18 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               <div className={`flex flex-row gap-1 ${styles['dot-separated-list']}`}>
                                 <dt className="sr-only">Rating</dt>
                                 <dd>
-                                  {formatPossiblyNaNValue(stats[code].rating)}
+                                  {formatNumber(stats[code].rating)}
                                   <span className="text-gray-400"> / 5 rating</span>
                                 </dd>
                                 <dt className="sr-only">Difficulty</dt>
                                 <dd>
-                                  {formatPossiblyNaNValue(stats[code].difficulty)}
+                                  {formatNumber(stats[code].difficulty)}
                                   <span className="text-gray-400"> / 5 difficulty</span>
                                 </dd>
                               </div>
                               <dt className="sr-only">Workload</dt>
                               <dd>
-                                {formatPossiblyNaNValue(stats[code].workload)}
+                                {formatNumber(stats[code].workload)}
                                 <span className="text-gray-400"> hours of work per week</span>
                               </dd>
                             </div>
@@ -834,13 +832,13 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           {code}
                         </td>
                         <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatPossiblyNaNValue(stats[code].rating)}
+                          {formatNumber(stats[code].rating)}
                         </td>
                         <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatPossiblyNaNValue(stats[code].difficulty)}
+                          {formatNumber(stats[code].difficulty)}
                         </td>
                         <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatPossiblyNaNValue(stats[code].workload)}
+                          {formatNumber(stats[code].workload)}
                         </td>
                         <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
                           {reviews.length}

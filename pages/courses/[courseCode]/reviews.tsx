@@ -16,6 +16,7 @@ import {
   getCourseCodes,
 } from '../../../src/sanity';
 import average from '../../../src/stats';
+import formatNumber from '../../../src/utils';
 
 interface ReviewsPathParams {
   courseCode: Course['code'];
@@ -87,9 +88,7 @@ export default function Reviews({
                   Rating
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {Number.isNaN(avgRating)
-                    ? 'N/A'
-                    : `${avgRating.toFixed(2)} / 5`}
+                  {`${formatNumber(avgRating)} / 5`}
                 </dd>
               </div>
 
@@ -100,9 +99,7 @@ export default function Reviews({
                   Difficulty
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {Number.isNaN(avgDifficulty)
-                    ? 'N/A'
-                    : `${avgDifficulty.toFixed(2)} / 5`}
+                  {`${formatNumber(avgDifficulty)} / 5`}
                 </dd>
               </div>
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
@@ -112,9 +109,7 @@ export default function Reviews({
                   Workload
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
-                  {Number.isNaN(avgWorkload)
-                    ? 'N/A'
-                    : `${avgWorkload.toFixed(2)} hours`}
+                  {`${formatNumber(avgWorkload)} hours`}
                 </dd>
               </div>
             </dl>
