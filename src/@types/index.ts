@@ -22,7 +22,8 @@ export interface Course {
   number: string;
   isFoundational: boolean;
   isDeprecated: boolean;
-  url?: string;
+  officialURL?: string;
+  notesURL?: string;
   aliases: string[];
 }
 
