@@ -6,6 +6,7 @@ import Head from 'next/head';
 
 import '../styles/globals.css';
 import Header from '../components/Header';
+import Banner from '../components/Banner';
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
@@ -63,6 +64,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
       </Head>
+      <Banner />
       <Header />
       <Component {...pageProps} />
       {analyticsId && (
