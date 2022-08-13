@@ -453,7 +453,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                           >
-                            <Popover.Panel className="absolute right-0 z-10 mt-3 px-4 sm:px-0">
+                            <Popover.Panel className="absolute right-0 translate-x-1/2 sm:translate-x-0 z-10 mt-3 px-4 sm:px-0">
                               <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                 <form className="bg-white p-7">
                                   <div className="mb-6">
