@@ -1,0 +1,4 @@
+.dot-separated-list > dd ~ dd::before  {
+  content: "\b7";
+  margin-right: 0.25rem;
+}

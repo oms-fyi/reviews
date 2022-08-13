@@ -23,6 +23,8 @@ import { CourseEnrichmentOption, getCourses } from '../src/sanity';
 import Toggle from '../components/Toggle';
 import average from '../src/stats';
 
+import styles from '../styles/Home.module.css';
+
 interface HomePageProps {
   courses: CourseWithReviewsStats[];
 }
@@ -200,6 +202,9 @@ const Pagination: FC<PaginationProps> = function Pagination({
 };
 
 const getDefaultInputValue = (value: number | undefined): string => (typeof value === 'undefined' || Number.isNaN(value) ? '' : value.toString());
+const formatPossiblyNaNValue = (value: number): string => (
+  Number.isNaN(value) ? 'N/A' : value.toFixed(2)
+);
 
 type CourseStats = {
   [code: string]: {
@@ -267,11 +272,12 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   const [hideDeprecated, setHideDeprecated] = useState(false);
   const [onlyShowFoundational, setOnlyShowFoundational] = useState(false);
+  const [onlyShowNotes, setOnlyShowNotes] = useState(false);
 
   useEffect(() => {
     setView(
       courses.filter(({
-        code, reviews, isDeprecated, isFoundational,
+        code, reviews, isDeprecated, isFoundational, notesURL,
       }) => {
         function between(value: number, min: number, max: number): boolean {
           return Number.isNaN(value) ? true : value >= min && value <= max;
@@ -290,6 +296,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
           && between(workload, minWorkload || 1, maxWorkload || 100)
           && (hideDeprecated ? isDeprecated === false : true)
           && (onlyShowFoundational ? isFoundational === true : true)
+          && (onlyShowNotes ? Boolean(notesURL) : true)
         );
       }),
     );
@@ -306,6 +313,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
     maxWorkload,
     onlyShowFoundational,
     hideDeprecated,
+    onlyShowNotes,
   ]);
 
   // SORTING
@@ -395,8 +403,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       <Head>
         <title>Home | OMSCentral</title>
       </Head>
-      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 py-10">
-        <div className="px-4 sm:px-6 lg:px-8">
+      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 py-6 sm:py-10">
+        <div className="px-4">
           <div className="space-y-2 flex flex-col">
             <div className="flex justify-between items-end gap-2">
               <div>
@@ -626,6 +634,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </p>
                                     <div className="flex flex-col gap-6">
                                       <Toggle
+                                        enabled={onlyShowNotes}
+                                        onChange={setOnlyShowNotes}
+                                        label="Has lecture notes"
+                                      />
+                                      <Toggle
                                         enabled={onlyShowFoundational}
                                         onChange={setOnlyShowFoundational}
                                         label="Foundational only"
@@ -709,31 +722,37 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                     <tr>
                       <th
                         scope="col"
-                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
-                        Name
+                        Course
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        Code
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Rating
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Difficulty
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Workload
                       </th>
                       <th
                         scope="col"
-                        className="sticky top-0 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Reviews
                       </th>
@@ -741,51 +760,89 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {page.map(({
-                      id, code, name, reviews,
+                      id, code, name, reviews, officialURL, notesURL,
                     }, index) => (
                       <tr
                         key={id}
                         className={index % 2 === 0 ? undefined : 'bg-gray-50'}
                       >
-                        <td className="px-2 py-2 px-3 py-4 text-sm font-medium text-gray-500 sm:pl-6">
-                          <span className="text-xs block">
-                            {code}
-                          </span>
+                        <td className="px-2 py-2 px-3 py-4 text-sm text-gray-700 sm:pl-6">
                           <dl className="font-normal">
-                            <dt className="sr-only">Title</dt>
-                            <dd className="mt-1">
-                              <Link
-                                href={`/courses/${code}/reviews`}
-                                passHref
-                              >
-                                <a
-                                  href="replace"
-                                  title={name}
-                                  className="text-indigo-600 text-sm hover:text-indigo-900"
-                                >
-                                  <span className="w-60 whitespace-nowrap truncate block">{name}</span>
-                                  <span className="sr-only"> reviews</span>
-                                </a>
-                              </Link>
+                            <dt className="sr-only">Course name</dt>
+                            <dd className="inline">
+                              <span className="w-72 whitespace-nowrap truncate block">
+                                <span className="block text-xs md:hidden mr-2 text-gray-500">{code}</span>
+                                <span className=" text-base">{name}</span>
+                              </span>
                             </dd>
+                            <div className="block sm:hidden">
+                              <div className={`flex flex-row gap-1 ${styles['dot-separated-list']}`}>
+                                <dt className="sr-only">Rating</dt>
+                                <dd>
+                                  {formatPossiblyNaNValue(stats[code].rating)}
+                                  <span className="text-gray-400"> / 5 rating</span>
+                                </dd>
+                                <dt className="sr-only">Difficulty</dt>
+                                <dd>
+                                  {formatPossiblyNaNValue(stats[code].difficulty)}
+                                  <span className="text-gray-400"> / 5 difficulty</span>
+                                </dd>
+                              </div>
+                              <dt className="sr-only">Workload</dt>
+                              <dd>
+                                {formatPossiblyNaNValue(stats[code].workload)}
+                                <span className="text-gray-400"> hours of work per week</span>
+                              </dd>
+                            </div>
+                            <div className={`flex flex-row gap-1 ${styles['dot-separated-list']}`}>
+                              <dt className="sr-only">Reviews URL</dt>
+                              <dd>
+                                <Link
+                                  href={`/courses/${code}/reviews`}
+                                  passHref
+                                >
+                                  <a
+                                    href="replace"
+                                    className="text-indigo-600 text-sm hover:text-indigo-900"
+                                  >
+                                    Reviews
+                                  </a>
+                                </Link>
+                                {' '}
+                                <span className="md:hidden">
+                                  (
+                                  {reviews.length}
+                                  )
+                                </span>
+                              </dd>
+                              {officialURL && (
+                                <>
+                                  <dt className="sr-only">GATech URL</dt>
+                                  <dd><a href={officialURL} target="_blank" rel="noreferrer" className="text-indigo-600 text-sm hover:text-indigo-900">GT Official</a></dd>
+                                </>
+                              )}
+                              {notesURL && (
+                                <>
+                                  <dt className="sr-only">OMSCSNotes URL</dt>
+                                  <dd><a href={notesURL} target="_blank" rel="noreferrer" className="text-indigo-600 text-sm hover:text-indigo-900">Lecture Notes</a></dd>
+                                </>
+                              ) }
+                            </div>
                           </dl>
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {stats[code].rating
-                            ? stats[code].rating.toFixed(2)
-                            : 'N/A'}
+                        <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          {code}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {stats[code].difficulty
-                            ? stats[code].difficulty.toFixed(2)
-                            : 'N/A'}
+                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          {formatPossiblyNaNValue(stats[code].rating)}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {stats[code].workload
-                            ? stats[code].workload.toFixed(2)
-                            : 'N/A'}
+                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          {formatPossiblyNaNValue(stats[code].difficulty)}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          {formatPossiblyNaNValue(stats[code].workload)}
+                        </td>
+                        <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
                           {reviews.length}
                         </td>
                       </tr>
