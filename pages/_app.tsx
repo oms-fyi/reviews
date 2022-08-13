@@ -4,9 +4,9 @@ import type { AppProps } from 'next/app';
 import Script from 'next/script';
 import Head from 'next/head';
 
-import '../styles/globals.css';
-import Header from '../components/Header';
-import Banner from '../components/Banner';
+import 'styles/globals.css';
+import Header from 'components/Header';
+import Banner from 'components/Banner';
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 

@@ -16,15 +16,15 @@ import Fuse from 'fuse.js';
 
 import classNames from 'classnames';
 
-import Input from '../components/Input';
+import Input from 'components/Input';
 
-import type { CourseWithReviewsStats, Course, Review } from '../src/@types';
-import { CourseEnrichmentOption, getCourses } from '../src/sanity';
-import Toggle from '../components/Toggle';
-import average from '../src/stats';
+import type { CourseWithReviewsStats, Course, Review } from 'src/@types';
+import { CourseEnrichmentOption, getCourses } from 'src/sanity';
+import Toggle from 'components/Toggle';
+import average from 'src/stats';
 
-import styles from '../styles/Home.module.css';
-import formatNumber from '../src/utils';
+import styles from 'styles/Home.module.css';
+import formatNumber from 'src/utils';
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];

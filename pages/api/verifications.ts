@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { withSentry, captureException } from '@sentry/nextjs';
 
-import { sendCodeToUser, SendCodeResponse } from '../../src/twilio';
+import { sendCodeToUser, SendCodeResponse } from 'src/twilio';
 
 type ResponseData = Record<string, never> | { error: string };
 type Payload = { username?: string; };

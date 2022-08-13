@@ -1,4 +1,4 @@
-import { Review } from '../@types';
+import { Review } from 'src/@types';
 
 // MAY RETURN NaN
 const average = (
