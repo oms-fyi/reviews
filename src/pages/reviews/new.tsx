@@ -14,7 +14,7 @@ import classNames from 'classnames';
 
 import { Course, Review, Semester } from 'src/@types';
 import { getCourseNames, getRecentSemesters } from 'src/sanity';
-import Alert from 'components/Alert';
+import Alert from 'src/components/Alert';
 
 interface NewReviewFormProps {
   courses: Pick<Course, 'id' | 'code' | 'name'>[];
