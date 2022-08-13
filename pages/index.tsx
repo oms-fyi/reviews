@@ -766,7 +766,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         key={id}
                         className={index % 2 === 0 ? undefined : 'bg-gray-50'}
                       >
-                        <td className="px-2 py-2 px-3 py-4 text-sm text-gray-700 sm:pl-6">
+                        <td className="px-3 py-4 text-sm text-gray-700 sm:pl-6">
                           <dl className="font-normal">
                             <dt className="sr-only">Course name</dt>
                             <dd className="inline">
