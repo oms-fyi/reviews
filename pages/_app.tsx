@@ -24,7 +24,14 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       setIsDarkModePreferred(e.matches);
     }
 
-    queryList.addEventListener('change', listener);
+    if ('addEventListener' in queryList) {
+      queryList.addEventListener('change', listener);
+    } else {
+      // https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
+      // MQL didn't inherit from EventTarget (so no addEventListener) until
+      // iOS Safari 14. Need this as a fallback
+      queryList.addListener(listener);
+    }
 
     return function cleanup() {
       queryList.removeEventListener('change', listener);
