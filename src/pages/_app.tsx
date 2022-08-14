@@ -6,6 +6,7 @@ import Head from 'next/head';
 
 import 'src/styles/globals.css';
 import Header from 'src/components/Header';
+import Footer from 'src/components/Footer';
 import Banner from 'src/components/Banner';
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
@@ -67,6 +68,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       <Banner />
       <Header />
       <Component {...pageProps} />
+      <Footer />
       {analyticsId && (
         <>
           <Script
