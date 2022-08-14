@@ -9,6 +9,9 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily: {
+      cookie: ['Cookie', 'cursive'],
+    },
     extend: {},
   },
   plugins: [typography, forms],
