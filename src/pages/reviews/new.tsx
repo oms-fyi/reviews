@@ -285,7 +285,7 @@ export default function NewReviewForm({ courses, semesters }: NewReviewFormProps
                   <div key={id}>
                     <label
                       htmlFor={`semester-${term}-${startDate}`}
-                      className="flex flex-row-reverse justify-end items-center gap-3 block text-sm font-medium text-gray-700 capitalize"
+                      className="flex flex-row-reverse justify-end items-center gap-3 text-sm font-medium text-gray-700 capitalize"
                     >
                       {`${term} ${new Date(startDate).getFullYear()}`}
                       <input
@@ -330,7 +330,7 @@ export default function NewReviewForm({ courses, semesters }: NewReviewFormProps
                   <div className="flex items-center" key={num}>
                     <label
                       htmlFor={`rating-${num}`}
-                      className="flex flex-row-reverse gap-3 items-center block text-sm font-medium text-gray-700"
+                      className="flex flex-row-reverse gap-3 items-center text-sm font-medium text-gray-700"
                     >
                       {num}
                       <input
@@ -363,7 +363,7 @@ export default function NewReviewForm({ courses, semesters }: NewReviewFormProps
                   <div className="flex items-center" key={num}>
                     <label
                       htmlFor={`difficulty-${num}`}
-                      className="flex flex-row-reverse gap-3 items-center block text-sm font-medium text-gray-700"
+                      className="flex flex-row-reverse gap-3 items-center text-sm font-medium text-gray-700"
                     >
                       {num}
                       <input
