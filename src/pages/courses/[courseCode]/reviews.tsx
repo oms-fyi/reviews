@@ -6,7 +6,6 @@ import Head from 'next/head';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 
-import format from 'date-fns/format';
 import { CalendarIcon, PencilAltIcon } from '@heroicons/react/outline';
 
 import type { Course, CourseWithReviewsFull } from 'src/@types';
@@ -157,7 +156,7 @@ export default function Reviews({
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
                   <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  {`Review submitted: ${hasMounted ? format(new Date(created), 'MMMM dd, yyyy') : created}`}
+                  {`Review submitted: ${hasMounted ? new Date(created).toLocaleDateString(navigator.language || 'en-US', { dateStyle: 'long' }) : created}`}
                 </p>
               </li>
             ),
