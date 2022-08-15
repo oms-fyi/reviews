@@ -1,24 +1,20 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from "react";
 
-import type { GetStaticPaths, GetStaticProps } from 'next';
-import Head from 'next/head';
+import type { GetStaticPaths, GetStaticProps } from "next";
+import Head from "next/head";
 
-import ReactMarkdown from 'react-markdown';
-import rehypeSanitize from 'rehype-sanitize';
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
 
-import { CalendarIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { CalendarIcon, PencilAltIcon } from "@heroicons/react/outline";
 
-import type { Course, CourseWithReviewsFull } from 'src/@types';
-import {
-  CourseEnrichmentOption,
-  getCourse,
-  getCourseCodes,
-} from 'src/sanity';
-import average from 'src/stats';
-import formatNumber from 'src/utils';
+import type { Course, CourseWithReviewsFull } from "src/@types";
+import { CourseEnrichmentOption, getCourse, getCourseCodes } from "src/sanity";
+import { average } from "src/stats";
+import { formatNumber } from "src/utils";
 
 interface ReviewsPathParams {
-  courseCode: Course['code'];
+  courseCode: Course["code"];
   [key: string]: string | string[];
 }
 
@@ -39,11 +35,11 @@ export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
 };
 
 export const getStaticProps: GetStaticProps<
-ReviewsPageProps,
-ReviewsPathParams
+  ReviewsPageProps,
+  ReviewsPathParams
 > = async ({ params: { courseCode } = {} }) => {
   if (!courseCode) {
-    throw new Error('No code passed to `getStaticProps`');
+    throw new Error("No code passed to `getStaticProps`");
   }
 
   const course = await getCourse(courseCode, CourseEnrichmentOption.REVIEWS);
@@ -53,12 +49,12 @@ ReviewsPathParams
 export default function Reviews({
   course: { code, name, reviews },
 }: ReviewsPageProps): JSX.Element {
-  const avgRating = useMemo(() => average(reviews, 'rating'), [reviews]);
+  const avgRating = useMemo(() => average(reviews, "rating"), [reviews]);
   const avgDifficulty = useMemo(
-    () => average(reviews, 'difficulty'),
-    [reviews],
+    () => average(reviews, "difficulty"),
+    [reviews]
   );
-  const avgWorkload = useMemo(() => average(reviews, 'workload'), [reviews]);
+  const avgWorkload = useMemo(() => average(reviews, "workload"), [reviews]);
 
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -82,9 +78,7 @@ export default function Reviews({
             <dl className="mt-5 grid gap-5 grid-cols-3">
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                 <dt className="text-xs font-medium text-gray-500">
-                  <span className="hidden sm:inline">Average</span>
-                  {' '}
-                  Rating
+                  <span className="hidden sm:inline">Average</span> Rating
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
                   {`${formatNumber(avgRating)} / 5`}
@@ -93,9 +87,7 @@ export default function Reviews({
 
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                 <dt className="text-xs font-medium text-gray-500">
-                  <span className="hidden sm:inline">Average</span>
-                  {' '}
-                  Difficulty
+                  <span className="hidden sm:inline">Average</span> Difficulty
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
                   {`${formatNumber(avgDifficulty)} / 5`}
@@ -103,8 +95,7 @@ export default function Reviews({
               </div>
               <div className="px-2 py-3 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                 <dt className="text-xs font-medium text-gray-500">
-                  <span className="hidden sm:inline">Average Weekly</span>
-                  {' '}
+                  <span className="hidden sm:inline">Average Weekly</span>{" "}
                   Workload
                 </dt>
                 <dd className="mt-1 text-xs md:text-xl font-semibold text-gray-900">
@@ -116,9 +107,7 @@ export default function Reviews({
         </div>
         <ul className="divide-y px-6 divide-gray-200 prose prose-sm mx-auto">
           {reviews.map(
-            ({
-              id, created, body, rating, difficulty, workload, semester,
-            }) => (
+            ({ id, created, body, rating, difficulty, workload, semester }) => (
               <li key={id} className="py-4">
                 <div>
                   <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
@@ -127,39 +116,37 @@ export default function Reviews({
                 </div>
                 <div className="py-2 flex flex-row gap-2 items-start">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Rating:
-                    {' '}
-                    {rating ? `${rating} / 5` : 'N/A'}
+                    Rating: {rating ? `${rating} / 5` : "N/A"}
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Difficulty:
-                    {' '}
-                    {difficulty ? `${difficulty} / 5` : 'N/A'}
+                    Difficulty: {difficulty ? `${difficulty} / 5` : "N/A"}
                   </span>
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    Workload:
-                    {' '}
-                    {workload ? `${workload} hours / week` : 'N/A'}
+                    Workload: {workload ? `${workload} hours / week` : "N/A"}
                   </span>
                 </div>
                 {semester && (
-                <p className="text-gray-500 mt-2 flex items-center text-xs">
-                  <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  <span className="capitalize">
-                    Semester:
-                    {' '}
-                    {semester.term}
-                    {' '}
-                    {new Date(semester.startDate).getFullYear()}
-                  </span>
-                </p>
+                  <p className="text-gray-500 mt-2 flex items-center text-xs">
+                    <CalendarIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+                    <span className="capitalize">
+                      Semester: {semester.term}{" "}
+                      {new Date(semester.startDate).getFullYear()}
+                    </span>
+                  </p>
                 )}
                 <p className="text-gray-500 mt-2 flex items-center text-xs">
                   <PencilAltIcon className="h-5 w-5 mr-2" aria-hidden="true" />
-                  {`Review submitted: ${hasMounted ? new Date(created).toLocaleDateString(navigator.language || 'en-US', { dateStyle: 'long' }) : created}`}
+                  {`Review submitted: ${
+                    hasMounted
+                      ? new Date(created).toLocaleDateString(
+                          navigator.language || "en-US",
+                          { dateStyle: "long" }
+                        )
+                      : created
+                  }`}
                 </p>
               </li>
-            ),
+            )
           )}
         </ul>
       </main>

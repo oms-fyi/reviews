@@ -1,30 +1,35 @@
+import { Fragment, FC, useState, useEffect, useMemo } from "react";
+
+import type { GetStaticProps } from "next";
+import Head from "next/head";
+import Link from "next/link";
+
+import { Popover, Transition, Listbox } from "@headlessui/react";
 import {
-  Fragment, FC, useState, useEffect, useMemo,
-} from 'react';
-
-import type { GetStaticProps } from 'next';
-import Head from 'next/head';
-import Link from 'next/link';
-
-import { Popover, Transition, Listbox } from '@headlessui/react';
-import { ChevronRightIcon, ChevronLeftIcon, SelectorIcon } from '@heroicons/react/solid';
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  SelectorIcon,
+} from "@heroicons/react/solid";
 import {
-  SearchIcon, FilterIcon, ChevronUpIcon, ChevronDownIcon,
-} from '@heroicons/react/outline';
+  SearchIcon,
+  FilterIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/outline";
 
-import Fuse from 'fuse.js';
+import Fuse from "fuse.js";
 
-import classNames from 'classnames';
+import classNames from "classnames";
 
-import Input from 'src/components/Input';
+import { Input } from "src/components/input";
 
-import type { CourseWithReviewsStats, Course, Review } from 'src/@types';
-import { CourseEnrichmentOption, getCourses } from 'src/sanity';
-import Toggle from 'src/components/Toggle';
-import average from 'src/stats';
+import type { CourseWithReviewsStats, Course, Review } from "src/@types";
+import { CourseEnrichmentOption, getCourses } from "src/sanity";
+import { Toggle } from "src/components/toggle";
+import { average } from "src/stats";
 
-import styles from 'src/styles/Home.module.css';
-import formatNumber from 'src/utils';
+import styles from "src/styles/Home.module.css";
+import { formatNumber } from "src/utils";
 
 interface HomePageProps {
   courses: CourseWithReviewsStats[];
@@ -78,7 +83,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
 
   if (totalPages <= 7) {
     paginationChunks = [
-      Array(totalPages)
+      Array.from({ length: totalPages })
         .fill(0)
         .map((_, i) => i),
     ];
@@ -97,25 +102,16 @@ const Pagination: FC<PaginationProps> = function Pagination({
   return (
     <div className="bg-white px-4 py-3 flex flex-wrap items-center justify-center border-t border-gray-200 sm:px-6 gap-4">
       <p className="text-sm text-gray-700 md:w-full">
-        Showing
-        {' '}
+        Showing{" "}
         {resultCount ? (
           <>
-            <span className="font-medium">{rangeStart + 1}</span>
-            {' '}
-            to
-            {' '}
-            <span className="font-medium">{rangeEnd}</span>
-            {' '}
-            of
-            {' '}
+            <span className="font-medium">{rangeStart + 1}</span> to{" "}
+            <span className="font-medium">{rangeEnd}</span> of{" "}
           </>
         ) : (
-          ''
+          ""
         )}
-        <span className="font-medium">{resultCount}</span>
-        {' '}
-        courses
+        <span className="font-medium">{resultCount}</span> courses
       </p>
       <div className="md:grow">
         <span className="relative z-0 inline-flex items-center rounded-md">
@@ -126,15 +122,15 @@ const Pagination: FC<PaginationProps> = function Pagination({
               onClick={() => size !== pageSize && changePageSize(size)}
               className={classNames(
                 {
-                  'rounded-l-md': i === 0,
-                  '-ml-px': i > 0,
-                  'rounded-r-md': i === a.length - 1,
+                  "rounded-l-md": i === 0,
+                  "-ml-px": i > 0,
+                  "rounded-r-md": i === a.length - 1,
                 },
-                'relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                "relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
                 {
-                  'z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50':
+                  "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
                     size === pageSize,
-                },
+                }
               )}
             >
               {size}
@@ -157,36 +153,35 @@ const Pagination: FC<PaginationProps> = function Pagination({
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
           </button>
-          {paginationChunks.map((chunks, i, a) => chunks
-            .map((page) => (
+          {paginationChunks.map((chunks, i, a) => [
+            ...chunks.map((page) => (
               <button
                 type="button"
                 key={page}
-                {...(page === pageNumber && { 'aria-current': 'page' })}
+                {...(page === pageNumber && { "aria-current": "page" })}
                 onClick={() => onPageChange(page)}
                 className={classNames(
                   {
-                    'z-10 bg-indigo-50 border-indigo-500 text-indigo-600':
-                        page === pageNumber,
+                    "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
+                      page === pageNumber,
                   },
-                  'relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border text-sm font-medium',
+                  "relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border text-sm font-medium"
                 )}
               >
                 {page + 1}
               </button>
-            ))
-            .concat(
-              i + 1 === a.length
-                ? []
-                : [
+            )),
+            ...(i + 1 === a.length
+              ? []
+              : [
                   <span
                     key="..."
                     className=" relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border bg-white text-sm font-medium text-gray-700"
                   >
                     ...
                   </span>,
-                ],
-            ))}
+                ]),
+          ])}
           <button
             type="button"
             {...(hasNextPage ? {} : { disabled: true })}
@@ -202,7 +197,8 @@ const Pagination: FC<PaginationProps> = function Pagination({
   );
 };
 
-const getDefaultInputValue = (value: number | undefined): string => (typeof value === 'undefined' || Number.isNaN(value) ? '' : value.toString());
+const getDefaultInputValue = (value: number | undefined): string =>
+  typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
 
 type CourseStats = {
   [code: string]: {
@@ -212,44 +208,48 @@ type CourseStats = {
   };
 };
 
-type SortableField = keyof Pick<Course, 'name'> | keyof Pick<Review, 'rating' | 'difficulty' | 'workload'> | 'reviewCount';
+type SortableField =
+  | keyof Pick<Course, "name">
+  | keyof Pick<Review, "rating" | "difficulty" | "workload">
+  | "reviewCount";
 type SortConfig = {
   field: SortableField;
-  direction: 'desc' | 'asc'
+  direction: "desc" | "asc";
 };
 
 const sortFieldsToLabels: {
   [Property in SortableField]: string;
 } = {
-  name: 'Name',
-  rating: 'Rating',
-  difficulty: 'Difficulty',
-  workload: 'Workload',
-  reviewCount: '# of Reviews',
+  name: "Name",
+  rating: "Rating",
+  difficulty: "Difficulty",
+  workload: "Workload",
+  reviewCount: "# of Reviews",
 };
 
 export default function Home({ courses }: HomePageProps): JSX.Element {
   const stats = useMemo<CourseStats>(
-    () => courses.reduce(
-      (d, { reviews, code }) => ({
-        ...d,
-        [code]: {
-          rating: average(reviews, 'rating'),
-          difficulty: average(reviews, 'difficulty'),
-          workload: average(reviews, 'workload'),
-        },
-      }),
-      {},
-    ),
-    [courses],
+    () =>
+      Object.fromEntries(
+        courses.map(({ reviews, code }) => [
+          code,
+          {
+            rating: average(reviews, "rating"),
+            difficulty: average(reviews, "difficulty"),
+            workload: average(reviews, "workload"),
+          },
+        ])
+      ),
+    [courses]
   );
 
   const searchIndex = useMemo(
-    () => new Fuse(courses, {
-      keys: ['name', 'aliases', 'code'],
-      threshold: 0.4,
-    }),
-    [courses],
+    () =>
+      new Fuse(courses, {
+        keys: ["name", "aliases", "code"],
+        threshold: 0.4,
+      }),
+    [courses]
   );
 
   const [view, setView] = useState<CourseWithReviewsStats[]>([]);
@@ -274,29 +274,29 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   useEffect(() => {
     setView(
-      courses.filter(({
-        code, reviews, isDeprecated, isFoundational, notesURL,
-      }) => {
-        function between(value: number, min: number, max: number): boolean {
-          return Number.isNaN(value) ? true : value >= min && value <= max;
+      courses.filter(
+        ({ code, reviews, isDeprecated, isFoundational, notesURL }) => {
+          function between(value: number, min: number, max: number): boolean {
+            return Number.isNaN(value) ? true : value >= min && value <= max;
+          }
+
+          const { rating, difficulty, workload } = stats[code];
+
+          return (
+            between(
+              reviews.length,
+              minReviewCount || 0,
+              maxReviewCount || Number.POSITIVE_INFINITY
+            ) &&
+            between(rating, minRating || 1, maxRating || 5) &&
+            between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
+            between(workload, minWorkload || 1, maxWorkload || 100) &&
+            (hideDeprecated ? isDeprecated === false : true) &&
+            (onlyShowFoundational ? isFoundational === true : true) &&
+            (onlyShowNotes ? Boolean(notesURL) : true)
+          );
         }
-
-        const { rating, difficulty, workload } = stats[code];
-
-        return (
-          between(
-            reviews.length,
-            minReviewCount || 0,
-            maxReviewCount || Infinity,
-          )
-          && between(rating, minRating || 1, maxRating || 5)
-          && between(difficulty, minDifficulty || 1, maxDifficulty || 5)
-          && between(workload, minWorkload || 1, maxWorkload || 100)
-          && (hideDeprecated ? isDeprecated === false : true)
-          && (onlyShowFoundational ? isFoundational === true : true)
-          && (onlyShowNotes ? Boolean(notesURL) : true)
-        );
-      }),
+      )
     );
   }, [
     courses,
@@ -317,8 +317,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   // SORTING
   const [sorted, setSorted] = useState<CourseWithReviewsStats[]>([]);
   const [sort, setSort] = useState<SortConfig>({
-    field: 'reviewCount',
-    direction: 'desc',
+    field: "reviewCount",
+    direction: "desc",
   });
 
   useEffect(() => {
@@ -326,39 +326,39 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       [...view].sort((a, b) => {
         const comp = ((attribute) => {
           switch (attribute) {
-            case 'name':
+            case "name":
               return a.name.localeCompare(b.name);
-            case 'reviewCount':
+            case "reviewCount":
               return a.reviews.length - b.reviews.length;
-            case 'rating':
+            case "rating":
               return stats[a.code].rating - stats[b.code].rating;
-            case 'difficulty':
+            case "difficulty":
               return stats[a.code].difficulty - stats[b.code].difficulty;
             default:
               return stats[a.code].workload - stats[b.code].workload;
           }
         })(sort.field);
 
-        return comp * (sort.direction === 'asc' ? 1 : -1);
-      }),
+        return comp * (sort.direction === "asc" ? 1 : -1);
+      })
     );
   }, [sort, view, stats]);
 
   function toggleSort(field: SortableField) {
     if (sort.field !== field) {
-      setSort({ field, direction: 'asc' });
+      setSort({ field, direction: "asc" });
     } else {
       setSort({
         field,
-        direction: sort.direction === 'asc' ? 'desc' : 'asc',
+        direction: sort.direction === "asc" ? "desc" : "asc",
       });
     }
   }
 
   // SEARCHING
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<CourseWithReviewsStats[]>(
-    [],
+    []
   );
 
   useEffect(() => {
@@ -393,7 +393,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   const page = collection.slice(
     pageNumber * pageSize,
-    pageNumber * pageSize + pageSize,
+    pageNumber * pageSize + pageSize
   );
 
   return (
@@ -440,7 +440,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               className="h-5 w-5 text-gray-400"
                               aria-hidden="true"
                             />
-                            <span className="sr-only sm:not-sr-only">{open ? 'Done' : 'Filter'}</span>
+                            <span className="sr-only sm:not-sr-only">
+                              {open ? "Done" : "Filter"}
+                            </span>
                           </Popover.Button>
                           <Transition
                             as={Fragment}
@@ -468,13 +470,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         label="Min Reviews"
                                         placeholder="1"
                                         defaultValue={getDefaultInputValue(
-                                          minReviewCount,
+                                          minReviewCount
                                         )}
                                         inputMode="decimal"
                                         size={10}
                                         onBlur={(e) => {
                                           setMinReviewCount(
-                                            parseFloat(e.currentTarget.value),
+                                            Number.parseFloat(
+                                              e.currentTarget.value
+                                            )
                                           );
                                         }}
                                       />
@@ -485,12 +489,14 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         placeholder="100"
                                         size={10}
                                         defaultValue={getDefaultInputValue(
-                                          maxReviewCount,
+                                          maxReviewCount
                                         )}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMaxReviewCount(
-                                            parseFloat(e.currentTarget.value),
+                                            Number.parseFloat(
+                                              e.currentTarget.value
+                                            )
                                           );
                                         }}
                                       />
@@ -511,15 +517,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Rating"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minRating,
+                                            minRating
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinRating(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -529,15 +535,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Rating"
                                           placeholder="5"
                                           defaultValue={getDefaultInputValue(
-                                            maxRating,
+                                            maxRating
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxRating(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -552,15 +558,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Difficulty"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minDifficulty,
+                                            minDifficulty
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinDifficulty(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -570,15 +576,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Difficulty"
                                           placeholder="5"
                                           defaultValue={getDefaultInputValue(
-                                            maxDifficulty,
+                                            maxDifficulty
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxDifficulty(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -593,15 +599,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Workload"
                                           placeholder="10"
                                           defaultValue={getDefaultInputValue(
-                                            minWorkload,
+                                            minWorkload
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinWorkload(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -611,15 +617,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Workload"
                                           placeholder="20"
                                           defaultValue={getDefaultInputValue(
-                                            maxWorkload,
+                                            maxWorkload
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxWorkload(
-                                              parseFloat(
-                                                e.currentTarget.value,
-                                              ),
+                                              Number.parseFloat(
+                                                e.currentTarget.value
+                                              )
                                             );
                                           }}
                                         />
@@ -659,18 +665,38 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                 </label>
               </div>
               <div>
-                <Listbox value={sort.field} onChange={(field) => toggleSort(field)}>
+                <Listbox
+                  value={sort.field}
+                  onChange={(field) => toggleSort(field)}
+                >
                   {({ open }) => (
                     <>
-                      <Listbox.Label className="block text-sm font-medium text-gray-700">Sort by</Listbox.Label>
+                      <Listbox.Label className="block text-sm font-medium text-gray-700">
+                        Sort by
+                      </Listbox.Label>
                       <div className="mt-1 relative">
                         <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                           <div className="flex gap-1 items-center">
-                            <span className="block truncate">{sortFieldsToLabels[sort.field]}</span>
-                            {sort.direction === 'asc' ? <ChevronUpIcon className="h-5 w-5" aria-hidden="true" /> : <ChevronDownIcon className="h-5 w-5" aria-hidden="true" />}
+                            <span className="block truncate">
+                              {sortFieldsToLabels[sort.field]}
+                            </span>
+                            {sort.direction === "asc" ? (
+                              <ChevronUpIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <ChevronDownIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            )}
                           </div>
                           <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                            <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            <SelectorIcon
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden="true"
+                            />
                           </span>
                         </Listbox.Button>
 
@@ -682,26 +708,37 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           leaveTo="opacity-0"
                         >
                           <Listbox.Options className="absolute right-0 z-10 mt-1 w-40 bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                            {Object.entries(sortFieldsToLabels).map(([field, label]) => (
-                              <Listbox.Option
-                                key={field}
-                                className={({ active }) => classNames({
-                                  'text-white bg-indigo-600': active,
-                                  'text-gray-900': !active,
-                                }, 'cursor-default select-none relative py-2 pl-3 pr-9')}
-                                value={field}
-                              >
-                                {({ selected }) => (
-                                  <span className={classNames({
-                                    'font-semibold': selected,
-                                    'font-normal': !selected,
-                                  }, 'block truncate')}
-                                  >
-                                    {label}
-                                  </span>
-                                )}
-                              </Listbox.Option>
-                            ))}
+                            {Object.entries(sortFieldsToLabels).map(
+                              ([field, label]) => (
+                                <Listbox.Option
+                                  key={field}
+                                  className={({ active }) =>
+                                    classNames(
+                                      {
+                                        "text-white bg-indigo-600": active,
+                                        "text-gray-900": !active,
+                                      },
+                                      "cursor-default select-none relative py-2 pl-3 pr-9"
+                                    )
+                                  }
+                                  value={field}
+                                >
+                                  {({ selected }) => (
+                                    <span
+                                      className={classNames(
+                                        {
+                                          "font-semibold": selected,
+                                          "font-normal": !selected,
+                                        },
+                                        "block truncate"
+                                      )}
+                                    >
+                                      {label}
+                                    </span>
+                                  )}
+                                </Listbox.Option>
+                              )
+                            )}
                           </Listbox.Options>
                         </Transition>
                       </div>
@@ -757,94 +794,127 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {page.map(({
-                      id, code, name, reviews, officialURL, notesURL,
-                    }, index) => (
-                      <tr
-                        key={id}
-                        className={index % 2 === 0 ? undefined : 'bg-gray-50'}
-                      >
-                        <td className="px-3 py-4 text-sm text-gray-700 sm:pl-6">
-                          <dl className="font-normal">
-                            <dt className="sr-only">Course name</dt>
-                            <dd className="inline">
-                              <span className="w-72 whitespace-nowrap truncate block">
-                                <span className="block text-xs md:hidden mr-2 text-gray-500">{code}</span>
-                                <span className=" text-base">{name}</span>
-                              </span>
-                            </dd>
-                            <div className="block sm:hidden">
-                              <div className={`flex flex-row gap-1 ${styles['dot-separated-list']}`}>
-                                <dt className="sr-only">Rating</dt>
-                                <dd>
-                                  {formatNumber(stats[code].rating)}
-                                  <span className="text-gray-400"> / 5 rating</span>
-                                </dd>
-                                <dt className="sr-only">Difficulty</dt>
-                                <dd>
-                                  {formatNumber(stats[code].difficulty)}
-                                  <span className="text-gray-400"> / 5 difficulty</span>
-                                </dd>
-                              </div>
-                              <dt className="sr-only">Workload</dt>
-                              <dd>
-                                {formatNumber(stats[code].workload)}
-                                <span className="text-gray-400"> hours of work per week</span>
-                              </dd>
-                            </div>
-                            <div className={`flex flex-row gap-1 ${styles['dot-separated-list']}`}>
-                              <dt className="sr-only">Reviews URL</dt>
-                              <dd>
-                                <Link
-                                  href={`/courses/${code}/reviews`}
-                                  passHref
-                                >
-                                  <a
-                                    href="replace"
-                                    className="text-indigo-600 text-sm hover:text-indigo-900"
-                                  >
-                                    Reviews
-                                  </a>
-                                </Link>
-                                {' '}
-                                <span className="md:hidden">
-                                  (
-                                  {reviews.length}
-                                  )
+                    {page.map(
+                      (
+                        { id, code, name, reviews, officialURL, notesURL },
+                        index
+                      ) => (
+                        <tr
+                          key={id}
+                          className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                        >
+                          <td className="px-3 py-4 text-sm text-gray-700 sm:pl-6">
+                            <dl className="font-normal">
+                              <dt className="sr-only">Course name</dt>
+                              <dd className="inline">
+                                <span className="w-72 whitespace-nowrap truncate block">
+                                  <span className="block text-xs md:hidden mr-2 text-gray-500">
+                                    {code}
+                                  </span>
+                                  <span className=" text-base">{name}</span>
                                 </span>
                               </dd>
-                              {officialURL && (
-                                <>
-                                  <dt className="sr-only">GATech URL</dt>
-                                  <dd><a href={officialURL} target="_blank" rel="noreferrer" className="text-indigo-600 text-sm hover:text-indigo-900">GT Official</a></dd>
-                                </>
-                              )}
-                              {notesURL && (
-                                <>
-                                  <dt className="sr-only">OMSCSNotes URL</dt>
-                                  <dd><a href={notesURL} target="_blank" rel="noreferrer" className="text-indigo-600 text-sm hover:text-indigo-900">Lecture Notes</a></dd>
-                                </>
-                              ) }
-                            </div>
-                          </dl>
-                        </td>
-                        <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {code}
-                        </td>
-                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatNumber(stats[code].rating)}
-                        </td>
-                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatNumber(stats[code].difficulty)}
-                        </td>
-                        <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {formatNumber(stats[code].workload)}
-                        </td>
-                        <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                          {reviews.length}
-                        </td>
-                      </tr>
-                    ))}
+                              <div className="block sm:hidden">
+                                <div
+                                  className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
+                                >
+                                  <dt className="sr-only">Rating</dt>
+                                  <dd>
+                                    {formatNumber(stats[code].rating)}
+                                    <span className="text-gray-400">
+                                      {" "}
+                                      / 5 rating
+                                    </span>
+                                  </dd>
+                                  <dt className="sr-only">Difficulty</dt>
+                                  <dd>
+                                    {formatNumber(stats[code].difficulty)}
+                                    <span className="text-gray-400">
+                                      {" "}
+                                      / 5 difficulty
+                                    </span>
+                                  </dd>
+                                </div>
+                                <dt className="sr-only">Workload</dt>
+                                <dd>
+                                  {formatNumber(stats[code].workload)}
+                                  <span className="text-gray-400">
+                                    {" "}
+                                    hours of work per week
+                                  </span>
+                                </dd>
+                              </div>
+                              <div
+                                className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
+                              >
+                                <dt className="sr-only">Reviews URL</dt>
+                                <dd>
+                                  <Link
+                                    href={`/courses/${code}/reviews`}
+                                    passHref
+                                  >
+                                    <a
+                                      href="replace"
+                                      className="text-indigo-600 text-sm hover:text-indigo-900"
+                                    >
+                                      Reviews
+                                    </a>
+                                  </Link>{" "}
+                                  <span className="md:hidden">
+                                    ({reviews.length})
+                                  </span>
+                                </dd>
+                                {officialURL && (
+                                  <>
+                                    <dt className="sr-only">GATech URL</dt>
+                                    <dd>
+                                      <a
+                                        href={officialURL}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-indigo-600 text-sm hover:text-indigo-900"
+                                      >
+                                        GT Official
+                                      </a>
+                                    </dd>
+                                  </>
+                                )}
+                                {notesURL && (
+                                  <>
+                                    <dt className="sr-only">OMSCSNotes URL</dt>
+                                    <dd>
+                                      <a
+                                        href={notesURL}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-indigo-600 text-sm hover:text-indigo-900"
+                                      >
+                                        Lecture Notes
+                                      </a>
+                                    </dd>
+                                  </>
+                                )}
+                              </div>
+                            </dl>
+                          </td>
+                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {code}
+                          </td>
+                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {formatNumber(stats[code].rating)}
+                          </td>
+                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {formatNumber(stats[code].difficulty)}
+                          </td>
+                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {formatNumber(stats[code].workload)}
+                          </td>
+                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {reviews.length}
+                          </td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>

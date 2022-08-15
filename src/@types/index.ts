@@ -1,7 +1,7 @@
 export interface Semester {
   id: string;
   startDate: string; // ISO Date string
-  term: 'spring' | 'summer' | 'fall';
+  term: "spring" | "summer" | "fall";
 }
 
 export interface Review {
@@ -28,7 +28,7 @@ export interface Course {
 }
 
 export type CourseWithReviewsStats = Course & {
-  reviews: Pick<Review, 'difficulty' | 'workload' | 'rating'>[];
+  reviews: Pick<Review, "difficulty" | "workload" | "rating">[];
 };
 
 export type CourseWithReviewsFull = Course & {

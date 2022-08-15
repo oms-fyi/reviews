@@ -11,9 +11,9 @@
  *  - https://reactjs.org/docs/error-boundaries.html
  */
 
-import * as Sentry from '@sentry/nextjs';
-import { NextPageContext } from 'next';
-import NextErrorComponent from 'next/error';
+import * as Sentry from "@sentry/nextjs";
+import { NextPageContext } from "next";
+import NextErrorComponent from "next/error";
 
 function CustomErrorComponent({ statusCode }: { statusCode: number }) {
   return <NextErrorComponent statusCode={statusCode} />;

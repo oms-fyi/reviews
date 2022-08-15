@@ -1,9 +1,9 @@
-import { Review } from 'src/@types';
+import { Review } from "src/@types";
 
 // MAY RETURN NaN
-const average = (
-  reviews: Pick<Review, 'rating' | 'difficulty' | 'workload'>[],
-  key: keyof Pick<Review, 'rating' | 'difficulty' | 'workload'>,
+export const average = (
+  reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
+  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
 ): number => {
   let sum = 0;
   let count = 0;
@@ -19,5 +19,3 @@ const average = (
 
   return sum / count;
 };
-
-export default average;
