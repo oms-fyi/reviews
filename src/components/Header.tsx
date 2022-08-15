@@ -147,7 +147,7 @@ export default function Header(): JSX.Element {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Popover.Panel className="origin-bottom-right absolute left-1/2 -translate-x-1/2 m-auto top-full rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Popover.Panel className="z-50 origin-bottom-right absolute left-1/2 -translate-x-1/2 m-auto top-full rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {contactMenuItems.map(({ contact, Icon, type }) => (
                           <div
                             key={contact}
