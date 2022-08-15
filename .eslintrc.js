@@ -67,17 +67,5 @@ module.exports = {
         "import/no-default-export": "off",
       },
     },
-    {
-      // Need default import for `pages`
-      files: ["src/components/**/*.tsx"],
-      rules: {
-        "unicorn/filename-case": [
-          "error",
-          {
-            case: "pascalCase",
-          },
-        ],
-      },
-    },
   ],
 };
