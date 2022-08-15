@@ -1,6 +1,6 @@
-import { HTMLProps } from 'react';
+import { HTMLProps } from "react";
 
-export default function Input({
+export function Input({
   id,
   label,
   ...delegated

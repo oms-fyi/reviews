@@ -1,16 +1,16 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { withSentry, captureException } from '@sentry/nextjs';
+import type { NextApiRequest, NextApiResponse } from "next";
+import { withSentry, captureException } from "@sentry/nextjs";
 
-import { sendCodeToUser, SendCodeResponse } from 'src/twilio';
+import { sendCodeToUser, SendCodeResponse } from "src/twilio";
 
 type ResponseData = Record<string, never> | { error: string };
-type Payload = { username?: string; };
+type Payload = { username?: string };
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>,
+  res: NextApiResponse<ResponseData>
 ) {
-  if (req.method !== 'POST') {
+  if (req.method !== "POST") {
     // Method Not Allowed, only accepting POST.
     res.status(405).json({});
     return;
@@ -18,8 +18,8 @@ async function handler(
 
   const { username } = req.body as Payload;
 
-  if (typeof username === 'undefined') {
-    res.status(400).json({ error: 'GATech username required.' });
+  if (typeof username === "undefined") {
+    res.status(400).json({ error: "GATech username required." });
     return;
   }
 
@@ -29,12 +29,16 @@ async function handler(
     if (responseCode === SendCodeResponse.SUCCESS) {
       res.status(201).json({});
     } else if (responseCode === SendCodeResponse.INVALID_EMAIL) {
-      res.status(400).json({ error: `${username} is not valid. Please try again.` });
+      res
+        .status(400)
+        .json({ error: `${username} is not valid. Please try again.` });
     } else {
-      res.status(400).json({ error: 'Too many send attempts. Please try again later.' });
+      res
+        .status(400)
+        .json({ error: "Too many send attempts. Please try again later." });
     }
   } catch (error: unknown) {
-    res.status(500).json({ error: 'Error generating code. Try again later.' });
+    res.status(500).json({ error: "Error generating code. Try again later." });
     captureException(error);
   }
 }

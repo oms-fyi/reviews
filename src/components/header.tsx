@@ -1,14 +1,12 @@
-import { Fragment, useState, useEffect } from 'react';
+import { Fragment, useState, useEffect } from "react";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
-import classNames from 'classnames';
+import classNames from "classnames";
 
-import {
-  Disclosure, Menu, Transition, Popover,
-} from '@headlessui/react';
+import { Disclosure, Menu, Transition, Popover } from "@headlessui/react";
 
 import {
   MenuIcon,
@@ -17,48 +15,48 @@ import {
   InboxIcon,
   ClipboardCopyIcon,
   CheckCircleIcon,
-} from '@heroicons/react/outline';
-import { PlusSmIcon } from '@heroicons/react/solid';
+} from "@heroicons/react/outline";
+import { PlusSmIcon } from "@heroicons/react/solid";
 
-import { PHONE_NUMBER, EMAIL_ADDRESS } from 'src/constants';
-import logo from 'public/logo.svg';
+import { PHONE_NUMBER, EMAIL_ADDRESS } from "src/constants";
+import logo from "public/logo.svg";
 
 const contactMenuItems = [
   {
     contact: EMAIL_ADDRESS,
-    type: 'email address',
+    type: "email address",
     Icon: InboxIcon,
   },
   {
     contact: PHONE_NUMBER,
-    type: 'phone number',
+    type: "phone number",
     Icon: DeviceMobileIcon,
   },
 ];
 
 const githubMenuItems = [
   {
-    text: 'Report a bug',
-    href: 'https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=bug&template=bug_report.md&title=[BUG REPORT]',
+    text: "Report a bug",
+    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=bug&template=bug_report.md&title=[BUG REPORT]",
   },
   {
-    text: 'Request a feature',
-    href: 'https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=enhancement&template=feature_request.md&title=[FEATURE REQUEST]',
+    text: "Request a feature",
+    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=enhancement&template=feature_request.md&title=[FEATURE REQUEST]",
   },
   {
-    text: 'View code',
-    href: 'https://github.com/oms-tech/reviews',
+    text: "View code",
+    href: "https://github.com/oms-tech/reviews",
   },
 ];
 
-export default function Header(): JSX.Element {
+export function Header(): JSX.Element {
   const router = useRouter();
   const [newReviewURL, setNewReviewURL] = useState<URL>();
-  const [copiedContactInfo, setCopiedContactInfo] = useState<string>();
+  const [copiedContactInfo, setCopiedContactInfo] = useState<string>("");
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setCopiedContactInfo(undefined);
+      setCopiedContactInfo("");
     }, 2000);
 
     return function cleanup() {
@@ -70,8 +68,8 @@ export default function Header(): JSX.Element {
     const url = new URL(`${window.location.origin}/reviews/new`);
     const { courseCode } = router.query;
 
-    if (typeof courseCode === 'string') {
-      url.searchParams.append('course', courseCode);
+    if (typeof courseCode === "string") {
+      url.searchParams.append("course", courseCode);
     }
 
     setNewReviewURL(url);
@@ -116,12 +114,12 @@ export default function Header(): JSX.Element {
                       href="replace"
                       className={classNames(
                         {
-                          'border-indigo-500 text-gray-900':
-                            router.pathname === '/',
-                          'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700':
-                            router.pathname !== '/',
+                          "border-indigo-500 text-gray-900":
+                            router.pathname === "/",
+                          "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
+                            router.pathname !== "/",
                         },
-                        'inline-flex items-center px-1 pt-1 border-b-2',
+                        "inline-flex items-center px-1 pt-1 border-b-2"
                       )}
                     >
                       Courses
@@ -174,11 +172,7 @@ export default function Header(): JSX.Element {
                               className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
                               <span className="sr-only">
-                                Copy
-                                {' '}
-                                {type}
-                                {' '}
-                                to clipboard
+                                Copy {type} to clipboard
                               </span>
                               {copiedContactInfo === contact ? (
                                 <CheckCircleIcon
@@ -201,7 +195,7 @@ export default function Header(): JSX.Element {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href={newReviewURL ?? '/'} passHref>
+                  <Link href={newReviewURL ?? "/"} passHref>
                     <a
                       href="replace"
                       className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -252,9 +246,9 @@ export default function Header(): JSX.Element {
                                 href={href}
                                 className={classNames(
                                   {
-                                    'bg-gray-100': active,
+                                    "bg-gray-100": active,
                                   },
-                                  'block px-4 py-2 text-gray-700',
+                                  "block px-4 py-2 text-gray-700"
                                 )}
                               >
                                 {text}
@@ -277,10 +271,10 @@ export default function Header(): JSX.Element {
                   as="a"
                   href="#"
                   className={classNames({
-                    'bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6':
-                      router.pathname === '/',
-                    'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6':
-                      router.pathname !== '/',
+                    "bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6":
+                      router.pathname === "/",
+                    "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6":
+                      router.pathname !== "/",
                   })}
                 >
                   Courses
@@ -323,9 +317,7 @@ export default function Header(): JSX.Element {
                     >
                       <span className="sr-only">
                         Copy
-                        {type}
-                        {' '}
-                        to clipboard
+                        {type} to clipboard
                       </span>
                       {copiedContactInfo === contact ? (
                         <CheckCircleIcon

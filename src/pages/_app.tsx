@@ -1,10 +1,10 @@
-import type { AppProps } from 'next/app';
-import Script from 'next/script';
+import type { AppProps } from "next/app";
+import Script from "next/script";
 
-import 'src/styles/globals.css';
-import Header from 'src/components/Header';
-import Footer from 'src/components/Footer';
-import Banner from 'src/components/Banner';
+import "src/styles/globals.css";
+import { Header } from "src/components/header";
+import { Footer } from "src/components/footer";
+import { Banner } from "src/components/banner";
 
 const analyticsId = process.env.NEXT_PUBLIC_ANALYTICS_ID;
 
