@@ -20,16 +20,16 @@ function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
   return `"reviews": *[_type == 'review' && references(^._id)]{
     "id": _id,
     "created": _createdAt,
-    rating,
-    difficulty,
-    workload,
+    ...,
     ${
       enrichmentOption === CourseEnrichmentOption.REVIEWS
         ? `
-      ...,
+      body,
       semester->
     `
-        : ""
+        : `
+      "body": ""
+    `
     }
   } | order(created desc)`;
 }

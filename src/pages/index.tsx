@@ -23,7 +23,7 @@ import classNames from "classnames";
 
 import { Input } from "src/components/input";
 
-import type { CourseWithReviewsStats, Course, Review } from "src/@types";
+import type { Course, Review } from "src/@types";
 import { CourseEnrichmentOption, getCourses } from "src/sanity";
 import { Toggle } from "src/components/toggle";
 import { average } from "src/stats";
@@ -32,15 +32,45 @@ import styles from "src/styles/Home.module.css";
 import { formatNumber } from "src/utils";
 
 interface HomePageProps {
-  courses: CourseWithReviewsStats[];
+  courses: Course[];
+  stats: {
+    [code: string]: Pick<Review, "rating" | "difficulty" | "workload"> & {
+      reviewCount: number;
+    };
+  };
 }
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
   const courses = await getCourses(CourseEnrichmentOption.STATS);
-
-  return {
-    props: { courses },
+  const props: HomePageProps = {
+    courses: [],
+    stats: {},
   };
+
+  courses.forEach(({ reviews, code, ...rest }) => {
+    props.stats[code] = {
+      reviewCount: reviews.length,
+    };
+
+    const rating = average(reviews, "rating");
+    if (rating) {
+      props.stats[code].rating = rating;
+    }
+
+    const difficulty = average(reviews, "difficulty");
+    if (difficulty) {
+      props.stats[code].difficulty = difficulty;
+    }
+
+    const workload = average(reviews, "workload");
+    if (workload) {
+      props.stats[code].workload = workload;
+    }
+
+    props.courses.push({ ...rest, code });
+  });
+
+  return { props };
 };
 
 interface PaginationProps {
@@ -200,13 +230,9 @@ const Pagination: FC<PaginationProps> = function Pagination({
 const getDefaultInputValue = (value: number | undefined): string =>
   typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
 
-type CourseStats = {
-  [code: string]: {
-    rating: number;
-    difficulty: number;
-    workload: number;
-  };
-};
+function between(value: number | undefined, min: number, max: number): boolean {
+  return typeof value === "undefined" ? true : value >= min && value <= max;
+}
 
 type SortableField =
   | keyof Pick<Course, "name">
@@ -227,22 +253,7 @@ const sortFieldsToLabels: {
   reviewCount: "# of Reviews",
 };
 
-export default function Home({ courses }: HomePageProps): JSX.Element {
-  const stats = useMemo<CourseStats>(
-    () =>
-      Object.fromEntries(
-        courses.map(({ reviews, code }) => [
-          code,
-          {
-            rating: average(reviews, "rating"),
-            difficulty: average(reviews, "difficulty"),
-            workload: average(reviews, "workload"),
-          },
-        ])
-      ),
-    [courses]
-  );
-
+export default function Home({ courses, stats }: HomePageProps): JSX.Element {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
@@ -252,7 +263,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
     [courses]
   );
 
-  const [view, setView] = useState<CourseWithReviewsStats[]>([]);
+  const [view, setView] = useState<Course[]>([]);
 
   // FILTERING
   // By default only show courses with 1+ review
@@ -274,29 +285,23 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   useEffect(() => {
     setView(
-      courses.filter(
-        ({ code, reviews, isDeprecated, isFoundational, notesURL }) => {
-          function between(value: number, min: number, max: number): boolean {
-            return Number.isNaN(value) ? true : value >= min && value <= max;
-          }
+      courses.filter(({ code, isDeprecated, isFoundational, notesURL }) => {
+        const { rating, difficulty, workload, reviewCount } = stats[code];
 
-          const { rating, difficulty, workload } = stats[code];
-
-          return (
-            between(
-              reviews.length,
-              minReviewCount || 0,
-              maxReviewCount || Number.POSITIVE_INFINITY
-            ) &&
-            between(rating, minRating || 1, maxRating || 5) &&
-            between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
-            between(workload, minWorkload || 1, maxWorkload || 100) &&
-            (hideDeprecated ? isDeprecated === false : true) &&
-            (onlyShowFoundational ? isFoundational === true : true) &&
-            (onlyShowNotes ? Boolean(notesURL) : true)
-          );
-        }
-      )
+        return (
+          between(
+            reviewCount,
+            minReviewCount || 0,
+            maxReviewCount || Number.POSITIVE_INFINITY
+          ) &&
+          between(rating, minRating || 1, maxRating || 5) &&
+          between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
+          between(workload, minWorkload || 1, maxWorkload || 100) &&
+          (hideDeprecated ? isDeprecated === false : true) &&
+          (onlyShowFoundational ? isFoundational === true : true) &&
+          (onlyShowNotes ? Boolean(notesURL) : true)
+        );
+      })
     );
   }, [
     courses,
@@ -315,7 +320,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   ]);
 
   // SORTING
-  const [sorted, setSorted] = useState<CourseWithReviewsStats[]>([]);
+  const [sorted, setSorted] = useState<Course[]>([]);
   const [sort, setSort] = useState<SortConfig>({
     field: "reviewCount",
     direction: "desc",
@@ -324,22 +329,30 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   useEffect(() => {
     setSorted(
       [...view].sort((a, b) => {
-        const comp = ((attribute) => {
-          switch (attribute) {
-            case "name":
-              return a.name.localeCompare(b.name);
-            case "reviewCount":
-              return a.reviews.length - b.reviews.length;
-            case "rating":
-              return stats[a.code].rating - stats[b.code].rating;
-            case "difficulty":
-              return stats[a.code].difficulty - stats[b.code].difficulty;
-            default:
-              return stats[a.code].workload - stats[b.code].workload;
-          }
-        })(sort.field);
+        const { direction, field } = sort;
+        const mult = direction === "asc" ? 1 : -1;
 
-        return comp * (sort.direction === "asc" ? 1 : -1);
+        switch (field) {
+          case "name":
+            return a.name.localeCompare(b.name) * mult;
+          case "reviewCount":
+            return (
+              (stats[a.code].reviewCount - stats[b.code].reviewCount) * mult
+            );
+          case "rating":
+          case "difficulty":
+          case "workload":
+            if (typeof stats[a.code][field] === "undefined") return 1;
+            if (typeof stats[b.code][field] === "undefined") return -1;
+
+            return (
+              ((stats[a.code][field] as number) -
+                (stats[b.code][field] as number)) *
+              mult
+            );
+          default:
+            throw new Error("Unknown sort option!");
+        }
       })
     );
   }, [sort, view, stats]);
@@ -357,9 +370,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   // SEARCHING
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState<CourseWithReviewsStats[]>(
-    []
-  );
+  const [searchResults, setSearchResults] = useState<Course[]>([]);
 
   useEffect(() => {
     if (!searchInput) {
@@ -795,10 +806,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {page.map(
-                      (
-                        { id, code, name, reviews, officialURL, notesURL },
-                        index
-                      ) => (
+                      ({ id, code, name, officialURL, notesURL }, index) => (
                         <tr
                           key={id}
                           className={index % 2 === 0 ? undefined : "bg-gray-50"}
@@ -861,7 +869,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </a>
                                   </Link>{" "}
                                   <span className="md:hidden">
-                                    ({reviews.length})
+                                    ({stats[code].reviewCount})
                                   </span>
                                 </dd>
                                 {officialURL && (
@@ -910,7 +918,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             {formatNumber(stats[code].workload)}
                           </td>
                           <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {reviews.length}
+                            {stats[code].reviewCount}
                           </td>
                         </tr>
                       )

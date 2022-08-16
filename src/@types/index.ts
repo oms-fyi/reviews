@@ -9,9 +9,9 @@ export interface Review {
   body: string;
   authorId: string; // encrypted GT username of author
   created: string; // ISO Datetime string
-  rating: number | null;
-  workload: number | null;
-  difficulty: number | null;
+  rating?: number;
+  workload?: number;
+  difficulty?: number;
 }
 
 export interface Course {
