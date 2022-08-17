@@ -221,7 +221,7 @@ export async function getReviews(): Promise<
         name,
         "code": department + "-" + number
       }
-    }[0...100]
+    }[0...100] | order(_createdAt desc)
   `;
 
   const response = sanityClient.fetch<
