@@ -207,3 +207,30 @@ export async function getCourses(
     sanityClient.fetch<ResponseType[typeof enrichmentOption][]>(query);
   return response;
 }
+
+export async function getReviews(): Promise<
+  Array<Review & { course: Pick<Course, "name" | "code">; semester: Semester }>
+> {
+  const query = `
+    *[_type == 'review']{
+      "id": _id,
+      "created": _createdAt,
+      ...,
+      semester->,
+      course-> {
+        name,
+        "code": department + "-" + number
+      }
+    }[0...100]
+  `;
+
+  const response = sanityClient.fetch<
+    Array<
+      Review & {
+        course: Pick<Course, "name" | "code">;
+        semester: Semester;
+      }
+    >
+  >(query);
+  return response;
+}

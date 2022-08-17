@@ -47,7 +47,10 @@ async function handler(
     }
 
     const payload = JSON.parse(body) as SanityWebhookPayload;
+
     await res.revalidate(`/courses/${payload.course.code}/reviews`);
+    await res.revalidate("/reviews/recent");
+
     res.json({ revalidated: true });
   } catch (error) {
     res.status(500).json({ error: "Error revalidating. Try again later." });
