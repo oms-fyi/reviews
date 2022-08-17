@@ -101,7 +101,7 @@ export function Header(): JSX.Element {
                         "inline-flex items-center px-1 pt-1 border-b-2"
                       )}
                     >
-                      Courses
+                      Home
                     </a>
                   </Link>
                   <a
