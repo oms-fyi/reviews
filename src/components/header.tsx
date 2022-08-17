@@ -6,34 +6,12 @@ import { useRouter } from "next/router";
 
 import classNames from "classnames";
 
-import { Disclosure, Menu, Transition, Popover } from "@headlessui/react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
 
-import {
-  MenuIcon,
-  XIcon,
-  DeviceMobileIcon,
-  InboxIcon,
-  ClipboardCopyIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
-} from "@heroicons/react/outline";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import { PlusSmIcon } from "@heroicons/react/solid";
 
-import { PHONE_NUMBER, EMAIL_ADDRESS } from "src/constants";
 import logo from "public/logo.svg";
-
-const contactMenuItems = [
-  {
-    contact: EMAIL_ADDRESS,
-    type: "email address",
-    Icon: InboxIcon,
-  },
-  {
-    contact: PHONE_NUMBER,
-    type: "phone number",
-    Icon: DeviceMobileIcon,
-  },
-];
 
 const githubMenuItems = [
   {
@@ -132,83 +110,6 @@ export function Header(): JSX.Element {
                   >
                     OMSCS Notes
                   </a>
-                  <Popover
-                    as="div"
-                    className="relative text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
-                  >
-                    <Popover.Button
-                      className={classNames(
-                        {
-                          "text-gray-900": open,
-                          "text-gray-500": !open,
-                        },
-                        "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      )}
-                    >
-                      Contact
-                      <ChevronDownIcon
-                        className={classNames(
-                          open ? "text-gray-600" : "text-gray-400",
-                          "ml-2 h-5 w-5 group-hover:text-gray-500"
-                        )}
-                        aria-hidden="true"
-                      />
-                    </Popover.Button>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Popover.Panel className="z-50 origin-bottom-right absolute left-1/2 -translate-x-1/2 m-auto top-full rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {contactMenuItems.map(({ contact, Icon, type }) => (
-                          <div
-                            key={contact}
-                            className="flex items-center justify-between px-4 py-3 text-gray-700 gap-10"
-                          >
-                            <span className="flex items-center gap-2">
-                              <span>
-                                <span className="sr-only">{type}</span>
-                                <Icon className="h-5 w-5" />
-                              </span>
-                              {contact}
-                            </span>
-                            <button
-                              {...(copiedContactInfo === contact
-                                ? { disabled: true }
-                                : {})}
-                              type="button"
-                              onClick={() => {
-                                window.navigator.clipboard
-                                  .writeText(contact)
-                                  .then(() => setCopiedContactInfo(contact))
-                                  .catch(() => {});
-                              }}
-                              className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            >
-                              <span className="sr-only">
-                                Copy {type} to clipboard
-                              </span>
-                              {copiedContactInfo === contact ? (
-                                <CheckCircleIcon
-                                  className="text-green-600 h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <ClipboardCopyIcon
-                                  className="text-indigo-500 h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              )}
-                            </button>
-                          </div>
-                        ))}
-                      </Popover.Panel>
-                    </Transition>
-                  </Popover>
                 </div>
               </div>
               <div className="flex items-center">
@@ -305,53 +206,6 @@ export function Header(): JSX.Element {
               >
                 OMSCS Notes
               </Disclosure.Button>
-            </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="space-y-1">
-                {contactMenuItems.map(({ contact, Icon, type }) => (
-                  <div
-                    key={contact}
-                    className="flex items-center px-4 py-3 justify-between text-gray-700 gap-10 w-72"
-                  >
-                    <span className="flex items-center gap-2">
-                      <span>
-                        <span className="sr-only">{type}</span>
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      {contact}
-                    </span>
-                    <button
-                      {...(copiedContactInfo === contact
-                        ? { disabled: true }
-                        : {})}
-                      type="button"
-                      onClick={() => {
-                        window.navigator.clipboard
-                          .writeText(contact)
-                          .then(() => setCopiedContactInfo(contact))
-                          .catch(() => {});
-                      }}
-                      className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      <span className="sr-only">
-                        Copy
-                        {type} to clipboard
-                      </span>
-                      {copiedContactInfo === contact ? (
-                        <CheckCircleIcon
-                          className="text-green-600 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <ClipboardCopyIcon
-                          className="text-indigo-500 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="space-y-1">
