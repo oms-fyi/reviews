@@ -15,6 +15,7 @@ import {
   InboxIcon,
   ClipboardCopyIcon,
   CheckCircleIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/outline";
 import { PlusSmIcon } from "@heroicons/react/solid";
 
@@ -133,9 +134,26 @@ export function Header(): JSX.Element {
                   </a>
                   <Popover
                     as="div"
-                    className="relative border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2"
+                    className="relative text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
                   >
-                    <Popover.Button>Contact</Popover.Button>
+                    <Popover.Button
+                      className={classNames(
+                        {
+                          "text-gray-900": open,
+                          "text-gray-500": !open,
+                        },
+                        "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      )}
+                    >
+                      Contact
+                      <ChevronDownIcon
+                        className={classNames(
+                          open ? "text-gray-600" : "text-gray-400",
+                          "ml-2 h-5 w-5 group-hover:text-gray-500"
+                        )}
+                        aria-hidden="true"
+                      />
+                    </Popover.Button>
                     <Transition
                       as={Fragment}
                       enter="transition ease-out duration-200"
