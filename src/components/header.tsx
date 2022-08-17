@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, forwardRef } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -8,10 +8,53 @@ import classNames from "classnames";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import {
+  MenuIcon,
+  XIcon,
+  ChevronDownIcon,
+  ClockIcon,
+  GlobeAltIcon,
+  LockClosedIcon,
+  CurrencyDollarIcon,
+  ChipIcon,
+} from "@heroicons/react/outline";
+
 import { PlusSmIcon } from "@heroicons/react/solid";
 
 import logo from "public/logo.svg";
+
+const reviewsMenuItems = [
+  {
+    title: "Most Recent",
+    subtitle: "The 100 most recently submitted reviews",
+    href: "/reviews/recent",
+    icon: ClockIcon,
+  },
+  {
+    title: "CS-6250",
+    subtitle: "Computer Networks",
+    href: "/courses/CS-6250/reviews",
+    icon: GlobeAltIcon,
+  },
+  {
+    title: "CS-6035",
+    subtitle: "Introduction to Information Security",
+    href: "/courses/CS-6035/reviews",
+    icon: LockClosedIcon,
+  },
+  {
+    title: "CS-7646",
+    subtitle: "Machine Learning for Trading",
+    href: "/courses/CS-7646/reviews",
+    icon: CurrencyDollarIcon,
+  },
+  {
+    title: "CS-6200",
+    subtitle: "Introduction to Operating Systems",
+    href: "/courses/CS-6200/reviews",
+    icon: ChipIcon,
+  },
+];
 
 const githubMenuItems = [
   {
@@ -27,6 +70,20 @@ const githubMenuItems = [
     href: "https://github.com/oms-tech/reviews",
   },
 ];
+
+// headlessui.com/react/menu#integrating-with-next-js
+const NextLinkWrapper: typeof Link = forwardRef((props, ref) => {
+  const { href, children, ...rest } = props;
+  return (
+    <Link href={href} passHref>
+      <a ref={ref} href="replace" {...rest}>
+        {children}
+      </a>
+    </Link>
+  );
+});
+
+NextLinkWrapper.displayName = "NextLinkWrapper";
 
 export function Header(): JSX.Element {
   const router = useRouter();
@@ -104,6 +161,73 @@ export function Header(): JSX.Element {
                       Home
                     </a>
                   </Link>
+                  <Menu
+                    as="div"
+                    className="relative text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
+                  >
+                    {({ open: reviewMenuOpen }) => (
+                      <>
+                        <Menu.Button
+                          className={classNames(
+                            {
+                              "text-gray-900": reviewMenuOpen,
+                              "text-gray-500": !reviewMenuOpen,
+                            },
+                            "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                          )}
+                        >
+                          Reviews
+                          <ChevronDownIcon
+                            className={classNames(
+                              reviewMenuOpen
+                                ? "text-gray-600"
+                                : "text-gray-400",
+                              "ml-2 h-5 w-5 group-hover:text-gray-500"
+                            )}
+                            aria-hidden="true"
+                          />
+                        </Menu.Button>
+                        <Transition
+                          as={Fragment}
+                          enter="transition ease-out duration-200"
+                          enterFrom="transform opacity-0 scale-95"
+                          enterTo="transform opacity-100 scale-100"
+                          leave="transition ease-in duration-75"
+                          leaveFrom="transform opacity-100 scale-100"
+                          leaveTo="transform opacity-0 scale-95"
+                        >
+                          <Menu.Items className="absolute origin-bottom-right top-full z-10 -ml-4 -mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
+                            <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                              <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                                {reviewsMenuItems.map((item) => (
+                                  <Menu.Item key={item.href}>
+                                    <NextLinkWrapper
+                                      href={item.href}
+                                      key={item.href}
+                                      className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
+                                    >
+                                      <item.icon
+                                        className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                                        aria-hidden="true"
+                                      />
+                                      <div className="ml-4">
+                                        <p className="text-base font-medium text-gray-900">
+                                          {item.title}
+                                        </p>
+                                        <p className="mt-1 text-sm text-gray-500">
+                                          {item.subtitle}
+                                        </p>
+                                      </div>
+                                    </NextLinkWrapper>
+                                  </Menu.Item>
+                                ))}
+                              </div>
+                            </div>
+                          </Menu.Items>
+                        </Transition>
+                      </>
+                    )}
+                  </Menu>
                   <a
                     href="https://omscs-notes.com"
                     className="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
@@ -185,7 +309,7 @@ export function Header(): JSX.Element {
 
           <Disclosure.Panel className="md:hidden">
             <div className="pt-2 pb-3 space-y-1">
-              <Link href="/" passHref>
+              <NextLinkWrapper href="/" passHref>
                 <Disclosure.Button
                   as="a"
                   href="#"
@@ -198,7 +322,7 @@ export function Header(): JSX.Element {
                 >
                   Courses
                 </Disclosure.Button>
-              </Link>
+              </NextLinkWrapper>
               <Disclosure.Button
                 as="a"
                 href="https://omscs-notes.com"
@@ -206,6 +330,31 @@ export function Header(): JSX.Element {
               >
                 OMSCS Notes
               </Disclosure.Button>
+            </div>
+            <div className="pt-4 pb-3 border-t border-gray-200">
+              <div className="space-y-1">
+                {reviewsMenuItems.map((item) => (
+                  <NextLinkWrapper href={item.href} key={item.href} passHref>
+                    <Disclosure.Button
+                      as="a"
+                      className="p-3 flex items-start rounded-lg hover:bg-gray-50"
+                    >
+                      <item.icon
+                        className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                        aria-hidden="true"
+                      />
+                      <div className="ml-4">
+                        <p className="text-base font-medium text-gray-900">
+                          {item.title}
+                        </p>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {item.subtitle}
+                        </p>
+                      </div>
+                    </Disclosure.Button>
+                  </NextLinkWrapper>
+                ))}
+              </div>
             </div>
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="space-y-1">
