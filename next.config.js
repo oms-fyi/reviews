@@ -15,6 +15,11 @@ const moduleExports = {
         destination: "/",
         permanent: true,
       },
+      {
+        source: "/course/:id",
+        destination: "/courses/:id/reviews",
+        permanent: true,
+      },
     ];
   },
 };
