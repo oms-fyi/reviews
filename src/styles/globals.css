@@ -1,5 +1,7 @@
 #__next {
   @apply h-full;
+  @apply flex;
+  @apply flex-col;
 }
 
 @tailwind base;
