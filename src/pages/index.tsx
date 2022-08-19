@@ -31,46 +31,37 @@ import { average } from "src/stats";
 import styles from "src/styles/Home.module.css";
 import { formatNumber } from "src/utils";
 
+type CourseWithStats = Course & {
+  rating?: number;
+  difficulty?: number;
+  workload?: number;
+  reviewCount: number;
+};
 interface HomePageProps {
-  courses: Course[];
-  stats: {
-    [code: string]: Pick<Review, "rating" | "difficulty" | "workload"> & {
-      reviewCount: number;
-    };
-  };
+  courses: CourseWithStats[];
 }
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const courses = await getCourses(CourseEnrichmentOption.STATS);
-  const props: HomePageProps = {
-    courses: [],
-    stats: {},
-  };
+  const apiResponse = await getCourses(CourseEnrichmentOption.STATS);
 
-  courses.forEach(({ reviews, code, ...rest }) => {
-    props.stats[code] = {
+  const courses = apiResponse.map(({ reviews, ...rest }) => {
+    const course: CourseWithStats = {
+      ...rest,
       reviewCount: reviews.length,
     };
 
     const rating = average(reviews, "rating");
-    if (rating) {
-      props.stats[code].rating = rating;
-    }
-
     const difficulty = average(reviews, "difficulty");
-    if (difficulty) {
-      props.stats[code].difficulty = difficulty;
-    }
-
     const workload = average(reviews, "workload");
-    if (workload) {
-      props.stats[code].workload = workload;
-    }
 
-    props.courses.push({ ...rest, code });
+    if (rating) course.rating = rating;
+    if (difficulty) course.difficulty = difficulty;
+    if (workload) course.workload = workload;
+
+    return course;
   });
 
-  return { props };
+  return { props: { courses } };
 };
 
 interface PaginationProps {
@@ -253,7 +244,7 @@ const sortFieldsToLabels: {
   reviewCount: "# of Reviews",
 };
 
-export default function Home({ courses, stats }: HomePageProps): JSX.Element {
+export default function Home({ courses }: HomePageProps): JSX.Element {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
@@ -263,7 +254,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
     [courses]
   );
 
-  const [view, setView] = useState<Course[]>([]);
+  const [view, setView] = useState<CourseWithStats[]>([]);
 
   // FILTERING
   // By default only show courses with 1+ review
@@ -285,10 +276,16 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
 
   useEffect(() => {
     setView(
-      courses.filter(({ code, isDeprecated, isFoundational, notesURL }) => {
-        const { rating, difficulty, workload, reviewCount } = stats[code];
-
-        return (
+      courses.filter(
+        ({
+          isDeprecated,
+          isFoundational,
+          notesURL,
+          rating,
+          difficulty,
+          workload,
+          reviewCount,
+        }) =>
           between(
             reviewCount,
             minReviewCount || 0,
@@ -300,12 +297,10 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
           (hideDeprecated ? isDeprecated === false : true) &&
           (onlyShowFoundational ? isFoundational === true : true) &&
           (onlyShowNotes ? Boolean(notesURL) : true)
-        );
-      })
+      )
     );
   }, [
     courses,
-    stats,
     minReviewCount,
     maxReviewCount,
     minRating,
@@ -320,7 +315,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
   ]);
 
   // SORTING
-  const [sorted, setSorted] = useState<Course[]>([]);
+  const [sorted, setSorted] = useState<CourseWithStats[]>([]);
   const [sort, setSort] = useState<SortConfig>({
     field: "reviewCount",
     direction: "desc",
@@ -336,26 +331,20 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
           case "name":
             return a.name.localeCompare(b.name) * mult;
           case "reviewCount":
-            return (
-              (stats[a.code].reviewCount - stats[b.code].reviewCount) * mult
-            );
+            return (a.reviewCount - b.reviewCount) * mult;
           case "rating":
           case "difficulty":
           case "workload":
-            if (typeof stats[a.code][field] === "undefined") return 1;
-            if (typeof stats[b.code][field] === "undefined") return -1;
+            if (typeof a[field] === "undefined") return 1;
+            if (typeof b[field] === "undefined") return -1;
 
-            return (
-              ((stats[a.code][field] as number) -
-                (stats[b.code][field] as number)) *
-              mult
-            );
+            return ((a[field] as number) - (b[field] as number)) * mult;
           default:
             throw new Error("Unknown sort option!");
         }
       })
     );
-  }, [sort, view, stats]);
+  }, [sort, view]);
 
   function toggleSort(field: SortableField) {
     if (sort.field !== field) {
@@ -370,7 +359,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
 
   // SEARCHING
   const [searchInput, setSearchInput] = useState("");
-  const [searchResults, setSearchResults] = useState<Course[]>([]);
+  const [searchResults, setSearchResults] = useState<CourseWithStats[]>([]);
 
   useEffect(() => {
     if (!searchInput) {
@@ -806,7 +795,20 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {page.map(
-                      ({ id, code, name, officialURL, notesURL }, index) => (
+                      (
+                        {
+                          id,
+                          code,
+                          name,
+                          officialURL,
+                          notesURL,
+                          rating,
+                          difficulty,
+                          workload,
+                          reviewCount,
+                        },
+                        index
+                      ) => (
                         <tr
                           key={id}
                           className={index % 2 === 0 ? undefined : "bg-gray-50"}
@@ -828,7 +830,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                                 >
                                   <dt className="sr-only">Rating</dt>
                                   <dd>
-                                    {formatNumber(stats[code].rating)}
+                                    {formatNumber(rating)}
                                     <span className="text-gray-400">
                                       {" "}
                                       / 5 rating
@@ -836,7 +838,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                                   </dd>
                                   <dt className="sr-only">Difficulty</dt>
                                   <dd>
-                                    {formatNumber(stats[code].difficulty)}
+                                    {formatNumber(difficulty)}
                                     <span className="text-gray-400">
                                       {" "}
                                       / 5 difficulty
@@ -845,7 +847,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                                 </div>
                                 <dt className="sr-only">Workload</dt>
                                 <dd>
-                                  {formatNumber(stats[code].workload)}
+                                  {formatNumber(workload)}
                                   <span className="text-gray-400">
                                     {" "}
                                     hours of work per week
@@ -869,7 +871,7 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                                     </a>
                                   </Link>{" "}
                                   <span className="md:hidden">
-                                    ({stats[code].reviewCount})
+                                    ({reviewCount})
                                   </span>
                                 </dd>
                                 {officialURL && (
@@ -909,16 +911,16 @@ export default function Home({ courses, stats }: HomePageProps): JSX.Element {
                             {code}
                           </td>
                           <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {formatNumber(stats[code].rating)}
+                            {formatNumber(rating)}
                           </td>
                           <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {formatNumber(stats[code].difficulty)}
+                            {formatNumber(difficulty)}
                           </td>
                           <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {formatNumber(stats[code].workload)}
+                            {formatNumber(workload)}
                           </td>
                           <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {stats[code].reviewCount}
+                            {reviewCount}
                           </td>
                         </tr>
                       )
