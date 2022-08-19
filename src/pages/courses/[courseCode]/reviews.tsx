@@ -57,7 +57,7 @@ export default function Reviews({
       <Head>
         <title>{`${code} | OMSCentral`}</title>
       </Head>
-      <main className="max-w-2xl m-auto pb-5 bg-white mt-10">
+      <main className="min-h-full max-w-2xl m-auto pb-5 bg-white my-10">
         <div className="sticky top-0 py-5 px-6 bg-white border-b border-gray-200">
           <div className="sm:flex sm:items-center sm:justify-between">
             <h3 className="text-lg leading-6 font-medium text-gray-900">

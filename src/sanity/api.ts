@@ -21,6 +21,7 @@ function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
     "id": _id,
     "created": _createdAt,
     ...,
+    "course": null,
     ${
       enrichmentOption === CourseEnrichmentOption.REVIEWS
         ? `
