@@ -15,6 +15,7 @@ import {
   FilterIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/outline";
 
 import Fuse from "fuse.js";
@@ -248,7 +249,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
-        keys: ["name", "aliases"],
+        keys: ["name", "aliases", "codes"],
         threshold: 0.4,
       }),
     [courses]
@@ -401,7 +402,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       <Head>
         <title>Home | OMSCentral</title>
       </Head>
-      <main className="mx-auto sm:max-w-4xl sm:px-6 lg:px-8 py-6 sm:py-10">
+      <main className="mx-auto sm:max-w-6xl sm:px-6 lg:px-8 py-6 sm:py-10">
         <div className="px-4">
           <div className="space-y-2 flex flex-col">
             <div className="flex justify-between items-end gap-2">
@@ -763,6 +764,40 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       </th>
                       <th
                         scope="col"
+                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                      >
+                        <span className="flex">
+                          Code(s)
+                          <Popover className="relative">
+                            <>
+                              <Popover.Button type="button">
+                                <InformationCircleIcon className="h-4 w-4 text-indigo-600" />
+                              </Popover.Button>
+                              <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-200"
+                                enterFrom="opacity-0 translate-y-1"
+                                enterTo="opacity-100 translate-y-0"
+                                leave="transition ease-in duration-150"
+                                leaveFrom="opacity-100 translate-y-0"
+                                leaveTo="opacity-0 translate-y-1"
+                              >
+                                <Popover.Panel className="absolute right-0 translate-x-1/2 z-10 w-80 mt-3 px-0">
+                                  <article className="bg-white rounded-lg shadow-lg font-normal ring-1 ring-black px-4 py-2 ring-opacity-5">
+                                    Multiple departments may <b>crosslist</b> a
+                                    single course so that students with distinct
+                                    degree requirements can enroll. Please
+                                    register with the department that best fits
+                                    your needs.
+                                  </article>
+                                </Popover.Panel>
+                              </Transition>
+                            </>
+                          </Popover>
+                        </span>
+                      </th>
+                      <th
+                        scope="col"
                         className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Rating
@@ -793,6 +828,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         {
                           id,
                           slug,
+                          codes,
                           name,
                           officialURL,
                           notesURL,
@@ -811,7 +847,10 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             <dl className="font-normal">
                               <dt className="sr-only">Course name</dt>
                               <dd className="inline">
-                                <span className="w-72 whitespace-nowrap truncate block">
+                                <span className="w-72 lg:w-96 whitespace-nowrap truncate block">
+                                  <span className="block text-xs md:hidden mr-2 text-gray-500">
+                                    {codes.join(" / ")}
+                                  </span>
                                   <span className=" text-base">{name}</span>
                                 </span>
                               </dd>
@@ -897,6 +936,14 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 )}
                               </div>
                             </dl>
+                          </td>
+                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                            {codes.map((code) => (
+                              <>
+                                {code}
+                                <br />
+                              </>
+                            ))}
                           </td>
                           <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
                             {formatNumber(rating)}
