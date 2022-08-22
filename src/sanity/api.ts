@@ -208,7 +208,7 @@ export async function getReviews(): Promise<
         name,
         "slug": slug.current
       }
-    }[0...100] | order(_createdAt desc)
+    } | order(_createdAt desc)[0...100]
   `;
 
   const response = sanityClient.fetch<
