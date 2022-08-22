@@ -7,14 +7,14 @@ import { PlusIcon } from "@heroicons/react/solid";
 import { DocumentAddIcon } from "@heroicons/react/outline";
 
 import type { Course, CourseWithReviewsFull } from "src/@types";
-import { CourseEnrichmentOption, getCourse, getCourseCodes } from "src/sanity";
+import { CourseEnrichmentOption, getCourse, getCourseSlugs } from "src/sanity";
 import { average } from "src/stats";
 import { formatNumber } from "src/utils";
 import { ReviewList } from "src/components/review-list";
 import Link from "next/link";
 
 interface ReviewsPathParams {
-  courseCode: Course["code"];
+  slug: Course["slug"];
   [key: string]: string | string[];
 }
 
@@ -23,9 +23,9 @@ interface ReviewsPageProps {
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
-  const courseCodes = await getCourseCodes();
-  const paths = courseCodes.map(({ code }) => ({
-    params: { courseCode: code },
+  const slugs = await getCourseSlugs();
+  const paths = slugs.map(({ slug }) => ({
+    params: { slug },
   }));
 
   return {
@@ -37,17 +37,17 @@ export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
 export const getStaticProps: GetStaticProps<
   ReviewsPageProps,
   ReviewsPathParams
-> = async ({ params: { courseCode } = {} }) => {
-  if (!courseCode) {
-    throw new Error("No code passed to `getStaticProps`");
+> = async ({ params: { slug } = {} }) => {
+  if (!slug) {
+    throw new Error("No slug passed to `getStaticProps`");
   }
 
-  const course = await getCourse(courseCode, CourseEnrichmentOption.REVIEWS);
+  const course = await getCourse(slug, CourseEnrichmentOption.REVIEWS);
   return { props: { course } };
 };
 
 export default function Reviews({
-  course: { code, name, reviews },
+  course: { slug, name, reviews },
 }: ReviewsPageProps): JSX.Element {
   const avgRating = useMemo(() => average(reviews, "rating"), [reviews]);
   const avgDifficulty = useMemo(
@@ -59,7 +59,7 @@ export default function Reviews({
   return (
     <>
       <Head>
-        <title>{`${code} | OMSCentral`}</title>
+        <title>{`${name} | OMSCentral`}</title>
       </Head>
       {reviews.length === 0 ? (
         <main className="min-h-full max-w-2xl m-auto flex flex-col justify-center">
@@ -74,7 +74,7 @@ export default function Reviews({
                   Get started by writing a review.
                 </p>
                 <div className="mt-6">
-                  <Link href={`/reviews/new?course=${code}`} passHref>
+                  <Link href={`/reviews/new?course=${slug}`} passHref>
                     <a
                       href="replace"
                       className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -15,7 +15,7 @@ import { getCourseNames, getRecentSemesters } from "src/sanity";
 import { Alert } from "src/components/alert";
 
 interface NewReviewFormProps {
-  courses: Pick<Course, "id" | "code" | "name">[];
+  courses: Pick<Course, "id" | "slug" | "name">[];
   semesters: Semester[];
 }
 
@@ -63,11 +63,11 @@ export default function NewReviewForm({
   );
 
   useEffect(() => {
-    const { course: courseCode } = router.query;
+    const { course: courseSlug } = router.query;
 
-    if (typeof courseCode === "string") {
+    if (typeof courseSlug === "string") {
       setCourseId(
-        courses.find((course) => course.code === courseCode)?.id ?? ""
+        courses.find((course) => course.slug === courseSlug)?.id ?? ""
       );
     }
   }, [router, courses]);
@@ -184,7 +184,7 @@ export default function NewReviewForm({
         <div className="md:flex md:items-center md:justify-between">
           <div className="flex-1 min-w-0" aria-live="polite">
             <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
-              Add A Review {selectedCourse ? `for ${selectedCourse.code}` : ""}
+              Add A Review
             </h1>
             <div className="text-sm font-medium">
               {reviewRequestState.status === "complete" &&
@@ -304,7 +304,7 @@ export default function NewReviewForm({
                 Semester
               </legend>
               <p className="text-sm leading-5 text-gray-500 mb-4">
-                When did you take {selectedCourse?.code ?? "this course"}?
+                When did you take this course?
               </p>
               <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                 {semesters.map(({ id, term, startDate }) => (
@@ -334,16 +334,14 @@ export default function NewReviewForm({
               Review
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              Please share your experience along with some quick stats about{" "}
-              {selectedCourse?.code ?? "this course"}.
+              Please share your experience along with some quick stats.
             </p>
             <fieldset className="mt-6">
               <legend className="text-sm font-medium text-gray-900">
                 Rating
               </legend>
               <p className="text-sm leading-5 text-gray-500 mb-4">
-                Overall, how would you rate{" "}
-                {selectedCourse?.code ?? "this course"} on a scale of 1-5?
+                Overall, how would you rate this course on a scale of 1-5?
               </p>
               <div className="flex items-center space-x-7 md:space-x-10">
                 {[1, 2, 3, 4, 5].map((num) => (
@@ -372,8 +370,7 @@ export default function NewReviewForm({
                 Difficulty
               </legend>
               <p className="text-sm leading-5 text-gray-500 mb-4">
-                How difficult was {selectedCourse?.code ?? "this course"} on a
-                scale of 1-5?
+                How difficult was this course on a scale of 1-5?
               </p>
               <div className="flex items-center space-x-7 md:space-x-10">
                 {[1, 2, 3, 4, 5].map((num) => (
@@ -430,7 +427,7 @@ export default function NewReviewForm({
             </label>
             <p className="mt-2 text-sm text-gray-500" id="workload-unit">
               How much time <span className="sr-only">(in hours per week)</span>{" "}
-              did you invest in {selectedCourse?.code ?? "this course"}?
+              did you invest in this course?
             </p>
             <label
               htmlFor="body"
@@ -450,7 +447,7 @@ export default function NewReviewForm({
               </div>
             </label>
             <p className="mt-2 text-sm text-gray-500">
-              So, how was {selectedCourse?.code ?? "the course"}?
+              So, how was this course?
             </p>
           </div>
           <div className="pt-8" aria-live="polite">
@@ -632,7 +629,7 @@ export default function NewReviewForm({
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           Thanks, {username}! It&apos;s so awesome you took the
-                          time to review {selectedCourse?.code ?? ""}.
+                          time to write a review.
                         </p>
                       </div>
                     </div>
@@ -640,7 +637,7 @@ export default function NewReviewForm({
                   <div className="mt-5 sm:mt-6">
                     <Link
                       href={`/courses/${
-                        selectedCourse?.code ?? "CS-0000"
+                        selectedCourse?.slug ?? "CS-0000"
                       }/reviews`}
                       passHref
                     >

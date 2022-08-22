@@ -8,7 +8,7 @@ import { ReviewList } from "src/components/review-list";
 interface ReviewsPageProps {
   reviews: Array<
     Review & {
-      course: Pick<Course, "name" | "code">;
+      course: Pick<Course, "name" | "slug">;
       semester: Semester;
     }
   >;

@@ -248,7 +248,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
-        keys: ["name", "aliases", "code"],
+        keys: ["name", "aliases"],
         threshold: 0.4,
       }),
     [courses]
@@ -763,12 +763,6 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       </th>
                       <th
                         scope="col"
-                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
-                      >
-                        Code
-                      </th>
-                      <th
-                        scope="col"
                         className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                       >
                         Rating
@@ -798,7 +792,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       (
                         {
                           id,
-                          code,
+                          slug,
                           name,
                           officialURL,
                           notesURL,
@@ -818,9 +812,6 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               <dt className="sr-only">Course name</dt>
                               <dd className="inline">
                                 <span className="w-72 whitespace-nowrap truncate block">
-                                  <span className="block text-xs md:hidden mr-2 text-gray-500">
-                                    {code}
-                                  </span>
                                   <span className=" text-base">{name}</span>
                                 </span>
                               </dd>
@@ -860,7 +851,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 <dt className="sr-only">Reviews URL</dt>
                                 <dd>
                                   <Link
-                                    href={`/courses/${code}/reviews`}
+                                    href={`/courses/${slug}/reviews`}
                                     passHref
                                   >
                                     <a
@@ -906,9 +897,6 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 )}
                               </div>
                             </dl>
-                          </td>
-                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
-                            {code}
                           </td>
                           <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
                             {formatNumber(rating)}

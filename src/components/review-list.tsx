@@ -10,7 +10,7 @@ interface ReviewListProps {
   reviews: Array<
     Review & {
       semester: Semester;
-      course?: Pick<Course, "name" | "code">;
+      course?: Pick<Course, "name" | "slug">;
     }
   >;
 }
@@ -39,8 +39,8 @@ export function ReviewList({ reviews }: ReviewListProps): JSX.Element {
             {course && (
               <>
                 <h3>{course.name}</h3>
-                <Link href={`/courses/${course.code}/reviews`} passHref>
-                  <a href="replace">More {course.code} reviews</a>
+                <Link href={`/courses/${course.slug}/reviews`} passHref>
+                  <a href="replace">More reviews for {course.name}</a>
                 </Link>
               </>
             )}
