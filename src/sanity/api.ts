@@ -35,16 +35,16 @@ function getReviewPair(enrichmentOption: CourseEnrichmentOption): string {
   } | order(created desc)`;
 }
 
-type CourseCodes = Pick<Course, "code">[];
+type CourseSlugs = Pick<Course, "slug">[];
 
-export async function getCourseCodes(): Promise<CourseCodes> {
+export async function getCourseSlugs(): Promise<CourseSlugs> {
   const query = `
   *[_type == 'course'] {
-      "code": department + '-' + number
+      "slug": slug.current
     }
   `;
 
-  const response = await sanityClient.fetch<CourseCodes>(query);
+  const response = await sanityClient.fetch<CourseSlugs>(query);
   return response;
 }
 
@@ -100,13 +100,13 @@ export async function createReview({
   return response;
 }
 
-type CourseNames = Pick<Course, "id" | "code" | "name">[];
+type CourseNames = Pick<Course, "id" | "slug" | "name">[];
 
 export async function getCourseNames(): Promise<CourseNames> {
   const query = `
   *[_type == 'course'] {
       "id": _id,
-      "code": department + '-' + number,
+      "slug": slug.current,
       name
     } | order(name)
   `;
@@ -136,50 +136,36 @@ type ResponseType = {
 };
 
 export async function getCourse(
-  code: Course["code"],
+  slug: Course["slug"],
   enrichmentOption: CourseEnrichmentOption.NONE
 ): Promise<Course>;
 export async function getCourse(
-  code: Course["code"],
+  slug: Course["slug"],
   enrichmentOption: CourseEnrichmentOption.STATS
 ): Promise<CourseWithReviewsStats>;
 export async function getCourse(
-  code: Course["code"],
+  slug: Course["slug"],
   enrichmentOption: CourseEnrichmentOption.REVIEWS
 ): Promise<CourseWithReviewsFull>;
 export async function getCourse(
-  code: Course["code"],
+  slug: Course["slug"],
   enrichmentOption: CourseEnrichmentOption = CourseEnrichmentOption.NONE
 ): Promise<ResponseType[typeof enrichmentOption]> {
-  const match = code.match(/^(?<department>[A-z]+)-(?<number>.+)$/);
-
-  if (!match) {
-    throw new Error(`Code doesn't match format: ${code}`);
-  }
-
-  const { department, number } = match.groups ?? {};
-
-  if (!department || !number) {
-    throw new Error(`Can't parse department or number from code: ${code}`);
-  }
-
   const query = `
-    *[_type == 'course' && department == $department && number == $number]{
+    *[_type == 'course' && slug.current == $slug]{
       ...,
+      "slug": slug.current,
       "id": _id,
       "created": _createdAt,
-      "code": department + "-" + number,
       ${getReviewPair(enrichmentOption)}
     }[0]
   `;
 
   const response = sanityClient.fetch<ResponseType[typeof enrichmentOption]>(
     query,
-    {
-      department,
-      number,
-    }
+    { slug }
   );
+
   return response;
 }
 
@@ -198,8 +184,8 @@ export async function getCourses(
   const query = `
     *[_type == 'course']{
       ...,
+      "slug": slug.current,
       "id": _id,
-      "code": department + "-" + number,
       ${getReviewPair(enrichmentOption)}
     }
   `;
@@ -210,7 +196,7 @@ export async function getCourses(
 }
 
 export async function getReviews(): Promise<
-  Array<Review & { course: Pick<Course, "name" | "code">; semester: Semester }>
+  Array<Review & { course: Pick<Course, "name" | "slug">; semester: Semester }>
 > {
   const query = `
     *[_type == 'review']{
@@ -220,7 +206,7 @@ export async function getReviews(): Promise<
       semester->,
       course-> {
         name,
-        "code": department + "-" + number
+        "slug": slug.current
       }
     }[0...100] | order(_createdAt desc)
   `;
@@ -228,7 +214,7 @@ export async function getReviews(): Promise<
   const response = sanityClient.fetch<
     Array<
       Review & {
-        course: Pick<Course, "name" | "code">;
+        course: Pick<Course, "name" | "slug">;
         semester: Semester;
       }
     >

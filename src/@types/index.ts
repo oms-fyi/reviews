@@ -16,7 +16,7 @@ export interface Review {
 
 export interface Course {
   id: string;
-  code: string;
+  slug: string;
   name: string;
   department: string;
   number: string;

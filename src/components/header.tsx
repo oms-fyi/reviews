@@ -33,25 +33,25 @@ const reviewsMenuItems = [
   {
     title: "CS-6250",
     subtitle: "Computer Networks",
-    href: "/courses/CS-6250/reviews",
+    href: "/courses/computer-networks/reviews",
     icon: GlobeAltIcon,
   },
   {
     title: "CS-6035",
     subtitle: "Introduction to Information Security",
-    href: "/courses/CS-6035/reviews",
+    href: "/courses/introduction-to-information-security/reviews",
     icon: LockClosedIcon,
   },
   {
     title: "CS-7646",
     subtitle: "Machine Learning for Trading",
-    href: "/courses/CS-7646/reviews",
+    href: "/courses/machine-learning-for-trading/reviews",
     icon: CurrencyDollarIcon,
   },
   {
     title: "CS-6200",
     subtitle: "Introduction to Operating Systems",
-    href: "/courses/CS-6200/reviews",
+    href: "/courses/graduate-introduction-to-operating-systems/reviews",
     icon: ChipIcon,
   },
 ];
@@ -102,10 +102,10 @@ export function Header(): JSX.Element {
 
   useEffect(() => {
     const url = new URL(`${window.location.origin}/reviews/new`);
-    const { courseCode } = router.query;
+    const { slug } = router.query;
 
-    if (typeof courseCode === "string") {
-      url.searchParams.append("course", courseCode);
+    if (typeof slug === "string") {
+      url.searchParams.append("course", slug);
     }
 
     setNewReviewURL(url);

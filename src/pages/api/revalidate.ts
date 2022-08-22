@@ -24,7 +24,7 @@ async function readBody(readable: NextApiRequest): Promise<string> {
 
 type SanityWebhookPayload = {
   _type: "review";
-  course: Pick<Course, "code">;
+  course: Pick<Course, "slug">;
 };
 
 async function handler(
@@ -48,7 +48,7 @@ async function handler(
 
     const payload = JSON.parse(body) as SanityWebhookPayload;
 
-    await res.revalidate(`/courses/${payload.course.code}/reviews`);
+    await res.revalidate(`/courses/${payload.course.slug}/reviews`);
     await res.revalidate("/reviews/recent");
 
     res.json({ revalidated: true });
