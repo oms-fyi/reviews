@@ -122,7 +122,7 @@ export default function Reviews({
                 Quick Facts and Resources
               </h3>
               <p className="mt-1 max-w-2xl text-xs text-gray-500">
-                Did we miss something? Get something wrong?{" "}
+                Something missing or incorrect?{" "}
                 <a
                   href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${name}`}
                   target="_blank"
