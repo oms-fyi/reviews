@@ -14,13 +14,24 @@ export interface Review {
   difficulty?: number;
 }
 
+export interface Program {
+  name: string;
+  acronym: string;
+  url: string;
+}
+
 export interface Course {
   id: string;
   slug: string;
   codes: string[];
   name: string;
-  department: string;
-  number: string;
+  description?: string;
+  creditHours: number;
+  syllabusUrl?: string;
+  textbooks?: {
+    name: string;
+    url: string;
+  }[];
   isFoundational: boolean;
   isDeprecated: boolean;
   officialURL?: string;
