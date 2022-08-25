@@ -4,7 +4,6 @@ about: Create a report to help us improve OMS Reviews
 title: "[BUG REPORT]"
 labels: bug
 assignees: m4ttsch
-
 ---
 
 **Describe the bug**
