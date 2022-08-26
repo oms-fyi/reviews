@@ -47,7 +47,6 @@ async function handler(
     }
 
     const payload = JSON.parse(body) as SanityWebhookPayload;
-    console.log(payload);
 
     await res.revalidate(`/courses/${payload.course.slug}/reviews`);
     await res.revalidate("/reviews/recent");
