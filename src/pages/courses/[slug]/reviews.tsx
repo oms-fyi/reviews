@@ -11,7 +11,7 @@ import { DocumentAddIcon } from "@heroicons/react/outline";
 
 import type { Course, Review, Semester, Program } from "src/@types";
 import { sanityClient } from "src/sanity/client";
-import { ReviewList } from "src/components/review-list";
+import { Review as ReviewComponent } from "src/components/review";
 
 interface ReviewsPathParams {
   slug: Course["slug"];
@@ -230,7 +230,13 @@ export default function Reviews({
             </div>
           </div>
           {reviews.length > 0 ? (
-            <ReviewList reviews={reviews} />
+            <ul className="space-y-4 divide-gray-200">
+              {reviews.map((review) => (
+                <li key={review.id}>
+                  <ReviewComponent review={review} />
+                </li>
+              ))}
+            </ul>
           ) : (
             <div className="bg-white px-4 py-2 grow w-full max-w-xl lg:max-w-full shadow sm:rounded-lg">
               <div className="px-4 py-5 sm:p-6">

@@ -3,7 +3,7 @@ import Head from "next/head";
 
 import type { Review, Semester, Course } from "src/@types";
 import { getReviews } from "src/sanity/api";
-import { ReviewList } from "src/components/review-list";
+import { Review as ReviewComponent } from "src/components/review";
 
 interface ReviewsPageProps {
   reviews: Array<
@@ -29,7 +29,13 @@ export default function Reviews({ reviews }: ReviewsPageProps): JSX.Element {
         <h3 className="text-3xl text-center mb-10 font-medium text-gray-900">
           100 Most Recent Reviews
         </h3>
-        <ReviewList reviews={reviews} />
+        <ul className="space-y-4 divide-gray-200">
+          {reviews.map((review) => (
+            <li key={review.id}>
+              <ReviewComponent review={review} />
+            </li>
+          ))}
+        </ul>
       </main>
     </>
   );
