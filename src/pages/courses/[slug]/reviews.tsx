@@ -1,17 +1,13 @@
-import { useEffect, useState } from "react";
-
+import type { Course, Program, Review, Semester } from "src/@types";
 import type { GetStaticPaths, GetStaticProps } from "next";
+import { useEffect, useState } from "react";
+import { DocumentAddIcon } from "@heroicons/react/outline";
 import Head from "next/head";
 import Link from "next/link";
-
-import classNames from "classnames";
-
 import { PlusIcon } from "@heroicons/react/solid";
-import { DocumentAddIcon } from "@heroicons/react/outline";
-
-import type { Course, Review, Semester, Program } from "src/@types";
-import { sanityClient } from "src/sanity/client";
 import { Review as ReviewComponent } from "src/components/review";
+import classNames from "classnames";
+import { sanityClient } from "src/sanity/client";
 
 interface ReviewsPathParams {
   slug: Course["slug"];

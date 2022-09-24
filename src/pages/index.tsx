@@ -1,36 +1,29 @@
-import { Fragment, FC, useState, useEffect, useMemo } from "react";
-
-import type { GetStaticProps } from "next";
-import Head from "next/head";
-import Link from "next/link";
-
-import { Popover, Transition, Listbox } from "@headlessui/react";
 import {
-  ChevronRightIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  FilterIcon,
+  InformationCircleIcon,
+  SearchIcon,
+} from "@heroicons/react/outline";
+import {
   ChevronLeftIcon,
+  ChevronRightIcon,
   SelectorIcon,
 } from "@heroicons/react/solid";
-import {
-  SearchIcon,
-  FilterIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-  InformationCircleIcon,
-} from "@heroicons/react/outline";
-
-import Fuse from "fuse.js";
-
-import classNames from "classnames";
-
-import { Input } from "src/components/input";
-
 import type { Course, Review } from "src/@types";
 import { CourseEnrichmentOption, getCourses } from "src/sanity";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import { Listbox, Popover, Transition } from "@headlessui/react";
+import Fuse from "fuse.js";
+import type { GetStaticProps } from "next";
+import Head from "next/head";
+import { Input } from "src/components/input";
+import Link from "next/link";
 import { Toggle } from "src/components/toggle";
 import { average } from "src/stats";
-
-import styles from "src/styles/Home.module.css";
+import classNames from "classnames";
 import { formatNumber } from "src/utils";
+import styles from "src/styles/Home.module.css";
 
 type CourseWithStats = Course & {
   rating?: number;

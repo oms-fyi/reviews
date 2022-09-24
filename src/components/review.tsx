@@ -1,16 +1,13 @@
-import { useEffect, useState } from "react";
-
-import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import rehypeSanitize from "rehype-sanitize";
-
 import {
   CalendarIcon,
   PencilAltIcon,
   UserCircleIcon,
 } from "@heroicons/react/outline";
-
-import type { Review as ReviewType, Semester, Course } from "src/@types";
+import type { Course, Review as ReviewType, Semester } from "src/@types";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
 
 interface ReviewProps {
   review: ReviewType & {

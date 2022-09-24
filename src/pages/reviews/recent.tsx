@@ -1,9 +1,8 @@
+import type { Course, Review, Semester } from "src/@types";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
-
-import type { Review, Semester, Course } from "src/@types";
-import { getReviews } from "src/sanity/api";
 import { Review as ReviewComponent } from "src/components/review";
+import { getReviews } from "src/sanity/api";
 
 interface ReviewsPageProps {
   reviews: Array<

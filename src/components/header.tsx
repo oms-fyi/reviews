@@ -1,27 +1,21 @@
-import { Fragment, useState, useEffect, forwardRef } from "react";
-
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/router";
-
-import classNames from "classnames";
-
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-
 import {
-  MenuIcon,
-  XIcon,
   ChevronDownIcon,
+  ChipIcon,
   ClockIcon,
+  CurrencyDollarIcon,
   GlobeAltIcon,
   LockClosedIcon,
-  CurrencyDollarIcon,
-  ChipIcon,
+  MenuIcon,
+  XIcon,
 } from "@heroicons/react/outline";
-
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Fragment, forwardRef, useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { PlusSmIcon } from "@heroicons/react/solid";
-
+import classNames from "classnames";
 import logo from "public/logo.svg";
+import { useRouter } from "next/router";
 
 const reviewsMenuItems = [
   {
