@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { withSentry, captureException } from "@sentry/nextjs";
-
-import { isValidSignature, SIGNATURE_HEADER_NAME } from "@sanity/webhook";
-
+import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
+import { captureException, withSentry } from "@sentry/nextjs";
 import { Course } from "src/@types";
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";

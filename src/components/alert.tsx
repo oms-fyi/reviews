@@ -1,4 +1,4 @@
-import { CheckCircleIcon, XIcon, XCircleIcon } from "@heroicons/react/solid";
+import { CheckCircleIcon, XCircleIcon, XIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 
 interface AlertProps {

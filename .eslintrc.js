@@ -49,6 +49,7 @@ module.exports = {
     "import/no-extraneous-dependencies": "off",
     "react/jsx-props-no-spreading": "off",
     "unicorn/no-useless-undefined": "off",
+    "sort-imports": "error",
   },
   overrides: [
     {
