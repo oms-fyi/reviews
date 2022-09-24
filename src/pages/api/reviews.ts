@@ -1,8 +1,46 @@
 import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio";
-import { CreateReviewRequest, createReview } from "src/sanity/api";
+import type { Course, Review, Semester } from "src/@types";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { captureException, withSentry } from "@sentry/nextjs";
 import Joi from "joi";
+import crypto from "node:crypto";
+import { sanityClient } from "src/sanity";
+
+type CreateReviewRequest = {
+  rating: NonNullable<Review["rating"]>;
+  difficulty: NonNullable<Review["difficulty"]>;
+  workload: NonNullable<Review["workload"]>;
+  body: Review["body"];
+  courseId: Course["id"];
+  semesterId: Semester["id"];
+  username: string;
+};
+
+const KEY = process.env.ENCRYPTION_KEY;
+const IV = "5183666c72eec9e4";
+
+function encrypt(data: string): string {
+  if (!KEY) throw new Error("Encryption key not found!");
+
+  const cipher = crypto.createCipheriv(
+    "aes-256-cbc",
+    Buffer.from(KEY, "hex"),
+    IV
+  );
+  const encrypted = cipher.update(data, "utf8", "base64");
+
+  return encrypted + cipher.final("base64");
+}
+
+type CreateReviewSanityRequest = Omit<
+  CreateReviewRequest,
+  "courseId" | "semesterId" | "username"
+> & {
+  course: { _ref: string };
+  semester: { _ref: string };
+} & {
+  authorId: NonNullable<Review["authorId"]>;
+};
 
 type Payload = CreateReviewRequest & {
   code: string;
@@ -56,7 +94,7 @@ async function handler(
     return;
   }
 
-  const { username, code, ...review } = payload;
+  const { username, code, courseId, semesterId, ...review } = payload;
 
   try {
     const codeCheckResponseCode = await doesUserCodeMatch(username, code);
@@ -77,7 +115,25 @@ async function handler(
       return;
     }
 
-    await createReview({ ...review, username });
+    const authorId = encrypt(username);
+
+    const request = {
+      _type: "review",
+      authorId,
+      ...review,
+      course: {
+        _ref: courseId,
+        _type: "reference",
+      },
+      semester: {
+        _ref: semesterId,
+        _type: "reference",
+      },
+    };
+
+    // Will throw ClientError if references are non-existent.
+    // Will not catch at this time.
+    await sanityClient.create<CreateReviewSanityRequest>(request);
     res.status(201).json({});
   } catch (error_: unknown) {
     res
