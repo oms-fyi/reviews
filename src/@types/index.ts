@@ -38,11 +38,3 @@ export interface Course {
   notesURL?: string;
   aliases: string[];
 }
-
-export type CourseWithReviewsStats = Course & {
-  reviews: Pick<Review, "difficulty" | "workload" | "rating">[];
-};
-
-export type CourseWithReviewsFull = Course & {
-  reviews: (Review & { semester: Semester })[];
-};

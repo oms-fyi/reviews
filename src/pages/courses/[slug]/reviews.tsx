@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/solid";
 import { Review as ReviewComponent } from "src/components/review";
 import classNames from "classnames";
-import { sanityClient } from "src/sanity/client";
+import { sanityClient } from "src/sanity";
 
 interface ReviewsPathParams {
   slug: Course["slug"];

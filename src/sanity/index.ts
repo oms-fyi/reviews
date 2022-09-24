@@ -1,1 +1,1 @@
-export * from "./api";
+export { sanityClient } from "./client";

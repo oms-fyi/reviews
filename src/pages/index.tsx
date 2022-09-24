@@ -11,7 +11,6 @@ import {
   SelectorIcon,
 } from "@heroicons/react/solid";
 import type { Course, Review } from "src/@types";
-import { CourseEnrichmentOption, getCourses } from "src/sanity";
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { Listbox, Popover, Transition } from "@headlessui/react";
 import Fuse from "fuse.js";
@@ -20,11 +19,13 @@ import Head from "next/head";
 import { Input } from "src/components/input";
 import Link from "next/link";
 import { Toggle } from "src/components/toggle";
-import { average } from "src/stats";
 import classNames from "classnames";
-import { formatNumber } from "src/utils";
+import { sanityClient } from "src/sanity";
 import styles from "src/styles/Home.module.css";
 
+type CourseWithReviewsStats = Course & {
+  reviews: Pick<Review, "rating" | "difficulty" | "workload">[];
+};
 type CourseWithStats = Course & {
   rating?: number;
   difficulty?: number;
@@ -36,7 +37,22 @@ interface HomePageProps {
 }
 
 export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
-  const apiResponse = await getCourses(CourseEnrichmentOption.STATS);
+  const query = `
+    *[_type == 'course']{
+      ...,
+      "slug": slug.current,
+      "id": _id,
+      "reviews": *[_type == 'review' && references(^._id)]{
+        "id": _id,
+        "created": _createdAt,
+        ...,
+        "body": "",
+        "course": null,
+      }
+    }
+  `;
+
+  const apiResponse = await sanityClient.fetch<CourseWithReviewsStats[]>(query);
 
   const courses = apiResponse.map(({ reviews, ...rest }) => {
     const course: CourseWithStats = {
@@ -211,6 +227,31 @@ const Pagination: FC<PaginationProps> = function Pagination({
     </div>
   );
 };
+
+// MAY RETURN NaN
+function average(
+  reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
+  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
+): number {
+  let sum = 0;
+  let count = 0;
+
+  reviews.forEach((review) => {
+    const value = review[key];
+    if (value) {
+      count += 1;
+      sum += value;
+    }
+  });
+
+  return sum / count;
+}
+
+function formatNumber(value: number | undefined): string {
+  return Number.isNaN(value) || typeof value === "undefined"
+    ? "N/A"
+    : value.toFixed(2);
+}
 
 const getDefaultInputValue = (value: number | undefined): string =>
   typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
