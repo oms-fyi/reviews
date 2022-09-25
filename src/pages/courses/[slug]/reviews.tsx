@@ -8,6 +8,7 @@ import { PlusIcon } from "@heroicons/react/solid";
 import { Review as ReviewComponent } from "src/components/review";
 import classNames from "classnames";
 import { sanityClient } from "src/sanity";
+import { shouldPolyfill } from "@formatjs/intl-listformat/should-polyfill";
 
 interface ReviewsPathParams {
   slug: Course["slug"];
@@ -75,6 +76,13 @@ export const getStaticProps: GetStaticProps<
   return { props: { course } };
 };
 
+async function polyfill(locale: string) {
+  if (shouldPolyfill(locale)) {
+    await import("@formatjs/intl-listformat/polyfill-force");
+    await import(`@formatjs/intl-listformat/locale-data/${locale}`);
+  }
+}
+
 export default function Reviews({
   course: {
     name,
@@ -88,19 +96,21 @@ export default function Reviews({
     syllabusUrl,
   },
 }: ReviewsPageProps): JSX.Element {
-  const [hasMounted, setHasMounted] = useState(false);
+  const [listFormatter, setListFormatter] = useState<Intl.ListFormat>();
+  const programAcronyms = programs.map(({ acronym }) => acronym);
 
   useEffect(() => {
-    setHasMounted(true);
+    polyfill(navigator.language)
+      .then(() =>
+        setListFormatter(
+          new Intl.ListFormat(navigator.language, {
+            style: "long",
+            type: "conjunction",
+          })
+        )
+      )
+      .catch(() => {});
   }, []);
-
-  const formatter = new Intl.ListFormat(
-    hasMounted ? navigator.language : "en",
-    {
-      style: "long",
-      type: "conjunction",
-    }
-  );
 
   return (
     <>
@@ -142,7 +152,9 @@ export default function Reviews({
                     Listed As
                   </dt>
                   <dd className="text-sm text-gray-900 mt-0 col-span-2">
-                    {formatter.format(codes)}
+                    {listFormatter
+                      ? listFormatter.format(codes)
+                      : codes.join(", ")}
                   </dd>
                 </div>
                 <div className="py-5 grid grid-cols-3 gap-4 px-6">
@@ -158,7 +170,9 @@ export default function Reviews({
                     Available to
                   </dt>
                   <dd className="text-sm text-gray-900 mt-0 col-span-2">
-                    {formatter.format(programs.map(({ acronym }) => acronym))}{" "}
+                    {listFormatter
+                      ? listFormatter.format(programAcronyms)
+                      : programAcronyms.join(", ")}{" "}
                     students
                   </dd>
                 </div>
