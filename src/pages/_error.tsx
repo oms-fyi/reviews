@@ -10,10 +10,9 @@
  *  - https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
  *  - https://reactjs.org/docs/error-boundaries.html
  */
-
 import * as Sentry from "@sentry/nextjs";
-import NextErrorComponent from "next/error";
 import { NextPageContext } from "next";
+import NextErrorComponent from "next/error";
 
 function CustomErrorComponent({ statusCode }: { statusCode: number }) {
   return <NextErrorComponent statusCode={statusCode} />;

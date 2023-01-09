@@ -1,4 +1,5 @@
 import RestException from "twilio/lib/base/RestException";
+
 import { twilioClient } from "./client";
 
 const VERIFY_SERVICE_SID = "VA8fe01f6ccca6c198aaaf592da51ad99c";

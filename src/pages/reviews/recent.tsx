@@ -1,6 +1,7 @@
-import type { Course, Review, Semester } from "src/@types";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
+
+import type { Course, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
 import { sanityClient } from "src/sanity";
 

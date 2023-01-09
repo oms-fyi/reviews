@@ -1,3 +1,4 @@
+import { Listbox, Popover, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -10,16 +11,16 @@ import {
   ChevronRightIcon,
   SelectorIcon,
 } from "@heroicons/react/solid";
-import type { Course, Review } from "src/@types";
-import { FC, Fragment, useEffect, useMemo, useState } from "react";
-import { Listbox, Popover, Transition } from "@headlessui/react";
+import classNames from "classnames";
 import Fuse from "fuse.js";
 import type { GetStaticProps } from "next";
 import Head from "next/head";
-import { Input } from "src/components/input";
 import Link from "next/link";
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
+
+import type { Course, Review } from "src/@types";
+import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
-import classNames from "classnames";
 import { sanityClient } from "src/sanity";
 import styles from "src/styles/Home.module.css";
 

@@ -1,3 +1,4 @@
+import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
   ChipIcon,
@@ -8,14 +9,13 @@ import {
   MenuIcon,
   XIcon,
 } from "@heroicons/react/outline";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Fragment, forwardRef, useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { PlusSmIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
-import logo from "public/logo.svg";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import logo from "public/logo.svg";
+import { Fragment, forwardRef, useEffect, useState } from "react";
 
 const reviewsMenuItems = [
   {

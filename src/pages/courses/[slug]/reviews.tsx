@@ -1,14 +1,20 @@
-import type { Course, Program, Review, Semester } from "src/@types";
+import { shouldPolyfill } from "@formatjs/intl-listformat/should-polyfill";
+import {
+  ClockIcon,
+  DocumentAddIcon,
+  LightningBoltIcon,
+  StarIcon,
+} from "@heroicons/react/outline";
+import { PlusIcon } from "@heroicons/react/solid";
+import classNames from "classnames";
 import type { GetStaticPaths, GetStaticProps } from "next";
-import { useEffect, useState } from "react";
-import { DocumentAddIcon } from "@heroicons/react/outline";
 import Head from "next/head";
 import Link from "next/link";
-import { PlusIcon } from "@heroicons/react/solid";
+import { useEffect, useState } from "react";
+
+import type { Course, Program, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
-import classNames from "classnames";
 import { sanityClient } from "src/sanity";
-import { shouldPolyfill } from "@formatjs/intl-listformat/should-polyfill";
 
 interface ReviewsPathParams {
   slug: Course["slug"];
@@ -21,7 +27,35 @@ type CourseWithReviews = Course & {
 };
 
 interface ReviewsPageProps {
-  course: CourseWithReviews;
+  course: CourseWithReviews & {
+    rating: number;
+    difficulty: number;
+    workload: number;
+  };
+}
+
+function average(
+  reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
+  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
+): number {
+  let sum = 0;
+  let count = 0;
+
+  reviews.forEach((review) => {
+    const value = review[key];
+    if (value) {
+      count += 1;
+      sum += value;
+    }
+  });
+
+  return sum / count;
+}
+
+function formatNumber(value: number | undefined): string {
+  return Number.isNaN(value) || typeof value === "undefined"
+    ? "N/A"
+    : value.toFixed(2);
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
@@ -73,7 +107,11 @@ export const getStaticProps: GetStaticProps<
     slug,
   });
 
-  return { props: { course } };
+  const rating = average(course.reviews, "rating");
+  const difficulty = average(course.reviews, "difficulty");
+  const workload = average(course.reviews, "workload");
+
+  return { props: { course: { ...course, rating, difficulty, workload } } };
 };
 
 async function polyfill(locale: string) {
@@ -94,6 +132,9 @@ export default function Reviews({
     programs,
     textbooks,
     syllabusUrl,
+    rating,
+    difficulty,
+    workload,
   },
 }: ReviewsPageProps): JSX.Element {
   const [listFormatter, setListFormatter] = useState<Intl.ListFormat>();
@@ -118,10 +159,26 @@ export default function Reviews({
         <title>{`${name} | OMSCentral`}</title>
       </Head>
       <main className="m-auto max-w-6xl px-5 py-10">
-        <h3 className="text-3xl mb-10 font-medium text-gray-900 text-center lg:text-left">
+        <h3 className="text-3xl font-medium text-gray-900 text-center lg:text-left mb-2">
           {name}
         </h3>
-        <div className="flex flex-col lg:flex-row lg:items-start items-center gap-4">
+        {reviews.length > 0 && (
+          <div className="justify-center lg:justify-start flex gap-2 lg:gap-7">
+            <span className="flex items-center gap-0 lg:gap-1">
+              <StarIcon className="h-5 w-5 stroke-indigo-600" />
+              {formatNumber(rating)} / 5 rating
+            </span>
+            <span className="flex items-center gap-0 lg:gap-1">
+              <LightningBoltIcon className="h-5 w-5 stroke-indigo-600" />
+              {formatNumber(difficulty)} / 5 difficulty
+            </span>
+            <span className="flex items-center gap-0 lg:gap-1">
+              <ClockIcon className="h-5 w-5 stroke-indigo-600" />
+              {formatNumber(workload)} hrs / week
+            </span>
+          </div>
+        )}
+        <div className="flex flex-col lg:flex-row lg:items-start items-center gap-4 mt-10">
           <div className="bg-white shadow grow max-w-xl mx-auto lg:max-h-screen lg:overflow-y-auto lg:sticky lg:top-4 sm:rounded-lg">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">

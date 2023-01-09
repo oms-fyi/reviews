@@ -1,13 +1,14 @@
-import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
-import { Course, Review, Semester } from "src/@types";
-import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
-import { Alert } from "src/components/alert";
+import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
+import classNames from "classnames";
 import type { GetStaticProps } from "next";
 import Link from "next/link";
-import classNames from "classnames";
-import { sanityClient } from "src/sanity";
 import { useRouter } from "next/router";
+import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
+
+import { Course, Review, Semester } from "src/@types";
+import { Alert } from "src/components/alert";
+import { sanityClient } from "src/sanity";
 
 interface NewReviewFormProps {
   courses: Pick<Course, "id" | "slug" | "name">[];

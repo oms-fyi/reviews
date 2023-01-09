@@ -3,11 +3,12 @@ import {
   PencilAltIcon,
   UserCircleIcon,
 } from "@heroicons/react/outline";
-import type { Course, Review as ReviewType, Semester } from "src/@types";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
+
+import type { Course, Review as ReviewType, Semester } from "src/@types";
 
 interface ReviewProps {
   review: ReviewType & {
