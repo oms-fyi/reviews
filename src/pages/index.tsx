@@ -283,7 +283,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
-        keys: ["name", "aliases", "codes"],
+        keys: ["name", "tags", "codes"],
         threshold: 0.4,
       }),
     [courses]

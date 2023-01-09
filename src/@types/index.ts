@@ -36,5 +36,5 @@ export interface Course {
   isDeprecated: boolean;
   officialURL?: string;
   notesURL?: string;
-  aliases: string[];
+  tags: string[];
 }
