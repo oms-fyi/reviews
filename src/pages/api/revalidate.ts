@@ -49,6 +49,7 @@ async function handler(
 
     await res.revalidate(`/courses/${payload.course.slug}/reviews`);
     await res.revalidate("/reviews/recent");
+    await res.revalidate("/");
 
     res.json({ revalidated: true });
   } catch (error) {
