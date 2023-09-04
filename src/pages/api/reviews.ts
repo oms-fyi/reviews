@@ -84,18 +84,18 @@ async function handler(
     abortEarly: false,
     errors: { wrap: { label: "" } },
   };
-  const { value: payload, error } = schema.validate(
-    req.body,
-    validationOptions
-  );
+  const validationResult = schema.validate(req.body, validationOptions);
 
-  if (error) {
+  if (validationResult.error) {
     // Bad Request, Schema Validation Error
-    res.status(400).json({ errors: error.details.map((d) => d.message) });
+    res
+      .status(400)
+      .json({ errors: validationResult.error.details.map((d) => d.message) });
     return;
   }
 
-  const { username, code, courseId, semesterId, ...review } = payload;
+  const { username, code, courseId, semesterId, ...review } =
+    validationResult.value;
 
   try {
     const codeCheckResponseCode = await doesUserCodeMatch(username, code);

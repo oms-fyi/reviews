@@ -132,7 +132,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
   }
 
   return (
-    <div className="bg-white px-4 py-3 flex flex-wrap items-center justify-center border-t border-gray-200 sm:px-6 gap-4">
+    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <p className="text-sm text-gray-700 md:w-full">
         Showing{" "}
         {resultCount ? (
@@ -158,9 +158,9 @@ const Pagination: FC<PaginationProps> = function Pagination({
                   "-ml-px": i > 0,
                   "rounded-r-md": i === a.length - 1,
                 },
-                "relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
+                "relative inline-flex items-center border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:px-4 sm:py-2",
                 {
-                  "z-10 bg-indigo-50 border-indigo-500 text-indigo-600  hover:bg-indigo-50":
+                  "z-10 border-indigo-500 bg-indigo-50 text-indigo-600  hover:bg-indigo-50":
                     size === pageSize,
                 }
               )}
@@ -173,14 +173,14 @@ const Pagination: FC<PaginationProps> = function Pagination({
       </div>
       <div>
         <nav
-          className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+          className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm"
           aria-label="Pagination"
         >
           <button
             {...(hasPrevPage ? {} : { disabled: true })}
             type="button"
             onClick={decrementPageNumber}
-            className="relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
+            className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2"
           >
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -194,10 +194,10 @@ const Pagination: FC<PaginationProps> = function Pagination({
                 onClick={() => onPageChange(page)}
                 className={classNames(
                   {
-                    "z-10 bg-indigo-50 border-indigo-500 text-indigo-600":
+                    "z-10 border-indigo-500 bg-indigo-50 text-indigo-600":
                       page === pageNumber,
                   },
-                  "relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border text-sm font-medium"
+                  "relative inline-flex items-center border px-2 py-1 text-sm font-medium sm:px-4 sm:py-2"
                 )}
               >
                 {page + 1}
@@ -208,7 +208,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
               : [
                   <span
                     key="..."
-                    className=" relative inline-flex items-center px-2 py-1 sm:px-4 sm:py-2 border bg-white text-sm font-medium text-gray-700"
+                    className=" relative inline-flex items-center border bg-white px-2 py-1 text-sm font-medium text-gray-700 sm:px-4 sm:py-2"
                   >
                     ...
                   </span>,
@@ -218,7 +218,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
             type="button"
             {...(hasNextPage ? {} : { disabled: true })}
             onClick={incrementPageNumber}
-            className="relative inline-flex items-center rounded-r-md px-2 py-1 sm:px-4 sm:py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white"
+            className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2"
           >
             <span className="sr-only">Next</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -249,16 +249,14 @@ function average(
 }
 
 function formatNumber(value: number | undefined): string {
-  return Number.isNaN(value) || typeof value === "undefined"
-    ? "N/A"
-    : value.toFixed(2);
+  return Number.isNaN(value) || value === undefined ? "N/A" : value.toFixed(2);
 }
 
 const getDefaultInputValue = (value: number | undefined): string =>
-  typeof value === "undefined" || Number.isNaN(value) ? "" : value.toString();
+  value === undefined || Number.isNaN(value) ? "" : value.toString();
 
 function between(value: number | undefined, min: number, max: number): boolean {
-  return typeof value === "undefined" ? true : value >= min && value <= max;
+  return value === undefined ? true : value >= min && value <= max;
 }
 
 type SortableField =
@@ -364,32 +362,36 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
         const mult = direction === "asc" ? 1 : -1;
 
         switch (field) {
-          case "name":
+          case "name": {
             return a.name.localeCompare(b.name) * mult;
-          case "reviewCount":
+          }
+          case "reviewCount": {
             return (a.reviewCount - b.reviewCount) * mult;
+          }
           case "rating":
           case "difficulty":
-          case "workload":
-            if (typeof a[field] === "undefined") return 1;
-            if (typeof b[field] === "undefined") return -1;
+          case "workload": {
+            if (a[field] === undefined) return 1;
+            if (b[field] === undefined) return -1;
 
             return ((a[field] as number) - (b[field] as number)) * mult;
-          default:
+          }
+          default: {
             throw new Error("Unknown sort option!");
+          }
         }
       })
     );
   }, [sort, view]);
 
   function toggleSort(field: SortableField) {
-    if (sort.field !== field) {
-      setSort({ field, direction: "asc" });
-    } else {
+    if (sort.field === field) {
       setSort({
         field,
         direction: sort.direction === "asc" ? "desc" : "asc",
       });
+    } else {
+      setSort({ field, direction: "asc" });
     }
   }
 
@@ -437,10 +439,10 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       <Head>
         <title>Home | OMSCentral</title>
       </Head>
-      <main className="mx-auto sm:max-w-6xl sm:px-6 lg:px-8 py-6 sm:py-10">
+      <main className="mx-auto py-6 sm:max-w-6xl sm:px-6 sm:py-10 lg:px-8">
         <div className="px-4">
-          <div className="space-y-2 flex flex-col">
-            <div className="flex justify-between items-end gap-2">
+          <div className="flex flex-col space-y-2">
+            <div className="flex items-end justify-between gap-2">
               <div>
                 <label
                   htmlFor="search"
@@ -448,10 +450,10 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                 >
                   Search courses
                   <div className="mt-1 flex rounded-md shadow-sm">
-                    <div className="relative flex items-stretch flex-grow focus-within:z-10">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <div className="relative flex flex-grow items-stretch focus-within:z-10">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                         <SearchIcon
-                          className="h-5 w-5 text-gray-400 hidden sm:block"
+                          className="hidden h-5 w-5 text-gray-400 sm:block"
                           aria-hidden="true"
                         />
                       </div>
@@ -461,7 +463,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         id="search"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.currentTarget.value)}
-                        className="focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm sm:pl-10 border-gray-300"
+                        className="block w-full min-w-0 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:pl-10 sm:text-sm"
                         placeholder="HPCA"
                       />
                     </div>
@@ -470,7 +472,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         <>
                           <Popover.Button
                             type="button"
-                            className="-ml-px relative inline-flex items-center space-x-2 px-4 py-2.5 sm:py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                            className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:py-2"
                           >
                             <FilterIcon
                               className="h-5 w-5 text-gray-400"
@@ -489,11 +491,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             leaveFrom="opacity-100 translate-y-0"
                             leaveTo="opacity-0 translate-y-1"
                           >
-                            <Popover.Panel className="absolute right-0 translate-x-1/2 sm:translate-x-0 z-10 mt-3 px-4 sm:px-0">
+                            <Popover.Panel className="absolute right-0 z-10 mt-3 translate-x-1/2 px-4 sm:translate-x-0 sm:px-0">
                               <article className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                                 <form className="bg-white p-7">
                                   <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                    <p className="mb-4 text-xs uppercase text-gray-500">
                                       Filter by review count
                                     </p>
                                     <fieldset className="flex gap-2">
@@ -539,7 +541,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </fieldset>
                                   </div>
                                   <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                    <p className="mb-4 text-xs uppercase text-gray-500">
                                       Filter by stats
                                     </p>
                                     <div className="flex flex-col gap-6">
@@ -669,7 +671,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </div>
                                   </div>
                                   <div className="mb-6">
-                                    <p className="mb-4 text-xs text-gray-500 uppercase">
+                                    <p className="mb-4 text-xs uppercase text-gray-500">
                                       Other Filters
                                     </p>
                                     <div className="flex flex-col gap-6">
@@ -710,9 +712,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       <Listbox.Label className="block text-sm font-medium text-gray-700">
                         Sort by
                       </Listbox.Label>
-                      <div className="mt-1 relative">
-                        <Listbox.Button className="bg-white relative w-full border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                          <div className="flex gap-1 items-center">
+                      <div className="relative mt-1">
+                        <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                          <div className="flex items-center gap-1">
                             <span className="block truncate">
                               {sortFieldsToLabels[sort.field]}
                             </span>
@@ -728,7 +730,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               />
                             )}
                           </div>
-                          <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                             <SelectorIcon
                               className="h-5 w-5 text-gray-400"
                               aria-hidden="true"
@@ -743,7 +745,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           leaveFrom="opacity-100"
                           leaveTo="opacity-0"
                         >
-                          <Listbox.Options className="absolute right-0 z-10 mt-1 w-40 bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                          <Listbox.Options className="absolute right-0 z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                             {Object.entries(sortFieldsToLabels).map(
                               ([field, label]) => (
                                 <Listbox.Option
@@ -751,10 +753,10 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   className={({ active }) =>
                                     classNames(
                                       {
-                                        "text-white bg-indigo-600": active,
+                                        "bg-indigo-600 text-white": active,
                                         "text-gray-900": !active,
                                       },
-                                      "cursor-default select-none relative py-2 pl-3 pr-9"
+                                      "relative cursor-default select-none py-2 pl-3 pr-9"
                                     )
                                   }
                                   value={field}
@@ -783,7 +785,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                 </Listbox>
               </div>
             </div>
-            <div className="shadow ring-1 overflow-hidden ring-black ring-opacity-5 md:mx-0 md:rounded-lg">
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:mx-0 md:rounded-lg">
               <div className="overflow-scroll">
                 <table
                   className="min-w-full border-separate"
@@ -799,7 +801,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       </th>
                       <th
                         scope="col"
-                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter md:table-cell"
                       >
                         <span className="flex">
                           Code(s)
@@ -817,8 +819,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1"
                               >
-                                <Popover.Panel className="absolute right-0 translate-x-1/2 z-10 w-80 mt-3 px-0">
-                                  <article className="bg-white rounded-lg shadow-lg font-normal ring-1 ring-black px-4 py-2 ring-opacity-5">
+                                <Popover.Panel className="absolute right-0 z-10 mt-3 w-80 translate-x-1/2 px-0">
+                                  <article className="rounded-lg bg-white px-4 py-2 font-normal shadow-lg ring-1 ring-black ring-opacity-5">
                                     Multiple departments may <b>crosslist</b> a
                                     single course so that students with distinct
                                     degree requirements can enroll. Please
@@ -833,25 +835,25 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       </th>
                       <th
                         scope="col"
-                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                       >
                         Rating
                       </th>
                       <th
                         scope="col"
-                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                       >
                         Difficulty
                       </th>
                       <th
                         scope="col"
-                        className="hidden sm:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                       >
                         Workload
                       </th>
                       <th
                         scope="col"
-                        className="hidden md:table-cell border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                        className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter md:table-cell"
                       >
                         Reviews
                       </th>
@@ -882,8 +884,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             <dl className="font-normal">
                               <dt className="sr-only">Course name</dt>
                               <dd className="inline">
-                                <span className="w-72 lg:w-96 whitespace-nowrap truncate block">
-                                  <span className="block text-xs md:hidden mr-2 text-gray-500">
+                                <span className="block w-72 truncate whitespace-nowrap lg:w-96">
+                                  <span className="mr-2 block text-xs text-gray-500 md:hidden">
                                     {codes.join(" / ")}
                                   </span>
                                   <span className=" text-base">{name}</span>
@@ -930,7 +932,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   >
                                     <a
                                       href="replace"
-                                      className="text-indigo-600 text-sm hover:text-indigo-900"
+                                      className="text-sm text-indigo-600 hover:text-indigo-900"
                                     >
                                       Reviews
                                     </a>
@@ -947,7 +949,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         href={officialURL}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="text-indigo-600 text-sm hover:text-indigo-900"
+                                        className="text-sm text-indigo-600 hover:text-indigo-900"
                                       >
                                         GT Official
                                       </a>
@@ -962,7 +964,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         href={notesURL}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="text-indigo-600 text-sm hover:text-indigo-900"
+                                        className="text-sm text-indigo-600 hover:text-indigo-900"
                                       >
                                         Lecture Notes
                                       </a>
@@ -972,7 +974,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               </div>
                             </dl>
                           </td>
-                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 md:table-cell">
                             {codes.map((code) => (
                               <>
                                 {code}
@@ -980,16 +982,16 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               </>
                             ))}
                           </td>
-                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:table-cell">
                             {formatNumber(rating)}
                           </td>
-                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:table-cell">
                             {formatNumber(difficulty)}
                           </td>
-                          <td className="hidden sm:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:table-cell">
                             {formatNumber(workload)}
                           </td>
-                          <td className="hidden md:table-cell whitespace-nowrap px-3 py-4 text-sm text-gray-700">
+                          <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 md:table-cell">
                             {reviewCount}
                           </td>
                         </tr>

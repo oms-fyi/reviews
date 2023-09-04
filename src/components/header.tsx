@@ -109,12 +109,12 @@ export function Header(): JSX.Element {
     <Disclosure as="nav" className="bg-white shadow">
       {({ open }) => (
         <>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="-ml-2 mr-2 flex items-center md:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -124,7 +124,7 @@ export function Header(): JSX.Element {
                   </Disclosure.Button>
                 </div>
                 <Link href="/" passHref>
-                  <a href="replace" className="flex-shrink-0 flex items-center">
+                  <a href="replace" className="flex flex-shrink-0 items-center">
                     <div className="flex items-center gap-2">
                       <Image
                         // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
@@ -138,7 +138,7 @@ export function Header(): JSX.Element {
                     </div>
                   </a>
                 </Link>
-                <div className="hidden md:ml-6 md:flex justify-center gap-6">
+                <div className="hidden justify-center gap-6 md:ml-6 md:flex">
                   <Link href="/" passHref>
                     <a
                       href="replace"
@@ -149,7 +149,7 @@ export function Header(): JSX.Element {
                           "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
                             router.pathname !== "/",
                         },
-                        "inline-flex items-center px-1 pt-1 border-b-2"
+                        "inline-flex items-center border-b-2 px-1 pt-1"
                       )}
                     >
                       Home
@@ -157,7 +157,7 @@ export function Header(): JSX.Element {
                   </Link>
                   <Menu
                     as="div"
-                    className="relative text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
+                    className="relative inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
                   >
                     {({ open: reviewMenuOpen }) => (
                       <>
@@ -167,7 +167,7 @@ export function Header(): JSX.Element {
                               "text-gray-900": reviewMenuOpen,
                               "text-gray-500": !reviewMenuOpen,
                             },
-                            "group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           )}
                         >
                           Reviews
@@ -190,18 +190,18 @@ export function Header(): JSX.Element {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className="absolute origin-bottom-right top-full z-10 -ml-4 -mt-3 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
-                            <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                          <Menu.Items className="absolute top-full z-10 -ml-4 -mt-3 w-screen max-w-md origin-bottom-right transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
+                            <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
                               <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                                 {reviewsMenuItems.map((item) => (
                                   <Menu.Item key={item.href}>
                                     <NextLinkWrapper
                                       href={item.href}
                                       key={item.href}
-                                      className="-m-3 p-3 flex items-start rounded-lg hover:bg-gray-50"
+                                      className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                                     >
                                       <item.icon
-                                        className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                                        className="h-6 w-6 flex-shrink-0 text-indigo-600"
                                         aria-hidden="true"
                                       />
                                       <div className="ml-4">
@@ -224,7 +224,7 @@ export function Header(): JSX.Element {
                   </Menu>
                   <a
                     href="https://omscs-notes.com"
-                    className="text-gray-500 hover:text-gray-700 inline-flex items-center px-1 pt-1"
+                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
                   >
                     OMSCS Notes
                   </a>
@@ -235,7 +235,7 @@ export function Header(): JSX.Element {
                   <Link href={newReviewURL ?? "/"} passHref>
                     <a
                       href="replace"
-                      className="relative inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                       <PlusSmIcon
                         className="-ml-1 mr-2 h-5 w-5"
@@ -245,10 +245,10 @@ export function Header(): JSX.Element {
                     </a>
                   </Link>
                 </div>
-                <div className="hidden md:ml-4 md:flex-shrink-0 md:flex md:items-center">
-                  <Menu as="div" className="ml-3 relative">
+                <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
+                  <Menu as="div" className="relative ml-3">
                     <div className="flex">
-                      <Menu.Button className="bg-white p-1 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 text-gray-400 hover:text-gray-500 focus:text-gray-500">
+                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <span className="sr-only">Open GitHub menu</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -275,7 +275,7 @@ export function Header(): JSX.Element {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="z-50 origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {githubMenuItems.map(({ text, href }) => (
                           <Menu.Item key={href}>
                             {({ active }) => (
@@ -302,15 +302,15 @@ export function Header(): JSX.Element {
           </div>
 
           <Disclosure.Panel className="md:hidden">
-            <div className="pt-2 pb-3 space-y-1">
+            <div className="space-y-1 pb-3 pt-2">
               <NextLinkWrapper href="/" passHref>
                 <Disclosure.Button
                   as="a"
                   href="#"
                   className={classNames({
-                    "bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6":
+                    "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6":
                       router.pathname === "/",
-                    "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium sm:pl-5 sm:pr-6":
+                    "block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6":
                       router.pathname !== "/",
                   })}
                 >
@@ -320,21 +320,21 @@ export function Header(): JSX.Element {
               <Disclosure.Button
                 as="a"
                 href="https://omscs-notes.com"
-                className="text-gray-500 hover:bg-gray-50 hover:text-gray-700 block pl-3 pr-4 py-2 text-base font-medium sm:pl-5 sm:pr-6"
+                className="block py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6"
               >
                 OMSCS Notes
               </Disclosure.Button>
             </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
+            <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="space-y-1">
                 {reviewsMenuItems.map((item) => (
                   <NextLinkWrapper href={item.href} key={item.href} passHref>
                     <Disclosure.Button
                       as="a"
-                      className="p-3 flex items-start rounded-lg hover:bg-gray-50"
+                      className="flex items-start rounded-lg p-3 hover:bg-gray-50"
                     >
                       <item.icon
-                        className="flex-shrink-0 h-6 w-6 text-indigo-600"
+                        className="h-6 w-6 flex-shrink-0 text-indigo-600"
                         aria-hidden="true"
                       />
                       <div className="ml-4">
@@ -350,14 +350,14 @@ export function Header(): JSX.Element {
                 ))}
               </div>
             </div>
-            <div className="pt-4 pb-3 border-t border-gray-200">
+            <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="space-y-1">
                 {githubMenuItems.map(({ text, href }) => (
                   <Disclosure.Button
                     as="a"
                     href={href}
                     key={href}
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 sm:px-6"
+                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
                   >
                     {text}
                   </Disclosure.Button>

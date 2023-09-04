@@ -19,15 +19,15 @@ export function Alert({
           "bg-red-50": variant === "failure",
           "bg-green-50": variant === "success",
         },
-        "rounded-md p-4 my-4"
+        "my-4 rounded-md p-4"
       )}
     >
       <div className="flex">
         <div className="flex-shrink-0">
           {variant === "success" ? (
-            <CheckCircleIcon className="text-green-400 h-5 w-5" />
+            <CheckCircleIcon className="h-5 w-5 text-green-400" />
           ) : (
-            <XCircleIcon className="text-red-400 h-5 w-5" />
+            <XCircleIcon className="h-5 w-5 text-red-400" />
           )}
         </div>
         <div
@@ -48,9 +48,9 @@ export function Alert({
               onClick={onDismiss}
               className={classNames(
                 {
-                  "bg-green-50 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600":
+                  "bg-green-50 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50":
                     variant === "success",
-                  "bg-red-50 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-50 focus:ring-red-600":
+                  "bg-red-50 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50":
                     variant === "failure",
                 },
                 "inline-flex rounded-md p-1.5"

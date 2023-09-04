@@ -53,9 +53,7 @@ function average(
 }
 
 function formatNumber(value: number | undefined): string {
-  return Number.isNaN(value) || typeof value === "undefined"
-    ? "N/A"
-    : value.toFixed(2);
+  return Number.isNaN(value) || value === undefined ? "N/A" : value.toFixed(2);
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
@@ -159,11 +157,11 @@ export default function Reviews({
         <title>{`${name} | OMSCentral`}</title>
       </Head>
       <main className="m-auto max-w-6xl px-5 py-10">
-        <h3 className="text-3xl font-medium text-gray-900 text-center lg:text-left mb-2">
+        <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
           {name}
         </h3>
         {reviews.length > 0 && (
-          <div className="justify-center lg:justify-start flex gap-2 lg:gap-7">
+          <div className="flex justify-center gap-2 lg:justify-start lg:gap-7">
             <span className="flex items-center gap-0 lg:gap-1">
               <StarIcon className="h-5 w-5 stroke-indigo-600" />
               {formatNumber(rating)} / 5 rating
@@ -178,10 +176,10 @@ export default function Reviews({
             </span>
           </div>
         )}
-        <div className="flex flex-col lg:flex-row lg:items-start items-center gap-4 mt-10">
-          <div className="bg-white shadow grow max-w-xl mx-auto lg:max-h-screen lg:overflow-y-auto lg:sticky lg:top-4 sm:rounded-lg">
+        <div className="mt-10 flex flex-col items-center gap-4 lg:flex-row lg:items-start">
+          <div className="mx-auto max-w-xl grow bg-white shadow sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto">
             <div className="px-4 py-5 sm:px-6">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+              <h3 className="text-lg font-medium leading-6 text-gray-900">
                 Quick Facts and Resources
               </h3>
               <p className="mt-1 max-w-2xl text-xs text-gray-500">
@@ -196,56 +194,56 @@ export default function Reviews({
                 </a>
               </p>
             </div>
-            <div className="border-t border-gray-200 px-4 py-5 p-0">
+            <div className="border-t border-gray-200 p-0 px-4 py-5">
               <dl className="divide-y divide-gray-200">
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">Name</dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-2">
+                  <dd className="col-span-2 mt-0 text-sm text-gray-900">
                     {name}
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Listed As
                   </dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-2">
+                  <dd className="col-span-2 mt-0 text-sm text-gray-900">
                     {listFormatter
                       ? listFormatter.format(codes)
                       : codes.join(", ")}
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Credit Hours
                   </dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-2">
+                  <dd className="col-span-2 mt-0 text-sm text-gray-900">
                     {creditHours}
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Available to
                   </dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-2">
+                  <dd className="col-span-2 mt-0 text-sm text-gray-900">
                     {listFormatter
                       ? listFormatter.format(programAcronyms)
                       : programAcronyms.join(", ")}{" "}
                     students
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Description
                   </dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-3 sm:col-span-2 lg:col-span-3">
+                  <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3">
                     {description ?? "Course description not found."}{" "}
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Syllabus
                   </dt>
-                  <dd className="text-sm text-gray-900 mt-0 col-span-2">
+                  <dd className="col-span-2 mt-0 text-sm text-gray-900">
                     {syllabusUrl ? (
                       <a
                         href={syllabusUrl}
@@ -260,28 +258,28 @@ export default function Reviews({
                     )}
                   </dd>
                 </div>
-                <div className="py-5 grid grid-cols-3 gap-4 px-6">
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
                   <dt className="text-sm font-medium text-gray-500">
                     Textbooks
                   </dt>
                   <dd
-                    className={classNames("text-sm text-gray-900 mt-0", {
+                    className={classNames("mt-0 text-sm text-gray-900", {
                       "col-span-3": textbooks,
                       "col-span-2": !textbooks,
                     })}
                   >
                     {textbooks ? (
-                      <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
+                      <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
                         {textbooks.map(({ name: textbookName, url }) => (
                           <li
                             key={textbookName}
-                            className="pl-3 pr-4 py-3 flex items-center justify-between text-sm"
+                            className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
                           >
                             <a
                               href={url}
                               target="_blank"
                               rel="noreferrer"
-                              className="font-medium flex-1 w-0 text-indigo-600 hover:text-indigo-500 truncate"
+                              className="w-0 flex-1 truncate font-medium text-indigo-600 hover:text-indigo-500"
                             >
                               {textbookName}
                             </a>
@@ -305,7 +303,7 @@ export default function Reviews({
               ))}
             </ul>
           ) : (
-            <div className="bg-white px-4 py-2 grow w-full max-w-xl lg:max-w-full shadow sm:rounded-lg">
+            <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow sm:rounded-lg lg:max-w-full">
               <div className="px-4 py-5 sm:p-6">
                 <div className="text-center">
                   <DocumentAddIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -319,7 +317,7 @@ export default function Reviews({
                     <Link href={`/reviews/new?course=${slug}`} passHref>
                       <a
                         href="replace"
-                        className="no-underline inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white no-underline shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                       >
                         <PlusIcon
                           className="-ml-1 mr-2 h-5 w-5"

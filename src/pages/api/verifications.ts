@@ -18,7 +18,7 @@ async function handler(
 
   const { username } = req.body as Payload;
 
-  if (typeof username === "undefined") {
+  if (username === undefined) {
     res.status(400).json({ error: "GATech username required." });
     return;
   }

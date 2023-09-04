@@ -36,15 +36,15 @@ export function Review({ review }: ReviewProps): JSX.Element {
   }, []);
 
   return (
-    <div className="bg-white px-6 py-3 shadow sm:rounded-lg mx-auto prose prose-sm">
-      <p className="flex gap-2 items-center">
+    <div className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg">
+      <p className="flex items-center gap-2">
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
           <span className="font-medium">
             {authorId ?? "Georgia Tech Student"}
           </span>
           <span className="flex gap-3">
-            <span className="text-gray-500 flex items-center text-xs gap-1">
+            <span className="flex items-center gap-1 text-xs text-gray-500">
               <PencilAltIcon className="h-4 w-4" aria-hidden="true" />
               {hasMounted
                 ? new Date(created).toLocaleDateString(
@@ -53,7 +53,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
                   )
                 : created}
             </span>
-            <span className="text-gray-500 flex items-center text-xs gap-1">
+            <span className="flex items-center gap-1 text-xs text-gray-500">
               <CalendarIcon className="h-4 w-4" aria-hidden="true" />
               <span className="capitalize">
                 {semester
@@ -70,7 +70,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
         <Link href={`/courses/${course.slug}/reviews`} passHref>
           <a
             href="replace"
-            className="text-indigo-600 text-sm hover:text-indigo-900"
+            className="text-sm text-indigo-600 hover:text-indigo-900"
           >
             {course.name}
           </a>
@@ -80,13 +80,13 @@ export function Review({ review }: ReviewProps): JSX.Element {
         <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
       </div>
       <p className="flex flex-row gap-2">
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
           Rating: {rating ? `${rating} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
           Difficulty: {difficulty ? `${difficulty} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
           Workload: {workload ? `${workload} hours / week` : "N/A"}
         </span>
       </p>

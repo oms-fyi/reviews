@@ -25,12 +25,17 @@ export async function sendCodeToUser(
   } catch (error: unknown) {
     if (error instanceof RestException) {
       switch (error.code) {
-        case 60_200: // https://www.twilio.com/docs/api/errors/60200
+        case 60_200: {
+          // https://www.twilio.com/docs/api/errors/60200
           return SendCodeResponse.INVALID_EMAIL;
-        case 60_203: // https://www.twilio.com/docs/api/errors/60203
+        }
+        case 60_203: {
+          // https://www.twilio.com/docs/api/errors/60203
           return SendCodeResponse.MAX_ATTEMPTS_REACHED;
-        default:
+        }
+        default: {
           throw error;
+        }
       }
     } else {
       throw error;

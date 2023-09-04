@@ -40,7 +40,7 @@ export default function Reviews({ reviews }: ReviewsPageProps): JSX.Element {
         <title>Recent Reviews | OMSCentral</title>
       </Head>
       <main className="m-auto max-w-7xl px-5 py-10">
-        <h3 className="text-3xl text-center mb-10 font-medium text-gray-900">
+        <h3 className="mb-10 text-center text-3xl font-medium text-gray-900">
           100 Most Recent Reviews
         </h3>
         <ul className="space-y-4 divide-gray-200">
