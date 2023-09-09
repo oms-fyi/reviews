@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 
-import type { Course, Review as ReviewType, Semester } from "src/@types";
+import type { Course, Review as ReviewType, Semester } from "../types";
 
 interface ReviewProps {
   review: ReviewType & {

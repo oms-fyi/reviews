@@ -1,4 +1,4 @@
-import { captureException, withSentry } from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { SendCodeResponse, sendCodeToUser } from "src/twilio";
@@ -43,4 +43,4 @@ async function handler(
   }
 }
 
-export default withSentry(handler);
+export default handler;

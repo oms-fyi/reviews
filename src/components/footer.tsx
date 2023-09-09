@@ -1,5 +1,6 @@
 import Image from "next/image";
-import buyMeACoffeeLogo from "public/bmac.svg";
+
+import buyMeACoffeeLogo from "../assets/img/bmac.svg";
 
 export function Footer() {
   return (
@@ -11,7 +12,6 @@ export function Footer() {
             className="relative inline-flex items-center gap-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 pr-5 font-cookie text-2xl text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             <Image
-              // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
               src={buyMeACoffeeLogo as string}
               alt="A cup of coffee"
               width={32}

@@ -18,11 +18,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 
-import type { Course, Review } from "src/@types";
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
 import { sanityClient } from "src/sanity";
 import styles from "src/styles/Home.module.css";
+import type { Course, Review } from "src/types";
 
 type CourseWithReviewsStats = Course & {
   reviews: Pick<Review, "rating" | "difficulty" | "workload">[];

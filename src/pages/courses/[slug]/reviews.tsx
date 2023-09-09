@@ -12,9 +12,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import type { Course, Program, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
 import { sanityClient } from "src/sanity";
+import type { Course, Program, Review, Semester } from "src/types";
 
 interface ReviewsPathParams {
   slug: Course["slug"];

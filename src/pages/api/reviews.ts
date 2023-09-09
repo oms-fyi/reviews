@@ -1,11 +1,11 @@
-import { captureException, withSentry } from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import Joi from "joi";
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 
-import type { Course, Review, Semester } from "src/@types";
 import { sanityClient } from "src/sanity";
 import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio";
+import type { Course, Review, Semester } from "src/types";
 
 type CreateReviewRequest = {
   rating: NonNullable<Review["rating"]>;
@@ -144,4 +144,4 @@ async function handler(
   }
 }
 
-export default withSentry(handler);
+export default handler;
