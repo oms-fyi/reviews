@@ -67,7 +67,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
         </span>
       </p>
       {course && (
-        <Link href={`/courses/${course.slug}/reviews`} passHref>
+        <Link href={`/courses/${course.slug}/reviews`} passHref legacyBehavior>
           <a
             href="replace"
             className="text-sm text-indigo-600 hover:text-indigo-900"

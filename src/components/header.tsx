@@ -70,7 +70,7 @@ const githubMenuItems = [
 const NextLinkWrapper: typeof Link = forwardRef((props, ref) => {
   const { href, children, ...rest } = props;
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref legacyBehavior>
       <a ref={ref} href="replace" {...rest}>
         {children}
       </a>
@@ -124,7 +124,7 @@ export function Header(): JSX.Element {
                     )}
                   </Disclosure.Button>
                 </div>
-                <Link href="/" passHref>
+                <Link href="/" passHref legacyBehavior>
                   <a href="replace" className="flex flex-shrink-0 items-center">
                     <div className="flex items-center gap-2">
                       <Image
@@ -139,7 +139,7 @@ export function Header(): JSX.Element {
                   </a>
                 </Link>
                 <div className="hidden justify-center gap-6 md:ml-6 md:flex">
-                  <Link href="/" passHref>
+                  <Link href="/" passHref legacyBehavior>
                     <a
                       href="replace"
                       className={classNames(
@@ -232,7 +232,7 @@ export function Header(): JSX.Element {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href={newReviewURL ?? "/"} passHref>
+                  <Link href={newReviewURL ?? "/"} passHref legacyBehavior>
                     <a
                       href="replace"
                       className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

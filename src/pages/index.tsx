@@ -21,7 +21,6 @@ import { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
 import { sanityClient } from "src/sanity";
-import styles from "src/styles/Home.module.css";
 import type { Course, Review } from "src/types";
 
 type CourseWithReviewsStats = Course & {
@@ -892,9 +891,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 </span>
                               </dd>
                               <div className="block sm:hidden">
-                                <div
-                                  className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
-                                >
+                                <div className="flex flex-row gap-1">
                                   <dt className="sr-only">Rating</dt>
                                   <dd>
                                     {formatNumber(rating)}
@@ -904,7 +901,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </span>
                                   </dd>
                                   <dt className="sr-only">Difficulty</dt>
-                                  <dd>
+                                  <dd className="before:mr-1 before:content-['\b7']">
                                     {formatNumber(difficulty)}
                                     <span className="text-gray-400">
                                       {" "}
@@ -921,14 +918,13 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   </span>
                                 </dd>
                               </div>
-                              <div
-                                className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
-                              >
+                              <div className="flex flex-row gap-1">
                                 <dt className="sr-only">Reviews URL</dt>
                                 <dd>
                                   <Link
                                     href={`/courses/${slug}/reviews`}
                                     passHref
+                                    legacyBehavior
                                   >
                                     <a
                                       href="replace"
@@ -944,7 +940,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 {officialURL && (
                                   <>
                                     <dt className="sr-only">GATech URL</dt>
-                                    <dd>
+                                    <dd className="before:mr-1 before:content-['\b7']">
                                       <a
                                         href={officialURL}
                                         target="_blank"
@@ -959,7 +955,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 {notesURL && (
                                   <>
                                     <dt className="sr-only">OMSCSNotes URL</dt>
-                                    <dd>
+                                    <dd className="before:mr-1 before:content-['\b7']">
                                       <a
                                         href={notesURL}
                                         target="_blank"

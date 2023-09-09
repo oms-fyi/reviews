@@ -652,6 +652,7 @@ export default function NewReviewForm({
                         selectedCourse?.slug ?? "CS-0000"
                       }/reviews`}
                       passHref
+                      legacyBehavior
                     >
                       <a
                         href="replace"
