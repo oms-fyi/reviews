@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
 const typography = require("@tailwindcss/typography");
 const forms = require("@tailwindcss/forms");
 
@@ -11,7 +12,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        cookie: ["Cookie", "cursive"],
+        sans: ["var(--font-open-sans)", ...defaultTheme.fontFamily.sans],
       },
     },
   },
