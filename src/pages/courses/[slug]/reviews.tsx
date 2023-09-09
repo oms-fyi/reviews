@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Review as ReviewComponent } from "src/components/review";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/lib/sanity";
 import type { Course, Program, Review, Semester } from "src/types";
 
 interface ReviewsPathParams {

@@ -20,7 +20,7 @@ import { FC, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/lib/sanity";
 import type { Course, Review } from "src/types";
 
 type CourseWithReviewsStats = Course & {

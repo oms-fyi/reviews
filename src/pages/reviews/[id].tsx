@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 
 import { Review as ReviewComponent } from "src/components/review";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/lib/sanity";
 import type { Course, Review as ReviewType, Semester } from "src/types";
 
 const PRERENDER_LIMIT = 100;

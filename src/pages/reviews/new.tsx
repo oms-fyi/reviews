@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Alert } from "src/components/alert";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/lib/sanity";
 import { Course, Review, Semester } from "src/types";
 
 interface NewReviewFormProps {

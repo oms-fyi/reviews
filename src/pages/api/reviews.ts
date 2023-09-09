@@ -3,8 +3,8 @@ import Joi from "joi";
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 
-import { sanityClient } from "src/sanity";
-import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio";
+import { sanityClient } from "src/lib/sanity";
+import { CheckCodeResponse, doesUserCodeMatch } from "src/lib/twilio";
 import type { Course, Review, Semester } from "src/types";
 
 type CreateReviewRequest = {

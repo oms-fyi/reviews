@@ -2,7 +2,7 @@ import type { GetStaticProps } from "next";
 import Head from "next/head";
 
 import { Review as ReviewComponent } from "src/components/review";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/lib/sanity";
 import type { Course, Review, Semester } from "src/types";
 
 interface ReviewsPageProps {
