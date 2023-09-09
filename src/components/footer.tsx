@@ -1,6 +1,4 @@
-import Image from "next/image";
-
-import buyMeACoffeeLogo from "../assets/img/bmac.svg";
+import BuyMeACoffeeLogo from "../assets/img/bmac.svg";
 
 export function Footer() {
   return (
@@ -11,13 +9,7 @@ export function Footer() {
             href="https://www.buymeacoffee.com/omstech"
             className="relative inline-flex items-center gap-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 pr-5 font-cookie text-2xl text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            <Image
-              src={buyMeACoffeeLogo as string}
-              alt="A cup of coffee"
-              width={32}
-              height={32}
-              className="block"
-            />
+            <BuyMeACoffeeLogo className="h-8 w-8" />
             <span>Buy me a coffee</span>
           </a>
         </div>

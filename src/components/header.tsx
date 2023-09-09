@@ -11,12 +11,11 @@ import {
 } from "@heroicons/react/outline";
 import { PlusSmIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, forwardRef, useEffect, useState } from "react";
 
-import logo from "../assets/img/logo.svg";
+import Logo from "../assets/img/logo.svg";
 
 const reviewsMenuItems = [
   {
@@ -127,13 +126,7 @@ export function Header(): JSX.Element {
                 <Link href="/" passHref legacyBehavior>
                   <a href="replace" className="flex flex-shrink-0 items-center">
                     <div className="flex items-center gap-2">
-                      <Image
-                        src={logo as string}
-                        alt="OMS Tech Logo"
-                        width={32}
-                        height={32}
-                        className="block"
-                      />
+                      <Logo className="h-8 w-8" />
                       <h1 className="text-lg">OMS Reviews</h1>
                     </div>
                   </a>
