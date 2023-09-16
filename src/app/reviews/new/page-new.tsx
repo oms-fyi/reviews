@@ -1,13 +1,13 @@
+"use client";
+
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
-import type { GetStaticProps } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Alert } from "src/components/alert";
-import { sanityClient } from "src/lib/sanity";
 import { Course, Review, Semester } from "src/types";
 
 interface NewReviewFormProps {
@@ -20,34 +20,11 @@ type RequestState = {
   errors?: string[];
 };
 
-export const getStaticProps: GetStaticProps<NewReviewFormProps> = async () => {
-  const query = `{ 
-    "courses": *[_type == 'course'] {
-      "id": _id,
-      "slug": slug.current,
-      name
-    } | order(name),
-    "semesters" : *[_type == 'semester' && startDate <= now()]{
-    "id": _id,
-    ...
-    } | order(startDate desc)[0...$limit]
-  }`;
-
-  const { courses, semesters } = await sanityClient.fetch<NewReviewFormProps>(
-    query,
-    {
-      limit: 3,
-    }
-  );
-
-  return { props: { courses, semesters } };
-};
-
 export default function NewReviewForm({
   courses,
   semesters,
 }: NewReviewFormProps): JSX.Element {
-  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [query, setQuery] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -75,14 +52,14 @@ export default function NewReviewForm({
   );
 
   useEffect(() => {
-    const { course: courseSlug } = router.query;
+    const courseSlug = searchParams?.get("course");
 
     if (typeof courseSlug === "string") {
       setCourseId(
         courses.find((course) => course.slug === courseSlug)?.id ?? ""
       );
     }
-  }, [router, courses]);
+  }, [searchParams, courses]);
 
   useEffect(() => {
     if (reviewRequestState.status === "complete" && reviewRequestState.errors) {

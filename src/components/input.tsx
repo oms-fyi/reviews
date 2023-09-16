@@ -1,10 +1,13 @@
-import { HTMLProps } from "react";
+import { HTMLProps, forwardRef } from "react";
 
-export function Input({
-  id,
-  label,
-  ...delegated
-}: HTMLProps<HTMLInputElement> & { label: string }): JSX.Element {
+type Props = HTMLProps<HTMLInputElement> & {
+  label: string;
+};
+
+export const Input = forwardRef<HTMLInputElement, Props>(function Input(
+  { id, label, ...delegated },
+  ref
+) {
   return (
     <div className="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
       <label
@@ -16,9 +19,10 @@ export function Input({
 
       <input
         {...delegated}
+        ref={ref}
         id={id}
         className="block border-0 p-0 text-base text-gray-900 placeholder-gray-400 focus:ring-0 sm:text-sm"
       />
     </div>
   );
-}
+});

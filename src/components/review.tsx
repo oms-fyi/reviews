@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CalendarIcon,
   PencilAltIcon,
@@ -8,10 +10,10 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 
-import type { Course, Review as ReviewType, Semester } from "../types";
+import type { Course, Semester, Review as TReview } from "../types";
 
 interface ReviewProps {
-  review: ReviewType & {
+  review: TReview & {
     semester: Semester;
     course?: Pick<Course, "name" | "slug">;
   };

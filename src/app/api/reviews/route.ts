@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/nextjs";
 import Joi from "joi";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 
 import { sanityClient } from "src/lib/sanity";
@@ -70,16 +70,9 @@ const schema = Joi.object<Payload>({
 
 type ResponseData = Record<string, never> | { errors: string[] };
 
-async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
-  if (req.method !== "POST") {
-    // Method Not Allowed, only accepting POST.
-    res.status(405).json({});
-    return;
-  }
-
+export async function POST(
+  req: NextRequest
+): Promise<NextResponse<ResponseData>> {
   const validationOptions = {
     abortEarly: false,
     errors: { wrap: { label: "" } },
@@ -88,10 +81,10 @@ async function handler(
 
   if (validationResult.error) {
     // Bad Request, Schema Validation Error
-    res
-      .status(400)
-      .json({ errors: validationResult.error.details.map((d) => d.message) });
-    return;
+    return NextResponse.json(
+      { errors: validationResult.error.details.map((d) => d.message) },
+      { status: 400 }
+    );
   }
 
   const { username, code, courseId, semesterId, ...review } =
@@ -102,18 +95,18 @@ async function handler(
 
     if (codeCheckResponseCode === CheckCodeResponse.NOT_FOUND) {
       // Bad Request, Verification not found.
-      res.status(400).json({
-        errors: ["Code not found. Please request a new code."],
-      });
-      return;
+      return NextResponse.json(
+        { errors: ["Code not found. Please request a new code."] },
+        { status: 400 }
+      );
     }
 
     if (codeCheckResponseCode === CheckCodeResponse.NO_MATCH) {
       // Bad Request, Code doesn't match.
-      res.status(400).json({
-        errors: ["Code must match value that was sent via email."],
-      });
-      return;
+      return NextResponse.json(
+        { errors: ["Code must match value that was sent via email."] },
+        { status: 400 }
+      );
     }
 
     const authorId = encrypt(username);
@@ -135,13 +128,13 @@ async function handler(
     // Will throw ClientError if references are non-existent.
     // Will not catch at this time.
     await sanityClient.create<CreateReviewSanityRequest>(request);
-    res.status(201).json({});
+    return NextResponse.json({}, { status: 201 });
   } catch (error_: unknown) {
-    res
-      .status(500)
-      .json({ errors: ["Error creating review. Try again later."] });
     captureException(error_);
+
+    return NextResponse.json(
+      { errors: ["Error creating review. Try again later."] },
+      { status: 500 }
+    );
   }
 }
-
-export default handler;

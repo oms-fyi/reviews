@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 // This file sets a custom webpack configuration to use your Next.js app
 // with Sentry.
 // https://nextjs.org/docs/api-reference/next.config.js/introduction
@@ -6,6 +5,7 @@
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
+/** @type {import('next').NextConfig} */
 const moduleExports = {
   reactStrictMode: true,
   async redirects() {
@@ -504,8 +504,8 @@ const moduleExports = {
       // Convert all other *.svg imports to React components
       {
         test: /\.svg$/i,
-        issuer: /\.[jt]sx?$/,
-        resourceQuery: { not: /url/ }, // exclude if *.svg?url
+        issuer: fileLoaderRule.issuer,
+        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
         use: ["@svgr/webpack"],
       }
     );

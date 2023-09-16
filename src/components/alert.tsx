@@ -1,10 +1,10 @@
 import { CheckCircleIcon, XCircleIcon, XIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
+import { PropsWithChildren } from "react";
 
-interface AlertProps {
+interface AlertProps extends PropsWithChildren {
   variant: "success" | "failure";
   onDismiss: () => void;
-  children: React.ReactNode;
 }
 
 export function Alert({
