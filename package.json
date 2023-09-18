@@ -15,7 +15,7 @@
     "@heroicons/react": "^1.0.6",
     "@sanity/client": "^3.3.2",
     "@sanity/webhook": "^2.0.0",
-    "@sentry/nextjs": "^7.8.0",
+    "@sentry/nextjs": "^7.69.0",
     "@vercel/analytics": "^1.0.2",
     "classnames": "^2.3.1",
     "fuse.js": "^6.6.2",

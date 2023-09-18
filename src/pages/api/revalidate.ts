@@ -1,5 +1,4 @@
 import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
-import { captureException, withSentry } from "@sentry/nextjs";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { Course } from "src/@types";
@@ -26,7 +25,7 @@ type SanityWebhookPayload = {
   course: Pick<Course, "slug">;
 };
 
-async function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ revalidated: true } | { error: string }>,
 ) {
@@ -37,25 +36,20 @@ async function handler(
     return;
   }
 
-  try {
-    const body = await readBody(req);
+  const body = await readBody(req);
 
-    if (!isValidSignature(body, signature, SECRET)) {
-      res.status(401).json({ error: "Invalid signature" });
-      return;
-    }
-
-    const payload = JSON.parse(body) as SanityWebhookPayload;
-
-    await res.revalidate(`/courses/${payload.course.slug}/reviews`);
-    await res.revalidate("/reviews/recent");
-    await res.revalidate("/");
-
-    res.json({ revalidated: true });
-  } catch (error) {
-    res.status(500).json({ error: "Error revalidating. Try again later." });
-    captureException(error);
+  if (!isValidSignature(body, signature, SECRET)) {
+    res.status(401).json({ error: "Invalid signature" });
+    return;
   }
+
+  const payload = JSON.parse(body) as SanityWebhookPayload;
+
+  await res.revalidate(`/courses/${payload.course.slug}/reviews`);
+  await res.revalidate("/reviews/recent");
+  await res.revalidate("/");
+
+  res.json({ revalidated: true });
 }
 
 export const config = {
@@ -63,5 +57,3 @@ export const config = {
     bodyParser: false,
   },
 };
-
-export default withSentry(handler);
