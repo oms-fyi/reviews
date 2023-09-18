@@ -1,4 +1,3 @@
-import { captureException, withSentry } from "@sentry/nextjs";
 import Joi from "joi";
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
@@ -70,7 +69,7 @@ const schema = Joi.object<Payload>({
 
 type ResponseData = Record<string, never> | { errors: string[] };
 
-async function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
@@ -97,51 +96,42 @@ async function handler(
   const { username, code, courseId, semesterId, ...review } =
     validationResult.value;
 
-  try {
-    const codeCheckResponseCode = await doesUserCodeMatch(username, code);
+  const codeCheckResponseCode = await doesUserCodeMatch(username, code);
 
-    if (codeCheckResponseCode === CheckCodeResponse.NOT_FOUND) {
-      // Bad Request, Verification not found.
-      res.status(400).json({
-        errors: ["Code not found. Please request a new code."],
-      });
-      return;
-    }
-
-    if (codeCheckResponseCode === CheckCodeResponse.NO_MATCH) {
-      // Bad Request, Code doesn't match.
-      res.status(400).json({
-        errors: ["Code must match value that was sent via email."],
-      });
-      return;
-    }
-
-    const authorId = encrypt(username);
-
-    const request = {
-      _type: "review",
-      authorId,
-      ...review,
-      course: {
-        _ref: courseId,
-        _type: "reference",
-      },
-      semester: {
-        _ref: semesterId,
-        _type: "reference",
-      },
-    };
-
-    // Will throw ClientError if references are non-existent.
-    // Will not catch at this time.
-    await sanityClient.create<CreateReviewSanityRequest>(request);
-    res.status(201).json({});
-  } catch (error_: unknown) {
-    res
-      .status(500)
-      .json({ errors: ["Error creating review. Try again later."] });
-    captureException(error_);
+  if (codeCheckResponseCode === CheckCodeResponse.NOT_FOUND) {
+    // Bad Request, Verification not found.
+    res.status(400).json({
+      errors: ["Code not found. Please request a new code."],
+    });
+    return;
   }
-}
 
-export default withSentry(handler);
+  if (codeCheckResponseCode === CheckCodeResponse.NO_MATCH) {
+    // Bad Request, Code doesn't match.
+    res.status(400).json({
+      errors: ["Code must match value that was sent via email."],
+    });
+    return;
+  }
+
+  const authorId = encrypt(username);
+
+  const request = {
+    _type: "review",
+    authorId,
+    ...review,
+    course: {
+      _ref: courseId,
+      _type: "reference",
+    },
+    semester: {
+      _ref: semesterId,
+      _type: "reference",
+    },
+  };
+
+  // Will throw ClientError if references are non-existent.
+  // Will not catch at this time.
+  await sanityClient.create<CreateReviewSanityRequest>(request);
+  res.status(201).json({});
+}
