@@ -28,7 +28,7 @@ type SanityWebhookPayload = {
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ revalidated: true } | { error: string }>
+  res: NextApiResponse<{ revalidated: true } | { error: string }>,
 ) {
   const signature = req.headers[SIGNATURE_HEADER_NAME];
 

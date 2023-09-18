@@ -26,7 +26,7 @@ function encrypt(data: string): string {
   const cipher = crypto.createCipheriv(
     "aes-256-cbc",
     Buffer.from(KEY, "hex"),
-    IV
+    IV,
   );
   const encrypted = cipher.update(data, "utf8", "base64");
 
@@ -72,7 +72,7 @@ type ResponseData = Record<string, never> | { errors: string[] };
 
 async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ResponseData>,
 ) {
   if (req.method !== "POST") {
     // Method Not Allowed, only accepting POST.

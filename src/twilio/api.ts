@@ -11,7 +11,7 @@ export enum SendCodeResponse {
 }
 
 export async function sendCodeToUser(
-  username: string
+  username: string,
 ): Promise<SendCodeResponse> {
   const email = `${username}@gatech.edu`;
 
@@ -51,7 +51,7 @@ export enum CheckCodeResponse {
 
 export async function doesUserCodeMatch(
   username: string,
-  code: string
+  code: string,
 ): Promise<CheckCodeResponse> {
   const email = `${username}@gatech.edu`;
 

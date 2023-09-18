@@ -19,7 +19,7 @@ export function Alert({
           "bg-red-50": variant === "failure",
           "bg-green-50": variant === "success",
         },
-        "my-4 rounded-md p-4"
+        "my-4 rounded-md p-4",
       )}
     >
       <div className="flex">
@@ -36,7 +36,7 @@ export function Alert({
               "text-green-800": variant === "success",
               "text-red-800": variant === "failure",
             },
-            "ml-3"
+            "ml-3",
           )}
         >
           {children}
@@ -53,7 +53,7 @@ export function Alert({
                   "bg-red-50 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50":
                     variant === "failure",
                 },
-                "inline-flex rounded-md p-1.5"
+                "inline-flex rounded-md p-1.5",
               )}
             >
               <span className="sr-only">Dismiss</span>

@@ -37,7 +37,7 @@ export const getStaticProps: GetStaticProps<NewReviewFormProps> = async () => {
     query,
     {
       limit: 3,
-    }
+    },
   );
 
   return { props: { courses, semesters } };
@@ -69,9 +69,9 @@ export default function NewReviewForm({
     status: "init",
   });
 
-  const selectedCourse = useMemo<typeof courses[0] | undefined>(
+  const selectedCourse = useMemo<(typeof courses)[0] | undefined>(
     () => courses.find(({ id }) => id === courseId),
-    [courseId, courses]
+    [courseId, courses],
   );
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function NewReviewForm({
 
     if (typeof courseSlug === "string") {
       setCourseId(
-        courses.find((course) => course.slug === courseSlug)?.id ?? ""
+        courses.find((course) => course.slug === courseSlug)?.id ?? "",
       );
     }
   }, [router, courses]);
@@ -95,9 +95,9 @@ export default function NewReviewForm({
       query === ""
         ? courses
         : courses.filter((course) =>
-            course.name.toLowerCase().includes(query.toLowerCase())
+            course.name.toLowerCase().includes(query.toLowerCase()),
           ),
-    [query, courses]
+    [query, courses],
   );
 
   function onDismissSendCodeAlert() {
@@ -273,7 +273,7 @@ export default function NewReviewForm({
                             {
                               "bg-indigo-600 text-white": active,
                               "text-gray-900": !active,
-                            }
+                            },
                           )
                         }
                       >
@@ -294,7 +294,7 @@ export default function NewReviewForm({
                                   {
                                     "text-white": active,
                                     "text-indigo-600": !active,
-                                  }
+                                  },
                                 )}
                               >
                                 <CheckIcon
@@ -479,16 +479,17 @@ export default function NewReviewForm({
                   </p>
                 </Alert>
               )}
-            {codeRequestState.status === "complete" && codeRequestState.errors && (
-              <Alert
-                variant="failure"
-                onDismiss={() => onDismissSendCodeAlert()}
-              >
-                <p className="text-sm font-medium ">
-                  {codeRequestState.errors[0]}
-                </p>
-              </Alert>
-            )}
+            {codeRequestState.status === "complete" &&
+              codeRequestState.errors && (
+                <Alert
+                  variant="failure"
+                  onDismiss={() => onDismissSendCodeAlert()}
+                >
+                  <p className="text-sm font-medium ">
+                    {codeRequestState.errors[0]}
+                  </p>
+                </Alert>
+              )}
             <div className="mt-1 text-sm text-gray-500">
               <span className="block">
                 Only verified GATech students can leave reviews at this time.

@@ -36,7 +36,7 @@ interface ReviewsPageProps {
 
 function average(
   reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
-  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
+  key: keyof Pick<Review, "rating" | "difficulty" | "workload">,
 ): number {
   let sum = 0;
   let count = 0;
@@ -145,8 +145,8 @@ export default function Reviews({
           new Intl.ListFormat(navigator.language, {
             style: "long",
             type: "conjunction",
-          })
-        )
+          }),
+        ),
       )
       .catch(() => {});
   }, []);

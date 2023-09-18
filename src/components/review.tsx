@@ -49,7 +49,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
               {hasMounted
                 ? new Date(created).toLocaleDateString(
                     navigator.language || "en-US",
-                    { dateStyle: "long" }
+                    { dateStyle: "long" },
                   )
                 : created}
             </span>
@@ -58,7 +58,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
               <span className="capitalize">
                 {semester
                   ? `${semester.term} ${new Date(
-                      semester.startDate
+                      semester.startDate,
                     ).getFullYear()}`
                   : "Unknown Semester"}
               </span>

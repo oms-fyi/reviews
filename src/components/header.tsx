@@ -149,7 +149,7 @@ export function Header(): JSX.Element {
                           "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
                             router.pathname !== "/",
                         },
-                        "inline-flex items-center border-b-2 px-1 pt-1"
+                        "inline-flex items-center border-b-2 px-1 pt-1",
                       )}
                     >
                       Home
@@ -167,7 +167,7 @@ export function Header(): JSX.Element {
                               "text-gray-900": reviewMenuOpen,
                               "text-gray-500": !reviewMenuOpen,
                             },
-                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
                           )}
                         >
                           Reviews
@@ -176,7 +176,7 @@ export function Header(): JSX.Element {
                               reviewMenuOpen
                                 ? "text-gray-600"
                                 : "text-gray-400",
-                              "ml-2 h-5 w-5 group-hover:text-gray-500"
+                              "ml-2 h-5 w-5 group-hover:text-gray-500",
                             )}
                             aria-hidden="true"
                           />
@@ -285,7 +285,7 @@ export function Header(): JSX.Element {
                                   {
                                     "bg-gray-100": active,
                                   },
-                                  "block px-4 py-2 text-gray-700"
+                                  "block px-4 py-2 text-gray-700",
                                 )}
                               >
                                 {text}
