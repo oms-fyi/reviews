@@ -920,14 +920,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 <dd>
                                   <Link
                                     href={`/courses/${slug}/reviews`}
-                                    passHref
+                                    className="text-sm text-indigo-600 hover:text-indigo-900"
                                   >
-                                    <a
-                                      href="replace"
-                                      className="text-sm text-indigo-600 hover:text-indigo-900"
-                                    >
-                                      Reviews
-                                    </a>
+                                    Reviews
                                   </Link>{" "}
                                   <span className="md:hidden">
                                     ({reviewCount})

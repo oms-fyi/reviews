@@ -15,7 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import logo from "public/logo.svg";
-import { Fragment, forwardRef, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 const reviewsMenuItems = [
   {
@@ -65,20 +65,6 @@ const githubMenuItems = [
   },
 ];
 
-// headlessui.com/react/menu#integrating-with-next-js
-const NextLinkWrapper: typeof Link = forwardRef((props, ref) => {
-  const { href, children, ...rest } = props;
-  return (
-    <Link href={href} passHref>
-      <a ref={ref} href="replace" {...rest}>
-        {children}
-      </a>
-    </Link>
-  );
-});
-
-NextLinkWrapper.displayName = "NextLinkWrapper";
-
 export function Header(): JSX.Element {
   const router = useRouter();
   const [newReviewURL, setNewReviewURL] = useState<URL>();
@@ -123,37 +109,33 @@ export function Header(): JSX.Element {
                     )}
                   </Disclosure.Button>
                 </div>
-                <Link href="/" passHref>
-                  <a href="replace" className="flex flex-shrink-0 items-center">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
-                        src={logo as string}
-                        alt="OMS Tech Logo"
-                        width={32}
-                        height={32}
-                        className="block"
-                      />
-                      <h1 className="text-lg">OMS Reviews</h1>
-                    </div>
-                  </a>
+                <Link href="/" className="flex flex-shrink-0 items-center">
+                  <div className="flex items-center gap-2">
+                    <Image
+                      // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
+                      src={logo as string}
+                      alt="OMS Tech Logo"
+                      width={32}
+                      height={32}
+                      className="block"
+                    />
+                    <h1 className="text-lg">OMS Reviews</h1>
+                  </div>
                 </Link>
                 <div className="hidden justify-center gap-6 md:ml-6 md:flex">
-                  <Link href="/" passHref>
-                    <a
-                      href="replace"
-                      className={classNames(
-                        {
-                          "border-indigo-500 text-gray-900":
-                            router.pathname === "/",
-                          "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
-                            router.pathname !== "/",
-                        },
-                        "inline-flex items-center border-b-2 px-1 pt-1",
-                      )}
-                    >
-                      Home
-                    </a>
+                  <Link
+                    href="/"
+                    className={classNames(
+                      {
+                        "border-indigo-500 text-gray-900":
+                          router.pathname === "/",
+                        "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
+                          router.pathname !== "/",
+                      },
+                      "inline-flex items-center border-b-2 px-1 pt-1",
+                    )}
+                  >
+                    Home
                   </Link>
                   <Menu
                     as="div"
@@ -195,7 +177,7 @@ export function Header(): JSX.Element {
                               <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                                 {reviewsMenuItems.map((item) => (
                                   <Menu.Item key={item.href}>
-                                    <NextLinkWrapper
+                                    <Link
                                       href={item.href}
                                       key={item.href}
                                       className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
@@ -212,7 +194,7 @@ export function Header(): JSX.Element {
                                           {item.subtitle}
                                         </p>
                                       </div>
-                                    </NextLinkWrapper>
+                                    </Link>
                                   </Menu.Item>
                                 ))}
                               </div>
@@ -232,17 +214,15 @@ export function Header(): JSX.Element {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href={newReviewURL ?? "/"} passHref>
-                    <a
-                      href="replace"
-                      className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <PlusSmIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      <span>Add Review</span>
-                    </a>
+                  <Link
+                    href={newReviewURL ?? "/"}
+                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  >
+                    <PlusSmIcon
+                      className="-ml-1 mr-2 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                    <span>Add Review</span>
                   </Link>
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
@@ -303,7 +283,7 @@ export function Header(): JSX.Element {
 
           <Disclosure.Panel className="md:hidden">
             <div className="space-y-1 pb-3 pt-2">
-              <NextLinkWrapper href="/" passHref>
+              <Link href="/" passHref>
                 <Disclosure.Button
                   as="a"
                   href="#"
@@ -316,7 +296,7 @@ export function Header(): JSX.Element {
                 >
                   Courses
                 </Disclosure.Button>
-              </NextLinkWrapper>
+              </Link>
               <Disclosure.Button
                 as="a"
                 href="https://omscs-notes.com"
@@ -328,7 +308,7 @@ export function Header(): JSX.Element {
             <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="space-y-1">
                 {reviewsMenuItems.map((item) => (
-                  <NextLinkWrapper href={item.href} key={item.href} passHref>
+                  <Link href={item.href} key={item.href} passHref>
                     <Disclosure.Button
                       as="a"
                       className="flex items-start rounded-lg p-3 hover:bg-gray-50"
@@ -346,7 +326,7 @@ export function Header(): JSX.Element {
                         </p>
                       </div>
                     </Disclosure.Button>
-                  </NextLinkWrapper>
+                  </Link>
                 ))}
               </div>
             </div>
