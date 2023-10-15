@@ -67,13 +67,11 @@ export function Review({ review }: ReviewProps): JSX.Element {
         </span>
       </p>
       {course && (
-        <Link href={`/courses/${course.slug}/reviews`} passHref>
-          <a
-            href="replace"
-            className="text-sm text-indigo-600 hover:text-indigo-900"
-          >
-            {course.name}
-          </a>
+        <Link
+          href={`/courses/${course.slug}/reviews`}
+          className="text-sm text-indigo-600 hover:text-indigo-900"
+        >
+          {course.name}
         </Link>
       )}
       <div className="break-words">
