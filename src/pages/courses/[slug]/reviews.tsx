@@ -1,4 +1,3 @@
-import { shouldPolyfill } from "@formatjs/intl-listformat/should-polyfill";
 import {
   ClockIcon,
   DocumentAddIcon,
@@ -10,11 +9,11 @@ import classNames from "classnames";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import type { Course, Program, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
 import { sanityClient } from "src/sanity";
+import { formatList, formatNumber } from "src/util/format";
 
 interface ReviewsPathParams {
   slug: Course["slug"];
@@ -50,10 +49,6 @@ function average(
   });
 
   return sum / count;
-}
-
-function formatNumber(value: number | undefined): string {
-  return Number.isNaN(value) || value === undefined ? "N/A" : value.toFixed(2);
 }
 
 export const getStaticPaths: GetStaticPaths<ReviewsPathParams> = async () => {
@@ -112,13 +107,6 @@ export const getStaticProps: GetStaticProps<
   return { props: { course: { ...course, rating, difficulty, workload } } };
 };
 
-async function polyfill(locale: string) {
-  if (shouldPolyfill(locale)) {
-    await import("@formatjs/intl-listformat/polyfill-force");
-    await import(`@formatjs/intl-listformat/locale-data/${locale}`);
-  }
-}
-
 export default function Reviews({
   course: {
     name,
@@ -135,21 +123,7 @@ export default function Reviews({
     workload,
   },
 }: ReviewsPageProps): JSX.Element {
-  const [listFormatter, setListFormatter] = useState<Intl.ListFormat>();
   const programAcronyms = programs.map(({ acronym }) => acronym);
-
-  useEffect(() => {
-    polyfill(navigator.language)
-      .then(() =>
-        setListFormatter(
-          new Intl.ListFormat(navigator.language, {
-            style: "long",
-            type: "conjunction",
-          }),
-        ),
-      )
-      .catch(() => {});
-  }, []);
 
   return (
     <>
@@ -207,9 +181,7 @@ export default function Reviews({
                     Listed As
                   </dt>
                   <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                    {listFormatter
-                      ? listFormatter.format(codes)
-                      : codes.join(", ")}
+                    {formatList(codes)}
                   </dd>
                 </div>
                 <div className="grid grid-cols-3 gap-4 px-6 py-5">
@@ -225,10 +197,7 @@ export default function Reviews({
                     Available to
                   </dt>
                   <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                    {listFormatter
-                      ? listFormatter.format(programAcronyms)
-                      : programAcronyms.join(", ")}{" "}
-                    students
+                    {formatList(programAcronyms)} students
                   </dd>
                 </div>
                 <div className="grid grid-cols-3 gap-4 px-6 py-5">

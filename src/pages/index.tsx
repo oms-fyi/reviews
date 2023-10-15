@@ -22,7 +22,7 @@ import type { Course, Review } from "src/@types";
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
 import { sanityClient } from "src/sanity";
-import styles from "src/styles/Home.module.css";
+import { formatNumber } from "src/util";
 
 type CourseWithReviewsStats = Course & {
   reviews: Pick<Review, "rating" | "difficulty" | "workload">[];
@@ -162,7 +162,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                 {
                   "z-10 border-indigo-500 bg-indigo-50 text-indigo-600  hover:bg-indigo-50":
                     size === pageSize,
-                }
+                },
               )}
             >
               {size}
@@ -197,7 +197,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                     "z-10 border-indigo-500 bg-indigo-50 text-indigo-600":
                       page === pageNumber,
                   },
-                  "relative inline-flex items-center border px-2 py-1 text-sm font-medium sm:px-4 sm:py-2"
+                  "relative inline-flex items-center border px-2 py-1 text-sm font-medium sm:px-4 sm:py-2",
                 )}
               >
                 {page + 1}
@@ -232,7 +232,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
 // MAY RETURN NaN
 function average(
   reviews: Pick<Review, "rating" | "difficulty" | "workload">[],
-  key: keyof Pick<Review, "rating" | "difficulty" | "workload">
+  key: keyof Pick<Review, "rating" | "difficulty" | "workload">,
 ): number {
   let sum = 0;
   let count = 0;
@@ -246,10 +246,6 @@ function average(
   });
 
   return sum / count;
-}
-
-function formatNumber(value: number | undefined): string {
-  return Number.isNaN(value) || value === undefined ? "N/A" : value.toFixed(2);
 }
 
 const getDefaultInputValue = (value: number | undefined): string =>
@@ -285,7 +281,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
         keys: ["name", "tags", "codes"],
         threshold: 0.4,
       }),
-    [courses]
+    [courses],
   );
 
   const [view, setView] = useState<CourseWithStats[]>([]);
@@ -323,15 +319,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
           between(
             reviewCount,
             minReviewCount || 0,
-            maxReviewCount || Number.POSITIVE_INFINITY
+            maxReviewCount || Number.POSITIVE_INFINITY,
           ) &&
           between(rating, minRating || 1, maxRating || 5) &&
           between(difficulty, minDifficulty || 1, maxDifficulty || 5) &&
           between(workload, minWorkload || 1, maxWorkload || 100) &&
           (hideDeprecated ? isDeprecated === false : true) &&
           (onlyShowFoundational ? isFoundational === true : true) &&
-          (onlyShowNotes ? Boolean(notesURL) : true)
-      )
+          (onlyShowNotes ? Boolean(notesURL) : true),
+      ),
     );
   }, [
     courses,
@@ -380,7 +376,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
             throw new Error("Unknown sort option!");
           }
         }
-      })
+      }),
     );
   }, [sort, view]);
 
@@ -431,7 +427,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   const page = collection.slice(
     pageNumber * pageSize,
-    pageNumber * pageSize + pageSize
+    pageNumber * pageSize + pageSize,
   );
 
   return (
@@ -508,15 +504,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         label="Min Reviews"
                                         placeholder="1"
                                         defaultValue={getDefaultInputValue(
-                                          minReviewCount
+                                          minReviewCount,
                                         )}
                                         inputMode="decimal"
                                         size={10}
                                         onBlur={(e) => {
                                           setMinReviewCount(
                                             Number.parseFloat(
-                                              e.currentTarget.value
-                                            )
+                                              e.currentTarget.value,
+                                            ),
                                           );
                                         }}
                                       />
@@ -527,14 +523,14 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         placeholder="100"
                                         size={10}
                                         defaultValue={getDefaultInputValue(
-                                          maxReviewCount
+                                          maxReviewCount,
                                         )}
                                         inputMode="decimal"
                                         onBlur={(e) => {
                                           setMaxReviewCount(
                                             Number.parseFloat(
-                                              e.currentTarget.value
-                                            )
+                                              e.currentTarget.value,
+                                            ),
                                           );
                                         }}
                                       />
@@ -555,15 +551,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Rating"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minRating
+                                            minRating,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinRating(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -573,15 +569,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Rating"
                                           placeholder="5"
                                           defaultValue={getDefaultInputValue(
-                                            maxRating
+                                            maxRating,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxRating(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -596,15 +592,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Difficulty"
                                           placeholder="1"
                                           defaultValue={getDefaultInputValue(
-                                            minDifficulty
+                                            minDifficulty,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinDifficulty(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -614,15 +610,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Difficulty"
                                           placeholder="5"
                                           defaultValue={getDefaultInputValue(
-                                            maxDifficulty
+                                            maxDifficulty,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxDifficulty(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -637,15 +633,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Min Workload"
                                           placeholder="10"
                                           defaultValue={getDefaultInputValue(
-                                            minWorkload
+                                            minWorkload,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMinWorkload(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -655,15 +651,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           label="Max Workload"
                                           placeholder="20"
                                           defaultValue={getDefaultInputValue(
-                                            maxWorkload
+                                            maxWorkload,
                                           )}
                                           size={10}
                                           inputMode="decimal"
                                           onBlur={(e) => {
                                             setMaxWorkload(
                                               Number.parseFloat(
-                                                e.currentTarget.value
-                                              )
+                                                e.currentTarget.value,
+                                              ),
                                             );
                                           }}
                                         />
@@ -756,7 +752,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                         "bg-indigo-600 text-white": active,
                                         "text-gray-900": !active,
                                       },
-                                      "relative cursor-default select-none py-2 pl-3 pr-9"
+                                      "relative cursor-default select-none py-2 pl-3 pr-9",
                                     )
                                   }
                                   value={field}
@@ -768,14 +764,14 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                           "font-semibold": selected,
                                           "font-normal": !selected,
                                         },
-                                        "block truncate"
+                                        "block truncate",
                                       )}
                                     >
                                       {label}
                                     </span>
                                   )}
                                 </Listbox.Option>
-                              )
+                              ),
                             )}
                           </Listbox.Options>
                         </Transition>
@@ -874,7 +870,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           workload,
                           reviewCount,
                         },
-                        index
+                        index,
                       ) => (
                         <tr
                           key={id}
@@ -892,9 +888,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 </span>
                               </dd>
                               <div className="block sm:hidden">
-                                <div
-                                  className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
-                                >
+                                <div className="flex flex-row gap-1">
                                   <dt className="sr-only">Rating</dt>
                                   <dd>
                                     {formatNumber(rating)}
@@ -904,7 +898,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     </span>
                                   </dd>
                                   <dt className="sr-only">Difficulty</dt>
-                                  <dd>
+                                  <dd className="before:mr-1 before:content-['\b7']">
                                     {formatNumber(difficulty)}
                                     <span className="text-gray-400">
                                       {" "}
@@ -921,9 +915,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   </span>
                                 </dd>
                               </div>
-                              <div
-                                className={`flex flex-row gap-1 ${styles["dot-separated-list"]}`}
-                              >
+                              <div className="flex flex-row gap-1">
                                 <dt className="sr-only">Reviews URL</dt>
                                 <dd>
                                   <Link
@@ -944,7 +936,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 {officialURL && (
                                   <>
                                     <dt className="sr-only">GATech URL</dt>
-                                    <dd>
+                                    <dd className="before:mr-1 before:content-['\b7']">
                                       <a
                                         href={officialURL}
                                         target="_blank"
@@ -959,7 +951,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 {notesURL && (
                                   <>
                                     <dt className="sr-only">OMSCSNotes URL</dt>
-                                    <dd>
+                                    <dd className="before:mr-1 before:content-['\b7']">
                                       <a
                                         href={notesURL}
                                         target="_blank"
@@ -995,7 +987,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             {reviewCount}
                           </td>
                         </tr>
-                      )
+                      ),
                     )}
                   </tbody>
                 </table>
