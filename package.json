@@ -1,5 +1,5 @@
 {
-  "name": "reviews",
+  "name": "FIBreview",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,18 +13,23 @@
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
     "@sanity/client": "^3.3.2",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.45.0",
     "@sanity/webhook": "^2.0.0",
     "@sentry/nextjs": "^7.77.0",
     "@vercel/analytics": "^1.0.2",
     "classnames": "^2.3.1",
     "fuse.js": "^6.6.2",
     "joi": "^17.6.0",
-    "next": "13.5.4",
+    "next": "^14.2.3",
+    "pnpm": "^9.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-markdown": "^8.0.3",
     "rehype-sanitize": "^5.0.1",
-    "twilio": "^3.80.0"
+    "sanity": "^3.45.0",
+    "styled-components": "^6.1.11",
+    "twilio": "^5.1.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",
