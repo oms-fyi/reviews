@@ -1,3 +1,5 @@
+import { JWTPayload } from "jose";
+
 export interface Semester {
   id: string;
   startDate: string; // ISO Date string
@@ -37,4 +39,10 @@ export interface Course {
   officialURL?: string;
   notesURL?: string;
   tags: string[];
+}
+
+export interface jwtPayload extends JWTPayload {
+  accessToken: string;
+  refreshToken: string;
+  email: string;
 }

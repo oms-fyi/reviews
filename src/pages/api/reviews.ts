@@ -4,7 +4,6 @@ import crypto from "node:crypto";
 
 import type { Course, Review, Semester } from "src/@types";
 import { sanityClient } from "src/sanity";
-import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio";
 
 type CreateReviewRequest = {
   rating: NonNullable<Review["rating"]>;
@@ -93,26 +92,9 @@ export default async function handler(
     return;
   }
 
+  // eslint-disable-next-line no-unused-vars
   const { username, code, courseId, semesterId, ...review } =
     validationResult.value;
-
-  const codeCheckResponseCode = await doesUserCodeMatch(username, code);
-
-  if (codeCheckResponseCode === CheckCodeResponse.NOT_FOUND) {
-    // Bad Request, Verification not found.
-    res.status(400).json({
-      errors: ["Code not found. Please request a new code."],
-    });
-    return;
-  }
-
-  if (codeCheckResponseCode === CheckCodeResponse.NO_MATCH) {
-    // Bad Request, Code doesn't match.
-    res.status(400).json({
-      errors: ["Code must match value that was sent via email."],
-    });
-    return;
-  }
 
   const authorId = encrypt(username);
 

@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { SendCodeResponse, sendCodeToUser } from "src/twilio";
-
 type ResponseData = Record<string, never> | { error: string };
 type Payload = { username?: string };
 
@@ -22,17 +20,5 @@ export default async function handler(
     return;
   }
 
-  const responseCode = await sendCodeToUser(username);
-
-  if (responseCode === SendCodeResponse.SUCCESS) {
-    res.status(201).json({});
-  } else if (responseCode === SendCodeResponse.INVALID_EMAIL) {
-    res
-      .status(400)
-      .json({ error: `${username} is not valid. Please try again.` });
-  } else {
-    res
-      .status(400)
-      .json({ error: "Too many send attempts. Please try again later." });
-  }
+  res.status(200);
 }
