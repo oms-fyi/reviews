@@ -1,13 +1,12 @@
 import { JWTPayload } from "jose";
 
 export interface Semester {
-  id: string;
-  startDate: string; // ISO Date string
-  term: "spring" | "summer" | "fall";
+  term: "spring" | "fall";
+  date: string; // ISO Datetime string
 }
 
-export interface Review {
-  id: string;
+export interface Review extends Semester {
+  _id: string;
   body: string;
   authorId: string; // encrypted GT username of author
   created: string; // ISO Datetime string
@@ -23,10 +22,11 @@ export interface Program {
 }
 
 export interface Course {
-  id: string;
+  _id: string;
   slug: string;
   codes: string[];
   name: string;
+  term: "spring" | "fall" | "any";
   description?: string;
   creditHours: number;
   syllabusUrl?: string;
@@ -44,5 +44,5 @@ export interface Course {
 export interface jwtPayload extends JWTPayload {
   accessToken: string;
   refreshToken: string;
-  email: string;
+  username: string;
 }

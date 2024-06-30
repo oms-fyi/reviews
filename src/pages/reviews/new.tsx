@@ -6,13 +6,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
-import { Course, Review, Semester } from "src/@types";
+import { Course, Review } from "src/@types";
 import { Alert } from "src/components/alert";
-import { sanityClient } from "src/sanity";
+import { connectToDatabase } from "src/lib/mongodb";
 
 interface NewReviewFormProps {
-  courses: Pick<Course, "id" | "slug" | "name">[];
-  semesters: Semester[];
+  courses: Pick<Course, "_id" | "slug" | "name">[];
 }
 
 type RequestState = {
@@ -21,56 +20,37 @@ type RequestState = {
 };
 
 export const getStaticProps: GetStaticProps<NewReviewFormProps> = async () => {
-  const query = `{ 
-    "courses": *[_type == 'course'] {
-      "id": _id,
-      "slug": slug.current,
-      name
-    } | order(name),
-    "semesters" : *[_type == 'semester' && startDate <= now()]{
-    "id": _id,
-    ...
-    } | order(startDate desc)[0...$limit]
-  }`;
-
-  const { courses, semesters } = await sanityClient.fetch<NewReviewFormProps>(
-    query,
-    {
-      limit: 3,
-    },
+  const { db } = await connectToDatabase();
+  let courses = await JSON.parse(
+    JSON.stringify(await db.collection("courses").find().toArray()),
   );
 
-  return { props: { courses, semesters } };
+  // TODO: Implement a semester selection with drop down menu
+
+  return { props: { courses /*, semesters*/ } };
 };
 
 export default function NewReviewForm({
   courses,
-  semesters,
 }: NewReviewFormProps): JSX.Element {
   const router = useRouter();
 
   const [query, setQuery] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const [courseId, setCourseId] = useState<Course["id"]>("");
-  const [semesterId, setSemesterId] = useState<Semester["id"]>("");
+  const [courseId, setCourseId] = useState<Course["_id"]>("");
   const [rating, setRating] = useState<NonNullable<Review["rating"]>>();
   const [difficulty, setDifficulty] =
     useState<NonNullable<Review["difficulty"]>>();
   const [workload, setWorkload] = useState<NonNullable<Review["workload"]>>();
   const [body, setBody] = useState<Review["body"]>("");
-  const [username, setUsername] = useState<string>("");
-  const [code, setCode] = useState<string>("");
 
-  const [codeRequestState, setCodeRequestState] = useState<RequestState>({
-    status: "init",
-  });
   const [reviewRequestState, setReviewRequestState] = useState<RequestState>({
     status: "init",
   });
 
   const selectedCourse = useMemo<(typeof courses)[0] | undefined>(
-    () => courses.find(({ id }) => id === courseId),
+    () => courses.find(({ _id }) => _id === courseId),
     [courseId, courses],
   );
 
@@ -79,7 +59,7 @@ export default function NewReviewForm({
 
     if (typeof courseSlug === "string") {
       setCourseId(
-        courses.find((course) => course.slug === courseSlug)?.id ?? "",
+        courses.find((course) => course.slug === courseSlug)?._id ?? "",
       );
     }
   }, [router, courses]);
@@ -100,56 +80,18 @@ export default function NewReviewForm({
     [query, courses],
   );
 
-  function onDismissSendCodeAlert() {
-    setCodeRequestState({ status: "init" });
-  }
-
   function onDismissCreateReviewAlert() {
     setReviewRequestState({ status: "init" });
   }
 
   function closeSuccessModal() {
     setCourseId("");
-    setSemesterId("");
     setRating(undefined);
     setDifficulty(undefined);
     setWorkload(undefined);
     setBody("");
-    setUsername("");
-    setCode("");
 
     setIsSuccessModalOpen(false);
-  }
-
-  async function sendCode() {
-    if (!username) {
-      return;
-    }
-
-    setCodeRequestState({ status: "pending" });
-
-    try {
-      const response = await fetch("/api/verifications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username }),
-      });
-
-      const { error } = (await response.json()) as { error?: string };
-
-      if (error) {
-        setCodeRequestState({ status: "complete", errors: [error] });
-      } else {
-        setCodeRequestState({ status: "complete" });
-      }
-    } catch {
-      setCodeRequestState({
-        status: "complete",
-        errors: ["Something went wrong. Please try again."],
-      });
-    }
   }
 
   async function createReview(e: FormEvent) {
@@ -162,13 +104,10 @@ export default function NewReviewForm({
         method: "POST",
         body: JSON.stringify({
           courseId,
-          semesterId,
           rating,
           difficulty,
           workload,
           body,
-          username,
-          code,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -183,9 +122,9 @@ export default function NewReviewForm({
 
       setReviewRequestState({ status: "complete", errors });
     } catch {
-      setCodeRequestState({
+      setReviewRequestState({
         status: "complete",
-        errors: ["Something went wrong. Please try again."],
+        errors: ["An error occurred while submitting your review."],
       });
     }
   }
@@ -265,8 +204,8 @@ export default function NewReviewForm({
                   <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                     {filteredCourses.map((course) => (
                       <Combobox.Option
-                        key={course.id}
-                        value={course.id}
+                        key={course._id}
+                        value={course._id}
                         className={({ active }) =>
                           classNames(
                             "relative cursor-default select-none py-2 pl-3 pr-9",
@@ -319,7 +258,8 @@ export default function NewReviewForm({
                 When did you take this course?
               </p>
               <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
-                {semesters.map(({ id, term, startDate }) => (
+                {/* TODO: Implement a semester selection with drop down menu*/}
+                {/* {semesters.map(({ id, term, startDate }) => (
                   <div key={id}>
                     <label
                       htmlFor={`semester-${term}-${startDate}`}
@@ -337,7 +277,7 @@ export default function NewReviewForm({
                       />
                     </label>
                   </div>
-                ))}
+                ))} */}
               </div>
             </fieldset>
           </div>
@@ -462,122 +402,6 @@ export default function NewReviewForm({
               So, how was this course?
             </p>
           </div>
-          <div className="pt-8" aria-live="polite">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
-              Authentication
-            </h3>
-            {codeRequestState.status === "complete" &&
-              !codeRequestState.errors && (
-                <Alert
-                  variant="success"
-                  onDismiss={() => onDismissSendCodeAlert()}
-                >
-                  <p className="text-sm font-medium ">
-                    {`Sent code to ${username}@gatech.edu!`} This code is valid
-                    for 10 minutes. Click &apos;Send code&apos; again if you
-                    need a new code.
-                  </p>
-                </Alert>
-              )}
-            {codeRequestState.status === "complete" &&
-              codeRequestState.errors && (
-                <Alert
-                  variant="failure"
-                  onDismiss={() => onDismissSendCodeAlert()}
-                >
-                  <p className="text-sm font-medium ">
-                    {codeRequestState.errors[0]}
-                  </p>
-                </Alert>
-              )}
-            <div className="mt-1 text-sm text-gray-500">
-              <span className="block">
-                Only verified GATech students can leave reviews at this time.
-              </span>
-              <details className="inline-block">
-                <summary className="cursor-pointer text-xs text-indigo-600 hover:text-indigo-900 md:text-sm">
-                  How does this work?
-                </summary>
-                Enter your GT username below. If you need a code, you can
-                request one be sent to your email. Enter your code below before
-                you submit your review.
-              </details>
-            </div>
-            <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-6">
-              <div className="sm:col-span-6">
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  GT Account
-                  <div className="mt-1 flex flex-wrap gap-4">
-                    <div className="flex shrink-0">
-                      <input
-                        required
-                        type="text"
-                        name="username"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.currentTarget.value)}
-                        autoComplete="none"
-                        placeholder="david.joyner"
-                        className="relative block min-w-0 rounded-none rounded-l-md border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                      <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
-                        @gatech.edu
-                      </span>
-                    </div>
-                    {username && (
-                      <button
-                        type="button"
-                        {...(codeRequestState.status === "pending"
-                          ? { disabled: true }
-                          : {})}
-                        onClick={() => {
-                          sendCode().catch(() => {});
-                        }}
-                        className="rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 shadow-sm hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
-                      >
-                        {codeRequestState.status === "pending"
-                          ? "Sending..."
-                          : "Send code"}
-                      </button>
-                    )}
-                  </div>
-                </label>
-                <p className="mt-2 text-sm text-gray-500">
-                  Who are you, fellow student?
-                </p>
-              </div>
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="code"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Code
-                  <div className="mt-1">
-                    <input
-                      required
-                      type="text"
-                      minLength={6}
-                      maxLength={6}
-                      pattern="\d+"
-                      inputMode="numeric"
-                      name="code"
-                      id="code"
-                      value={code}
-                      onChange={(e) => setCode(e.currentTarget.value)}
-                      placeholder="123456"
-                      className="relative block min-w-0 rounded border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    />
-                  </div>
-                </label>
-                <p className="mt-2 text-sm text-gray-500">
-                  Please enter your one-time six-digit code.
-                </p>
-              </div>
-            </div>
-          </div>
           <div className="pt-5">
             <div className="flex justify-end">
               <button
@@ -641,8 +465,8 @@ export default function NewReviewForm({
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Thanks, {username}! It&apos;s so awesome you took the
-                          time to write a review.
+                          Thanks! It&apos;s so awesome you took the time to
+                          write a review.
                         </p>
                       </div>
                     </div>

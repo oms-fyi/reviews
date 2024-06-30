@@ -1,34 +1,37 @@
+import { ObjectId } from "mongodb";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 
-import type { Course, Review as ReviewType, Semester } from "src/@types";
+import type { Course, Review as ReviewType } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
-import { sanityClient } from "src/sanity";
+import { connectToDatabase } from "src/lib/mongodb";
 
 const PRERENDER_LIMIT = 100;
 
-type ReviewPathParams = Pick<ReviewType, "id">;
+type ReviewPathParams = Pick<ReviewType, "_id">;
 type ReviewPageProps = {
   review: ReviewType & {
-    semester: Semester;
     course?: Pick<Course, "name" | "slug">;
   };
 };
 
 export const getStaticPaths: GetStaticPaths<ReviewPathParams> = async () => {
-  const query = `
-  *[_type == 'review'] {
-      "id": _id
-    }[0...$limit]
-  `;
+  const { db } = await connectToDatabase();
 
-  const ids = await sanityClient.fetch<Pick<ReviewType, "id">[]>(query, {
-    limit: PRERENDER_LIMIT,
+  const ids = await db
+    .collection("reviews")
+    .aggregate([
+      { $group: { _id: "$_id" } },
+      { $sort: { _id: 1 } },
+      { $limit: PRERENDER_LIMIT },
+    ])
+    .toArray();
+
+  console.log(ids);
+
+  const paths = ids.map((_id) => {
+    return { params: { _id: _id.toString() } };
   });
-
-  const paths = ids.map(({ id }) => ({
-    params: { id },
-  }));
 
   return {
     paths,
@@ -40,27 +43,33 @@ export const getStaticPaths: GetStaticPaths<ReviewPathParams> = async () => {
 export const getStaticProps: GetStaticProps<
   ReviewPageProps,
   ReviewPathParams
-> = async ({ params: { id } = {} }) => {
-  if (!id) {
+> = async ({ params: { _id } = {} }) => {
+  if (!_id) {
     throw new Error("No review ID passed to `getStaticProps`");
   }
 
-  const query = `
-    *[_type == 'review' && _id == $id]{
-      "id": _id,
-      "created": _createdAt,
-      ...,
-      course->{
-        name,
-        "slug": slug.current
-      },
-      semester->
-    }[0]
-  `;
+  const { db } = await connectToDatabase();
 
-  const review = await sanityClient.fetch<ReviewPageProps["review"]>(query, {
-    id,
-  });
+  let review = await JSON.parse(
+    JSON.stringify(
+      await db
+        .collection("reviews")
+        .findOne({ _id: new ObjectId(_id.toString()) }),
+    ),
+  );
+
+  const tmpCourse = await JSON.parse(
+    JSON.stringify(
+      await db
+        .collection("courses")
+        .findOne({ _id: new ObjectId(review.courseId.toString()) }),
+    ),
+  );
+
+  review = {
+    ...review,
+    course: { name: tmpCourse.name, slug: tmpCourse.slug },
+  };
 
   if (!review) {
     return {

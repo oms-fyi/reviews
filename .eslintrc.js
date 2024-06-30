@@ -11,4 +11,8 @@ module.exports = {
       files: ["./**/*.{ts,tsx}"],
     },
   ],
+  globals: {
+    JSX: "readonly",
+    React: "readonly",
+  },
 };

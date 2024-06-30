@@ -6,9 +6,15 @@ import { jwtPayload } from "./@types";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const requiredAuthentication = !(path === "/login" || path === "/sign-up");
+  const requiredAuthentication = path === "/reviews/new";
   const loginPath = path === "/login" || path === "/sign-up";
+  const develpmentEndpoints = /\/api\/services\/*/.exec(path) !== null;
+  const isDevelopment = process.env.NODE_ENV === "development";
   const jwtToken = (await request.cookies.get("jwtToken")?.value) || "";
+
+  if (develpmentEndpoints && !isDevelopment) {
+    return NextResponse.redirect(new URL("/", request.nextUrl));
+  }
 
   // Redirect if token is not present and authentication is required
   if (requiredAuthentication && !jwtToken) {
@@ -23,7 +29,7 @@ export async function middleware(request: NextRequest) {
     secretToken = new TextEncoder().encode(process.env.TOKEN_SECRET as string);
     payload = (await jose.jwtVerify(jwtToken, secretToken))
       .payload as jwtPayload;
-  } catch (error) {
+  } catch (error: any) {
     if (error.toString().includes("JWTExpired")) {
       payload = (error as jose.JWTVerifyResult).payload as jwtPayload;
       delete payload.iat;
@@ -65,5 +71,11 @@ async function refreshToken(request: NextRequest, payload: jwtPayload) {
 }
 
 export const config = {
-  matcher: ["/login", "/sign-up", "/"],
+  matcher: [
+    "/login",
+    "/sign-up",
+    "/api/services/:path*",
+    "/reviews/new",
+    "/api/reviews",
+  ],
 };

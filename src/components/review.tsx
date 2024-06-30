@@ -8,11 +8,10 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 
-import type { Course, Review as ReviewType, Semester } from "src/@types";
+import type { Course, Review as ReviewType } from "src/@types";
 
 interface ReviewProps {
   review: ReviewType & {
-    semester: Semester;
     course?: Pick<Course, "name" | "slug">;
   };
 }
@@ -22,11 +21,12 @@ export function Review({ review }: ReviewProps): JSX.Element {
     course,
     authorId,
     created,
-    semester,
     body,
     rating,
     difficulty,
     workload,
+    term,
+    date,
   } = review;
 
   const [hasMounted, setHasMounted] = useState(false);
@@ -56,11 +56,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
             <span className="flex items-center gap-1 text-xs text-gray-500">
               <CalendarIcon className="h-4 w-4" aria-hidden="true" />
               <span className="capitalize">
-                {semester
-                  ? `${semester.term} ${new Date(
-                      semester.startDate,
-                    ).getFullYear()}`
-                  : "Unknown Semester"}
+                {`${term} ${new Date(date).getFullYear()}`}
               </span>
             </span>
           </span>

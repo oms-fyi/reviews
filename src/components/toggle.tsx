@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 interface ToggleProps {
   enabled: boolean;
+  // eslint-disable-next-line no-unused-vars
   onChange: (nextValue: boolean) => void;
   label: string;
 }
