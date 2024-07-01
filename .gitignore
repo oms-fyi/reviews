@@ -36,3 +36,8 @@ yarn-error.log*
 
 # Sentry Auth Token
 .sentryclirc
+
+# vscode
+.vscode
+
+*-lock.json
