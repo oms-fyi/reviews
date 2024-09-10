@@ -23,8 +23,8 @@ export interface Program {
 
 export interface Course {
   _id: string;
-  slug: string;
-  codes: string[];
+  slug: string; // == id
+  codes: string[]; // erase
   name: string;
   term: "spring" | "fall" | "any";
   description?: string;
@@ -33,11 +33,11 @@ export interface Course {
   textbooks?: {
     name: string;
     url: string;
-  }[];
-  isFoundational: boolean;
-  isDeprecated: boolean;
-  officialURL?: string;
-  notesURL?: string;
+  }[]; // erase
+  isFoundational: boolean; // erase
+  isDeprecated: boolean; // erase
+  officialURL?: string; // erase
+  notesURL?: string; // erase
   tags: string[];
 }
 
