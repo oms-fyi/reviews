@@ -52,15 +52,15 @@ const reviewsMenuItems = [
 const githubMenuItems = [
   {
     text: "Report a bug",
-    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=bug&template=bug_report.md&title=[BUG REPORT]",
+    href: "https://github.com/PereCP/FIBreview/issues/new?assignees=m4ttsch&labels=bug&template=bug_report.md&title=[BUG REPORT]",
   },
   {
     text: "Request a feature",
-    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=enhancement&template=feature_request.md&title=[FEATURE REQUEST]",
+    href: "https://github.com/PereCP/FIBreview/issues/new?assignees=m4ttsch&labels=enhancement&template=feature_request.md&title=[FEATURE REQUEST]",
   },
   {
     text: "View code",
-    href: "https://github.com/oms-tech/reviews",
+    href: "https://github.com/PereCP/FIBreview",
   },
 ];
 

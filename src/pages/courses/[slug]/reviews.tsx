@@ -129,7 +129,7 @@ export default function Reviews({
   return (
     <>
       <Head>
-        <title>{`${name} | OMSCentral`}</title>
+        <title>{`${name} | FIBReview`}</title>
       </Head>
       <main className="m-auto max-w-6xl px-5 py-10">
         <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
@@ -160,7 +160,7 @@ export default function Reviews({
               <p className="mt-1 max-w-2xl text-xs text-gray-500">
                 Something missing or incorrect?{" "}
                 <a
-                  href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${name}`}
+                  href={`https://github.com/PereCP/FIBreview/issues/new?template=course-edit-request.md&title=[EDIT] ${name}`}
                   target="_blank"
                   rel="noreferrer"
                   className="font-medium text-indigo-600 hover:text-indigo-500"

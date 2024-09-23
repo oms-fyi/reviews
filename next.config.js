@@ -24,7 +24,7 @@ module.exports = withSentryConfig(
 
     // Suppresses source map uploading logs during build
     silent: true,
-    org: "omscentral",
+    org: "fibreview",
     project: "javascript-nextjs",
   },
   {

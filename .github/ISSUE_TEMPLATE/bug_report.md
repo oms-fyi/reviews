@@ -1,9 +1,9 @@
 ---
 name: Bug report
-about: Create a report to help us improve OMS Reviews
+about: Create a report to help us improve FIB Reviews
 title: "[BUG REPORT]"
 labels: bug
-assignees: m4ttsch
+assignees: alexandru-d6
 ---
 
 **Describe the bug**
