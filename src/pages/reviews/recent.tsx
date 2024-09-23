@@ -8,7 +8,7 @@ import { connectToDatabase } from "src/lib/mongodb";
 interface ReviewsPageProps {
   reviews: Array<
     Review & {
-      course: Pick<Course, "name" | "slug" | "term">;
+      course: Pick<Course, "name" | "slug">;
     }
   >;
 }

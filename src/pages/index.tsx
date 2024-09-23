@@ -3,7 +3,6 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   FilterIcon,
-  InformationCircleIcon,
   SearchIcon,
 } from "@heroicons/react/outline";
 import {
@@ -68,7 +67,10 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
     }),
   );
 
-  return { props: { courses } };
+  return {
+    props: { courses },
+    revalidate: true,
+  };
 };
 
 interface PaginationProps {
@@ -306,15 +308,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   useEffect(() => {
     setView(
       courses.filter(
-        ({
-          isDeprecated,
-          isFoundational,
-          notesURL,
-          rating,
-          difficulty,
-          workload,
-          reviewCount,
-        }) =>
+        ({ rating, difficulty, workload, reviewCount }) =>
           between(
             reviewCount,
             minReviewCount || 0,
@@ -322,10 +316,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
           ) &&
           between(rating, minRating || 1, maxRating || 10) &&
           between(difficulty, minDifficulty || 1, maxDifficulty || 10) &&
-          between(workload, minWorkload || 1, maxWorkload || 100) &&
-          (hideDeprecated ? isDeprecated === false : true) &&
-          (onlyShowFoundational ? isFoundational === true : true) &&
-          (onlyShowNotes ? Boolean(notesURL) : true),
+          between(workload, minWorkload || 1, maxWorkload || 100),
       ),
     );
   }, [
@@ -798,35 +789,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         scope="col"
                         className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter md:table-cell"
                       >
-                        <span className="flex">
-                          Code(s)
-                          <Popover className="relative">
-                            <>
-                              <Popover.Button type="button">
-                                <InformationCircleIcon className="h-4 w-4 text-indigo-600" />
-                              </Popover.Button>
-                              <Transition
-                                as={Fragment}
-                                enter="transition ease-out duration-200"
-                                enterFrom="opacity-0 translate-y-1"
-                                enterTo="opacity-100 translate-y-0"
-                                leave="transition ease-in duration-150"
-                                leaveFrom="opacity-100 translate-y-0"
-                                leaveTo="opacity-0 translate-y-1"
-                              >
-                                <Popover.Panel className="absolute right-0 z-10 mt-3 w-80 translate-x-1/2 px-0">
-                                  <article className="rounded-lg bg-white px-4 py-2 font-normal shadow-lg ring-1 ring-black ring-opacity-5">
-                                    Multiple departments may <b>crosslist</b> a
-                                    single course so that students with distinct
-                                    degree requirements can enroll. Please
-                                    register with the department that best fits
-                                    your needs.
-                                  </article>
-                                </Popover.Panel>
-                              </Transition>
-                            </>
-                          </Popover>
-                        </span>
+                        <span className="flex">Acronym</span>
                       </th>
                       <th
                         scope="col"
@@ -860,10 +823,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         {
                           _id,
                           slug,
-                          codes,
                           name,
-                          officialURL,
-                          notesURL,
+                          syllabusUrl,
                           rating,
                           difficulty,
                           workload,
@@ -881,7 +842,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               <dd className="inline">
                                 <span className="block w-72 truncate whitespace-nowrap lg:w-96">
                                   <span className="mr-2 block text-xs text-gray-500 md:hidden">
-                                    {codes.join(" / ")}
+                                    {slug}
                                   </span>
                                   <span className=" text-base">{name}</span>
                                 </span>
@@ -893,7 +854,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     {formatNumber(rating)}
                                     <span className="text-gray-400">
                                       {" "}
-                                      / 5 rating
+                                      / 10 rating
                                     </span>
                                   </dd>
                                   <dt className="sr-only">Difficulty</dt>
@@ -901,7 +862,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     {formatNumber(difficulty)}
                                     <span className="text-gray-400">
                                       {" "}
-                                      / 5 difficulty
+                                      / 10 difficulty
                                     </span>
                                   </dd>
                                 </div>
@@ -927,32 +888,17 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                     ({reviewCount})
                                   </span>
                                 </dd>
-                                {officialURL && (
+                                {syllabusUrl && (
                                   <>
-                                    <dt className="sr-only">GATech URL</dt>
+                                    <dt className="sr-only">FIB URL</dt>
                                     <dd className="before:mr-1 before:content-['\b7']">
                                       <a
-                                        href={officialURL}
+                                        href={syllabusUrl}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="text-sm text-indigo-600 hover:text-indigo-900"
                                       >
-                                        GT Official
-                                      </a>
-                                    </dd>
-                                  </>
-                                )}
-                                {notesURL && (
-                                  <>
-                                    <dt className="sr-only">OMSCSNotes URL</dt>
-                                    <dd className="before:mr-1 before:content-['\b7']">
-                                      <a
-                                        href={notesURL}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="text-sm text-indigo-600 hover:text-indigo-900"
-                                      >
-                                        Lecture Notes
+                                        FIB Official
                                       </a>
                                     </dd>
                                   </>
@@ -961,12 +907,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             </dl>
                           </td>
                           <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 md:table-cell">
-                            {codes.map((code) => (
-                              <>
-                                {code}
-                                <br />
-                              </>
-                            ))}
+                            {slug}
                           </td>
                           <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:table-cell">
                             {formatNumber(rating)}

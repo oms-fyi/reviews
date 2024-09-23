@@ -27,10 +27,8 @@ export const getStaticPaths: GetStaticPaths<ReviewPathParams> = async () => {
     ])
     .toArray();
 
-  console.log(ids);
-
   const paths = ids.map((_id) => {
-    return { params: { _id: _id.toString() } };
+    return { params: { _id: _id._id.toString() } };
   });
 
   return {
@@ -52,9 +50,7 @@ export const getStaticProps: GetStaticProps<
 
   let review = await JSON.parse(
     JSON.stringify(
-      await db
-        .collection("reviews")
-        .findOne({ _id: new ObjectId(_id.toString()) }),
+      await db.collection("reviews").findOne({ _id: new ObjectId(_id) }),
     ),
   );
 
@@ -62,7 +58,7 @@ export const getStaticProps: GetStaticProps<
     JSON.stringify(
       await db
         .collection("courses")
-        .findOne({ _id: new ObjectId(review.courseId.toString()) }),
+        .findOne({ _id: new ObjectId(review.courseId as string) }),
     ),
   );
 

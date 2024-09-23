@@ -23,22 +23,14 @@ export interface Program {
 
 export interface Course {
   _id: string;
-  slug: string; // == id
-  codes: string[]; // erase
-  name: string;
-  term: "spring" | "fall" | "any";
-  description?: string;
+  slug: string;
   creditHours: number;
-  syllabusUrl?: string;
-  textbooks?: {
-    name: string;
-    url: string;
-  }[]; // erase
-  isFoundational: boolean; // erase
-  isDeprecated: boolean; // erase
-  officialURL?: string; // erase
-  notesURL?: string; // erase
-  tags: string[];
+  description?: string;
+  name: string;
+  syllabusUrl: string;
+
+  // term: "spring" | "fall" | "any";
+  // tags: string[];
 }
 
 export interface jwtPayload extends JWTPayload {

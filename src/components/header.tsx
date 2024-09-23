@@ -3,10 +3,10 @@ import {
   ChevronDownIcon,
   ChipIcon,
   ClockIcon,
-  CurrencyDollarIcon,
-  GlobeAltIcon,
-  LockClosedIcon,
+  DatabaseIcon,
+  DesktopComputerIcon,
   MenuIcon,
+  TrendingUpIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { PlusSmIcon } from "@heroicons/react/solid";
@@ -14,7 +14,6 @@ import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import logo from "public/logo.svg";
 import { Fragment, useEffect, useState } from "react";
 
 const reviewsMenuItems = [
@@ -25,27 +24,27 @@ const reviewsMenuItems = [
     icon: ClockIcon,
   },
   {
-    title: "CS-6250",
-    subtitle: "Computer Networks",
-    href: "/courses/computer-networks/reviews",
-    icon: GlobeAltIcon,
+    title: "PRO2",
+    subtitle: "Programming II",
+    href: "/courses/PRO2/reviews",
+    icon: DesktopComputerIcon,
   },
   {
-    title: "CS-6035",
-    subtitle: "Introduction to Information Security",
-    href: "/courses/introduction-to-information-security/reviews",
-    icon: LockClosedIcon,
+    title: "EDA",
+    subtitle: "Data Structures and Algorithmics",
+    href: "/courses/EDA/reviews",
+    icon: TrendingUpIcon,
   },
   {
-    title: "CS-7646",
-    subtitle: "Machine Learning for Trading",
-    href: "/courses/machine-learning-for-trading/reviews",
-    icon: CurrencyDollarIcon,
+    title: "BD",
+    subtitle: "Databases",
+    href: "/courses/BD/reviews",
+    icon: DatabaseIcon,
   },
   {
-    title: "CS-6200",
-    subtitle: "Introduction to Operating Systems",
-    href: "/courses/graduate-introduction-to-operating-systems/reviews",
+    title: "IC",
+    subtitle: "Introduction to Computers",
+    href: "/courses/IC/reviews",
     icon: ChipIcon,
   },
 ];
@@ -112,14 +111,13 @@ export function Header(): JSX.Element {
                 <Link href="/" className="flex flex-shrink-0 items-center">
                   <div className="flex items-center gap-2">
                     <Image
-                      // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
-                      src={logo as string}
-                      alt="OMS Tech Logo"
+                      src="https://dse.upc.edu/es/logosfooter-es/fib/@@images/image-400-f2beea873ec10b898a274f29520bed2c.png"
+                      alt="FIB Official Logo"
                       width={32}
                       height={32}
                       className="block"
                     />
-                    <h1 className="text-lg">OMS Reviews</h1>
+                    <h1 className="text-lg">FIB Reviews</h1>
                   </div>
                 </Link>
                 <div className="hidden justify-center gap-6 md:ml-6 md:flex">
@@ -204,12 +202,6 @@ export function Header(): JSX.Element {
                       </>
                     )}
                   </Menu>
-                  <a
-                    href="https://omscs-notes.com"
-                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
-                  >
-                    OMSCS Notes
-                  </a>
                 </div>
               </div>
               <div className="flex items-center">
@@ -297,13 +289,6 @@ export function Header(): JSX.Element {
                   Courses
                 </Disclosure.Button>
               </Link>
-              <Disclosure.Button
-                as="a"
-                href="https://omscs-notes.com"
-                className="block py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6"
-              >
-                OMSCS Notes
-              </Disclosure.Button>
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="space-y-1">

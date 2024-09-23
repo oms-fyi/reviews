@@ -19,39 +19,54 @@ export async function middleware(request: NextRequest) {
   // Redirect if token is not present and authentication is required
   if (requiredAuthentication && !jwtToken) {
     return NextResponse.redirect(new URL("/login", request.nextUrl));
-  }
+  } else if (requiredAuthentication && jwtToken) {
+    let secretToken: Uint8Array;
+    let payload: jwtPayload | undefined;
+    let tokenVerified: boolean = true;
 
-  let secretToken: Uint8Array;
-  let payload: jwtPayload | undefined;
-  let tokenVerified: boolean = true;
-
-  try {
-    secretToken = new TextEncoder().encode(process.env.TOKEN_SECRET as string);
-    payload = (await jose.jwtVerify(jwtToken, secretToken))
-      .payload as jwtPayload;
-  } catch (error: any) {
-    if (error.toString().includes("JWTExpired")) {
-      payload = (error as jose.JWTVerifyResult).payload as jwtPayload;
-      delete payload.iat;
-      delete payload.exp;
-      tokenVerified = true;
-      let response: NextResponse = NextResponse.redirect(
-        new URL("/", request.nextUrl),
+    try {
+      secretToken = new TextEncoder().encode(
+        process.env.TOKEN_SECRET as string,
       );
-      response.cookies.set(
-        "jwtToken",
-        await refreshToken(request, payload as jwtPayload),
-      );
-      return response;
-    } else {
-      if (requiredAuthentication && !loginPath) {
-        return NextResponse.redirect(new URL("/login", request.nextUrl));
+      payload = (await jose.jwtVerify(jwtToken, secretToken))
+        .payload as jwtPayload;
+    } catch (error: any) {
+      if (error.toString().includes("JWTExpired")) {
+        payload = (error as jose.JWTVerifyResult).payload as jwtPayload;
+        delete payload.iat;
+        delete payload.exp;
+        tokenVerified = true;
+        let response: NextResponse = NextResponse.redirect(
+          new URL("/", request.nextUrl),
+        );
+        response.cookies.set(
+          "jwtToken",
+          await refreshToken(request, payload as jwtPayload),
+        );
+        return response;
+      } else {
+        if (requiredAuthentication && !loginPath) {
+          return NextResponse.redirect(new URL("/login", request.nextUrl));
+        }
       }
+    }
+
+    if (loginPath && jwtToken && tokenVerified) {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
     }
   }
 
-  if (loginPath && jwtToken && tokenVerified) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+  const slug = new RegExp(/\/courses\/(.*)\/reviews/g).exec(path);
+
+  if (slug) {
+    const originalSlug = slug[1].toString();
+    const upperSlug = originalSlug.toUpperCase();
+
+    if (originalSlug !== upperSlug) {
+      return NextResponse.redirect(
+        new URL(`/courses/${upperSlug}/reviews`, request.nextUrl),
+      );
+    }
   }
 }
 
@@ -77,5 +92,6 @@ export const config = {
     "/api/services/:path*",
     "/reviews/new",
     "/api/reviews",
+    "/courses/:slug/reviews",
   ],
 };
