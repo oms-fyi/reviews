@@ -423,7 +423,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Home | OMSCentral</title>
+        <title>Home | FIBReview</title>
       </Head>
       <main className="mx-auto py-6 sm:max-w-6xl sm:px-6 sm:py-10 lg:px-8">
         <div className="px-4">

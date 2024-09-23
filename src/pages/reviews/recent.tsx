@@ -43,7 +43,7 @@ export default function Reviews({ reviews }: ReviewsPageProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Recent Reviews | OMSCentral</title>
+        <title>Recent Reviews | FIBReview</title>
       </Head>
       <main className="m-auto max-w-7xl px-5 py-10">
         <h3 className="mb-10 text-center text-3xl font-medium text-gray-900">

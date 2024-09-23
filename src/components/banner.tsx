@@ -4,9 +4,7 @@ export function Banner(): JSX.Element {
       <div className="mx-auto max-w-7xl px-3 py-3 sm:px-6 lg:px-8">
         <div className="text-center ">
           <p className="font-medium text-white">
-            <span>
-              Course pages now have syllabi, textbooks, descriptions and more!
-            </span>
+            <span>Course pages now have syllabus, descriptions and more!</span>
           </p>
         </div>
       </div>

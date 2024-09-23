@@ -1,9 +1,9 @@
 ---
 name: Feature request
-about: Suggest a new feature for OMS Reviews
+about: Suggest a new feature for FIB Reviews
 title: "[FEATURE REQUEST]"
 labels: enhancement
-assignees: m4ttsch
+assignees: alexandru-d6
 ---
 
 **What feature would you like to see added?**
