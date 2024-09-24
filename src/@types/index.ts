@@ -33,8 +33,9 @@ export interface Course {
   // tags: string[];
 }
 
-export interface jwtPayload extends JWTPayload {
+export interface UserToken extends JWTPayload {
   accessToken: string;
   refreshToken: string;
+  expirationDate: number;
   username: string;
 }

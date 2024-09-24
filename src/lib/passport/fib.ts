@@ -1,6 +1,8 @@
 import { Strategy as OAuth2Strategy } from "passport-oauth2";
 
-import { jwtPayload } from "src/@types";
+import { UserToken } from "src/@types";
+
+import { createExpirationDate } from "../jwt";
 
 interface userFibApi {
   assignatures: string;
@@ -13,6 +15,13 @@ interface userFibApi {
   nom: string;
   cognoms: string;
   email: string;
+}
+
+export interface FibAuthParams {
+  access_token: string;
+  expires_in: number;
+  scope: string;
+  token_type: string;
 }
 
 const API_URL = "https://api.fib.upc.edu/v2";
@@ -28,14 +37,17 @@ const strategy = new OAuth2Strategy(
   async (
     accessToken: string,
     refreshToken: string,
+    params: FibAuthParams,
     _profile: any,
     done: any,
   ) => {
     const { username } = await getFibUser(accessToken);
+    const expirationDate = createExpirationDate(params.expires_in);
 
-    const user: jwtPayload = {
+    const user: UserToken = {
       accessToken,
       refreshToken,
+      expirationDate,
       username: username,
     };
 

@@ -1,7 +1,7 @@
-import * as jose from "jose";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { jwtPayload } from "src/@types";
+import { UserToken } from "src/@types";
+import { createToken } from "src/lib/jwt";
 
 import passport from "../../../../lib/passport";
 
@@ -9,7 +9,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   passport.authenticate(
     req.query.provider as string,
     // eslint-disable-next-line no-unused-vars
-    async (err: any, profile: jwtPayload, _info: any) => {
+    async (err: any, profile: UserToken, _info: any) => {
       if (err) {
         return res.redirect("/login");
       }
@@ -18,17 +18,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.redirect("/login");
       }
 
-      const algo = "HS256";
-      const secret = new TextEncoder().encode(
-        process.env.TOKEN_SECRET as string,
-      );
-      const jwtToken = await new jose.SignJWT(profile)
-        .setProtectedHeader({ alg: algo })
-        .setIssuedAt()
-        .setExpirationTime("2h")
-        .sign(secret);
-
-      res.setHeader("Set-Cookie", `jwtToken=${jwtToken}; Path=/;`);
+      const jwtToken = await createToken(profile);
+      const expirationDate = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000); // expire in 400 days ()
+      res.setHeader("Set-Cookie", `jwtToken=${jwtToken}; Path=/; Expires=${expirationDate.toUTCString()};`);
       res.redirect("/");
     },
   )(req, res);
