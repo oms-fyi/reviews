@@ -425,7 +425,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
       <Head>
         <title>Home | FIBReview</title>
       </Head>
-      <main className="mx-auto py-6 sm:max-w-6xl sm:px-6 sm:py-10 lg:px-8">
+      <main className="mx-auto w-screen py-6 sm:max-w-6xl sm:px-6 sm:py-10 lg:px-8">
         <div className="px-4">
           <div className="flex flex-col space-y-2">
             <div className="flex items-end justify-between gap-2">

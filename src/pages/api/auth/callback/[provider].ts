@@ -1,3 +1,4 @@
+import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { UserToken } from "src/@types";
@@ -19,9 +20,24 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       }
 
       const jwtToken = await createToken(profile);
-      const expirationDate = new Date(Date.now() + 400 * 24 * 60 * 60 * 1000); // expire in 400 days ()
-      res.setHeader("Set-Cookie", `jwtToken=${jwtToken}; Path=/; Expires=${expirationDate.toUTCString()};`);
-      res.redirect("/");
+
+      let redirectUrl = "/";
+      if (req.cookies.redirectAfterLogin) {
+        const { pathname, search } = JSON.parse(req.cookies.redirectAfterLogin);
+        redirectUrl = `${pathname}${search}`;
+      }
+
+      res.setHeader("Set-Cookie", [
+        serialize("jwtToken", jwtToken, {
+          maxAge: 60 * 60 * 24 * 400,
+          path: "/",
+        }),
+        serialize("redirectAfterLogin", "", {
+          maxAge: 0,
+          path: "/",
+        }),
+      ]);
+      res.redirect(redirectUrl);
     },
   )(req, res);
 }

@@ -9,11 +9,13 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       {/* <Banner /> */}
-      <Header />
-      <div className="grow">
-        <Component {...pageProps} />
+      <div className="flex max-h-screen min-h-screen flex-col">
+        <Header />
+        <main className="flex w-screen grow flex-col justify-center">
+          <Component {...pageProps} />
+        </main>
+        <Footer />
       </div>
-      <Footer />
       <Analytics />
     </>
   );

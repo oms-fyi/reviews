@@ -91,7 +91,7 @@ export function Header(): JSX.Element {
   }, [router]);
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="grow-0 bg-white shadow">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

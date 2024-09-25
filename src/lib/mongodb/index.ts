@@ -18,12 +18,15 @@ if (!dbName) {
   );
 }
 
-export async function connectToDatabase() {
+async function connectToDatabase() {
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb };
   }
 
-  const client = await MongoClient.connect(uri, {});
+  const client = await MongoClient.connect(uri, {
+    maxIdleTimeMS: 10 * 60 * 1000,
+    maxPoolSize: 10,
+  });
 
   const db = await client.db(dbName);
 
@@ -33,4 +36,4 @@ export async function connectToDatabase() {
   return { client, db };
 }
 
-export default connectToDatabase;
+export { connectToDatabase };

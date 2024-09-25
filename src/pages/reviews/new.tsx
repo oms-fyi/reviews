@@ -130,7 +130,7 @@ export default function NewReviewForm({
   }
 
   return (
-    <main className="mx-auto mt-10 max-w-2xl bg-white px-5 py-10 sm:px-20">
+    <main className="mx-auto my-10 max-w-2xl rounded bg-white px-5 py-5 sm:px-20">
       <div className="space-y-8 divide-y divide-gray-200">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1" aria-live="polite">

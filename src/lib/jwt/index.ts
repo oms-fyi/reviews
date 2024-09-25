@@ -17,8 +17,8 @@ async function verifyAndUpdateToken(
 ): Promise<{ response: NextResponse; isAuthenticated: Boolean }> {
   const tokenPayload = (await req.cookies.get("jwtToken")?.value) || "";
 
-  const validToken = /^[\w-]+\.[\w-]+\.[\w-]+$/.test(tokenPayload);
-  if (!tokenPayload || !validToken) {`
+  const validToken = /^[\w-]+\.\.[\w-]+\.[\w-]+\.[\w-]+$/.test(tokenPayload);
+  if (!tokenPayload || !validToken) {
     res = NextResponse.redirect(new URL("/login", req.nextUrl));
     res.cookies.delete("jwtToken");
     return { response: res, isAuthenticated: false };

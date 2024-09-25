@@ -19,10 +19,14 @@ export async function middleware(request: NextRequest) {
     NextResponse.redirect(new URL("/", request.nextUrl)),
   );
 
-  if (
-    (loginPath && isAuthenticated) ||
-    (requiredAuthentication && !isAuthenticated)
-  ) {
+  if (loginPath && isAuthenticated) {
+    return response;
+  } else if (requiredAuthentication && !isAuthenticated) {
+    const { pathname, search } = request.nextUrl;
+    response.cookies.set(
+      "redirectAfterLogin",
+      JSON.stringify({ pathname, search }),
+    );
     return response;
   } else {
     const slug = new RegExp(/\/courses\/(.*)\/reviews/g).exec(path);

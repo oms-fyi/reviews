@@ -13,6 +13,7 @@
     "@headlessui/react": "^1.6.5",
     "@heroicons/react": "^1.0.6",
     "@sentry/nextjs": "^7.77.0",
+    "@types/cookie": "^0.6.0",
     "@vercel/analytics": "^1.0.2",
     "axios": "^1.7.2",
     "classnames": "^2.3.1",

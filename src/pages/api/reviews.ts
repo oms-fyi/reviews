@@ -80,7 +80,7 @@ export default async function handler(
     formData.username = userToken.username;
   } catch (error: any) {
     if (error instanceof InvalidToken) {
-      res.setHeader("Delete-Cookie", "jwtToken");
+      res.setHeader("Set-Cookie", "jwtToken=; Path=/; Max-Age=0;");
     }
     res.status(401).json({});
     return;
