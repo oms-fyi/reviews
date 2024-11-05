@@ -37,5 +37,5 @@ export interface UserToken extends JWTPayload {
   accessToken: string;
   refreshToken: string;
   expirationDate: number;
-  username: string;
+  usernameHash: string;
 }

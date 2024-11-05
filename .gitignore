@@ -40,4 +40,6 @@ yarn-error.log*
 # vscode
 .vscode
 
+.venv
+
 *-lock.json

@@ -14,26 +14,10 @@ type CreateReviewRequest = {
   workload: NonNullable<Review["workload"]>;
   body: Review["body"];
   courseId: Course["_id"];
-  username: string;
+  usernameHash: string;
   term: NonNullable<Review["term"]>;
   date: NonNullable<Review["date"]>;
 };
-
-// const KEY = process.env.ENCRYPTION_KEY;
-// const IV = "5183666c72eec9e4";
-
-// function encrypt(data: string): string {
-//   if (!KEY) throw new Error("Encryption key not found!");
-
-//   const cipher = crypto.createCipheriv(
-//     "aes-256-cbc",
-//     Buffer.from(KEY, "hex"),
-//     IV,
-//   );
-//   const encrypted = cipher.update(data, "utf8", "base64");
-
-//   return encrypted + cipher.final("base64");
-// }
 
 // type CreateReviewSanityRequest = Omit<
 //   CreateReviewRequest,
@@ -59,7 +43,7 @@ const schema = Joi.object<CreateReviewRequest>({
   body: Joi.string().required().label("Body"),
   term: Joi.string().required().valid("spring", "fall").label("Term"),
   date: Joi.date().required().label("Date"),
-  username: Joi.string().required().label("Username"),
+  usernameHash: Joi.string().required().label("UsernameHash"),
 });
 
 type ResponseData = Record<string, never> | { errors: string[] };
@@ -77,7 +61,7 @@ export default async function handler(
   let formData = req.body;
   try {
     const { userToken } = await getUserToken(req.cookies.jwtToken as string);
-    formData.username = userToken.username;
+    formData.usernameHash = userToken.usernameHash;
   } catch (error: any) {
     if (error instanceof InvalidToken) {
       res.setHeader("Set-Cookie", "jwtToken=; Path=/; Max-Age=0;");
@@ -104,10 +88,10 @@ export default async function handler(
   }
 
   // eslint-disable-next-line no-unused-vars
-  const { username, courseId, term, date, ...review } = validationResult.value;
+  const { usernameHash, courseId, term, date, ...review } =
+    validationResult.value;
 
-  // const authorId = encrypt(username);
-  const authorId = username;
+  const authorId = usernameHash;
 
   const requestReview = {
     authorId: authorId,

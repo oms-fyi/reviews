@@ -117,7 +117,7 @@ async function refreshToken(payload: UserToken): Promise<UserToken> {
     accessToken: response.data.access_token,
     refreshToken: response.data.refresh_token,
     expirationDate,
-    username: payload.username,
+    usernameHash: payload.usernameHash,
   };
 }
 

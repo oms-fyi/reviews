@@ -1,3 +1,4 @@
+import { sha512 } from "js-sha512";
 import { Strategy as OAuth2Strategy } from "passport-oauth2";
 
 import { UserToken } from "src/@types";
@@ -41,28 +42,30 @@ const strategy = new OAuth2Strategy(
     _profile: any,
     done: any,
   ) => {
-    const { username } = await getFibUser(accessToken);
+    const usernameHash = await getFibUserHash(accessToken);
     const expirationDate = createExpirationDate(params.expires_in);
 
     const user: UserToken = {
       accessToken,
       refreshToken,
       expirationDate,
-      username: username,
+      usernameHash: usernameHash,
     };
 
     return done(null, user);
   },
 );
 
-async function getFibUser(accessToken: string): Promise<userFibApi> {
+async function getFibUserHash(accessToken: string): Promise<string> {
   const response = await fetch(`${API_URL}/jo?format=json`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
   });
 
-  return (await response.json()) as userFibApi;
+  const { username } = (await response.json()) as userFibApi;
+
+  return sha512(username + (process.env.USERNAME_HASH_SALT as string));
 }
 
 export default strategy;

@@ -40,8 +40,8 @@ export function Review({ review }: ReviewProps): JSX.Element {
       <p className="flex items-center gap-2">
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
-          <span className="font-medium">
-            {authorId ?? "Georgia Tech Student"}
+          <span className="w-80 overflow-hidden font-medium">
+            {authorId ?? "Fiber Student"}
           </span>
           <span className="flex gap-3">
             <span className="flex items-center gap-1 text-xs text-gray-500">
