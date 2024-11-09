@@ -91,7 +91,8 @@ async function decryptToken(encryptedUserToken: string): Promise<UserToken> {
 
 async function refreshToken(payload: UserToken): Promise<UserToken> {
   const refreshToken = payload.refreshToken;
-  const tokenURL = process.env.FIB_TOKEN_URL;
+  const tokenURL: string =
+    (process.env.FIB_URL || "") + (process.env.FIB_TOKEN_URL || "");
   const clientID = process.env.FIB_CLIENT_ID;
   const clientSecret = process.env.FIB_CLIENT_SECRET;
 

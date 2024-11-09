@@ -25,15 +25,26 @@ export interface FibAuthParams {
   token_type: string;
 }
 
-const API_URL = "https://api.fib.upc.edu/v2";
+const FIB_URL = process.env.FIB_URL || "";
+const VERCEL_URL =
+  process.env.VERCEL_ENV === "production"
+    ? process.env.VERCEL_PROJECT_PRODUCTION_URL || ""
+    : process.env.VERCEL_BRANCH_URL || "";
+
+const TOKEN_URL = `${FIB_URL}/${process.env.FIB_TOKEN_URL || ""}`;
+const AUTH_URL = `${FIB_URL}/${process.env.FIB_AUTH_URL || ""}`;
+
+const CALLBACK_URL = `${VERCEL_URL}/${process.env.CALLBACK_URL || ""}`;
+const CLIENT_ID = process.env.FIB_CLIENT_ID || "";
+const CLIENT_SECRET = process.env.FIB_CLIENT_SECRET || "";
 
 const strategy = new OAuth2Strategy(
   {
-    tokenURL: process.env.FIB_TOKEN_URL || "",
-    authorizationURL: process.env.FIB_AUTH_URL || "",
-    clientID: process.env.FIB_CLIENT_ID || "",
-    clientSecret: process.env.FIB_CLIENT_SECRET || "",
-    callbackURL: process.env.FIB_REDIRECT_URI || "",
+    tokenURL: TOKEN_URL,
+    authorizationURL: AUTH_URL,
+    callbackURL: CALLBACK_URL,
+    clientID: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
   },
   async (
     accessToken: string,
@@ -57,7 +68,7 @@ const strategy = new OAuth2Strategy(
 );
 
 async function getFibUserHash(accessToken: string): Promise<string> {
-  const response = await fetch(`${API_URL}/jo?format=json`, {
+  const response = await fetch(`${FIB_URL}/jo?format=json`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
