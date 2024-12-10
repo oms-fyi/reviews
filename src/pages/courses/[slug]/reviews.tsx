@@ -5,15 +5,19 @@ import {
   StarIcon,
 } from "@heroicons/react/outline";
 import { PlusIcon } from "@heroicons/react/solid";
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import classNames from "classnames";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { Pie } from "react-chartjs-2";
 
 import type { Course, Program, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
 import { sanityClient } from "src/sanity";
 import { formatList, formatNumber } from "src/util/format";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface ReviewsPathParams {
   slug: Course["slug"];
@@ -124,6 +128,64 @@ export default function Reviews({
   },
 }: ReviewsPageProps): JSX.Element {
   const programAcronyms = programs.map(({ acronym }) => acronym);
+
+  const ratingDistribution = [1, 2, 3, 4, 5].map(
+    (ratingValue) =>
+      reviews.filter((review) => review.rating === ratingValue).length,
+  );
+
+  const difficultyDistribution = [1, 2, 3, 4, 5].map(
+    (diffValue) =>
+      reviews.filter((review) => review.difficulty === diffValue).length,
+  );
+
+  const ratingChartData = {
+    labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+    datasets: [
+      {
+        label: "Ratings Distribution",
+        data: ratingDistribution,
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4CAF50",
+          "#9575CD",
+        ],
+        hoverBackgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4CAF50",
+          "#9575CD",
+        ],
+      },
+    ],
+  };
+
+  const difficultyChartData = {
+    labels: ["1 Star", "2 Stars", "3 Stars", "4 Stars", "5 Stars"],
+    datasets: [
+      {
+        label: "Difficulty Distribution",
+        data: difficultyDistribution,
+        backgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4CAF50",
+          "#9575CD",
+        ],
+        hoverBackgroundColor: [
+          "#FF6384",
+          "#36A2EB",
+          "#FFCE56",
+          "#4CAF50",
+          "#9575CD",
+        ],
+      },
+    ],
+  };
 
   return (
     <>
@@ -258,6 +320,184 @@ export default function Reviews({
                     ) : (
                       "No textbooks found."
                     )}
+                  </dd>
+                </div>
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Ratings Distribution
+                  </dt>
+                  <dd className="col-span-3 mt-2 flex justify-center">
+                    <div
+                      className="flex items-center justify-center overflow-hidden"
+                      style={{ maxWidth: "250px", margin: "0 auto" }}
+                    >
+                      <Pie
+                        data={ratingChartData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: true,
+                          animation: false,
+                          plugins: {
+                            legend: {
+                              position: "right",
+                              labels: {
+                                boxWidth: 10,
+                                font: { size: 10 },
+                                generateLabels: (
+                                  chart,
+                                ): { text: string; fillStyle: string }[] => {
+                                  const datasets = chart.data.datasets[0];
+                                  const data = datasets.data as number[];
+                                  const total = data.reduce(
+                                    (sum, value) => sum + value,
+                                    0,
+                                  );
+
+                                  return chart.data.labels &&
+                                    Array.isArray(chart.data.labels) &&
+                                    chart.data.labels.length > 0
+                                    ? chart.data.labels.map(
+                                        (value: string, index: number) => {
+                                          const labelValue = datasets.data[
+                                            index
+                                          ] as number;
+                                          const percentage =
+                                            (
+                                              (labelValue / total) *
+                                              100
+                                            ).toFixed(1) + "%";
+                                          const color = Array.isArray(
+                                            datasets.backgroundColor,
+                                          )
+                                            ? (datasets.backgroundColor[
+                                                index
+                                              ] as string)
+                                            : "#ff0000";
+                                          return {
+                                            text: `${value}: ${percentage}`,
+                                            fillStyle: color,
+                                          };
+                                        },
+                                      )
+                                    : [];
+                                },
+                              },
+                            },
+                            tooltip: {
+                              callbacks: {
+                                label: (context) => {
+                                  const total = context.dataset.data.reduce(
+                                    (sum, value) => sum + value,
+                                    0,
+                                  );
+                                  const value = context.raw as number;
+                                  const percentage = (
+                                    (value / total) *
+                                    100
+                                  ).toFixed(1);
+                                  return `${context.label}: ${percentage}%`;
+                                },
+                              },
+                            },
+                          },
+                          layout: {
+                            padding: {
+                              top: 10,
+                              bottom: 10,
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  </dd>
+                </div>
+                <div className="grid grid-cols-3 gap-4 px-6 py-5">
+                  <dt className="text-sm font-medium text-gray-500">
+                    Difficulty Distribution
+                  </dt>
+                  <dd className="col-span-3 mt-2 flex justify-center">
+                    <div
+                      className="flex items-center justify-center overflow-hidden"
+                      style={{ maxWidth: "250px", margin: "0 auto" }}
+                    >
+                      <Pie
+                        data={difficultyChartData}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: true,
+                          animation: false,
+                          plugins: {
+                            legend: {
+                              position: "right",
+                              labels: {
+                                boxWidth: 10,
+                                font: { size: 10 },
+                                generateLabels: (
+                                  chart,
+                                ): { text: string; fillStyle: string }[] => {
+                                  const datasets = chart.data.datasets[0];
+                                  const data = datasets.data as number[];
+                                  const total = data.reduce(
+                                    (sum, value) => sum + value,
+                                    0,
+                                  );
+
+                                  return chart.data.labels &&
+                                    Array.isArray(chart.data.labels) &&
+                                    chart.data.labels.length > 0
+                                    ? chart.data.labels.map(
+                                        (value: string, index: number) => {
+                                          const labelValue = datasets.data[
+                                            index
+                                          ] as number;
+                                          const percentage =
+                                            (
+                                              (labelValue / total) *
+                                              100
+                                            ).toFixed(1) + "%";
+                                          const color = Array.isArray(
+                                            datasets.backgroundColor,
+                                          )
+                                            ? (datasets.backgroundColor[
+                                                index
+                                              ] as string)
+                                            : "#ff0000";
+                                          return {
+                                            text: `${value}: ${percentage}`,
+                                            fillStyle: color,
+                                          };
+                                        },
+                                      )
+                                    : [];
+                                },
+                              },
+                            },
+                            tooltip: {
+                              callbacks: {
+                                label: (context) => {
+                                  const total = context.dataset.data.reduce(
+                                    (sum, value) => sum + value,
+                                    0,
+                                  );
+                                  const value = context.raw as number;
+                                  const percentage = (
+                                    (value / total) *
+                                    100
+                                  ).toFixed(1);
+                                  return `${context.label}: ${percentage}%`;
+                                },
+                              },
+                            },
+                          },
+                          layout: {
+                            padding: {
+                              top: 10,
+                              bottom: 10,
+                            },
+                          },
+                        }}
+                      />
+                    </div>
                   </dd>
                 </div>
               </dl>
