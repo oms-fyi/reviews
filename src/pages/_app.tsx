@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { AppProps } from "next/app";
 
 import { Footer } from "src/components/footer";
@@ -12,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       <Header />
       <div className="grow">
         <Component {...pageProps} />
+        <SpeedInsights />
       </div>
       <Footer />
       <Analytics />
