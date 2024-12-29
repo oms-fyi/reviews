@@ -1,7 +1,14 @@
+html,
+body,
 #__next {
   @apply h-full;
+}
+
+#__next {
+  @apply bg-gray-100;
   @apply flex;
   @apply flex-col;
+  @apply overflow-hidden;
 }
 
 @tailwind base;

@@ -1,7 +1,9 @@
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import classNames from "classnames";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 import { Header } from "src/components/header";
 import "src/styles/globals.css";
@@ -11,11 +13,17 @@ const inter = Inter({ subsets: ["latin"] });
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
+      <Head>
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>"
+        />
+      </Head>
       <Header />
-      <div className={`${inter.className} grow`}>
+      <main className={classNames(inter.className, "my-1 overflow-y-auto")}>
         <Component {...pageProps} />
         <SpeedInsights />
-      </div>
+      </main>
       <footer className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
           <div className="flex justify-center space-x-6 md:order-2">
