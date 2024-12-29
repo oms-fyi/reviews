@@ -1,1 +1,0 @@
-export { sanityClient } from "./client";

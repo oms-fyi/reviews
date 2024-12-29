@@ -10,9 +10,9 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-import type { Course, Program, Review, Semester } from "src/@types";
 import { Review as ReviewComponent } from "src/components/review";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/sanity/client";
+import type { Course, Program, Review, Semester } from "src/types";
 import { formatList, formatNumber } from "src/util/format";
 
 interface ReviewsPathParams {

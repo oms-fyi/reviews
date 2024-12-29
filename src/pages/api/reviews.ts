@@ -2,9 +2,9 @@ import Joi from "joi";
 import type { NextApiRequest, NextApiResponse } from "next";
 import crypto from "node:crypto";
 
-import type { Course, Review, Semester } from "src/@types";
-import { sanityClient } from "src/sanity";
-import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio";
+import { sanityClient } from "src/sanity/client";
+import { CheckCodeResponse, doesUserCodeMatch } from "src/twilio/api";
+import type { Course, Review, Semester } from "src/types";
 
 type CreateReviewRequest = {
   rating: NonNullable<Review["rating"]>;
