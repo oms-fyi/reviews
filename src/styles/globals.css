@@ -1,7 +1,7 @@
+html,
+body,
 #__next {
   @apply h-full;
-  @apply flex;
-  @apply flex-col;
 }
 
 @tailwind base;

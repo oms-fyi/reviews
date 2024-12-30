@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
-import { Course, Review, Semester } from "src/@types";
 import { Alert } from "src/components/alert";
-import { sanityClient } from "src/sanity";
+import { sanityClient } from "src/sanity/client";
+import { Course, Review, Semester } from "src/types";
 
 interface NewReviewFormProps {
   courses: Pick<Course, "id" | "slug" | "name">[];

@@ -1,7 +1,7 @@
 import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { Course } from "src/@types";
+import { Course } from "src/types";
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";
 

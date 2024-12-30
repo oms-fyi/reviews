@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { SendCodeResponse, sendCodeToUser } from "src/twilio";
+import { SendCodeResponse, sendCodeToUser } from "src/twilio/api";
 
 type ResponseData = Record<string, never> | { error: string };
 type Payload = { username?: string };

@@ -1,5 +1,16 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
+  images: {
+    dangerouslyAllowSVG: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.buymeacoffee.com",
+        port: "",
+        pathname: "/button-api/",
+      },
+    ],
+  },
   reactStrictMode: true,
   async redirects() {
     return [
