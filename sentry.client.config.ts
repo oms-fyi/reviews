@@ -1,29 +1,30 @@
-// This file configures the initialization of Sentry on the client.
-// The config you add here will be used whenever a users loads a page in their browser.
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
+/**
+ * Copied from https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#create-initialization-config-files
+ */
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://a1cf5c15e6f84d09bec76e60b8846341@o1339131.ingest.sentry.io/6610904",
+  dsn: "https://a1cf5c15e6f84d09bec76e60b8846341@o1339131.ingest.us.sentry.io/6610904",
+  // Replay may only be enabled for the client-side
+  integrations: [Sentry.replayIntegration()],
 
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 0.5,
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for tracing.
+  // We recommend adjusting this value in production
+  // Learn more at
+  // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
+  tracesSampleRate: 1.0,
 
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-
+  // Capture Replay for 10% of all sessions,
+  // plus for 100% of sessions with an error
+  // Learn more at
+  // https://docs.sentry.io/platforms/javascript/session-replay/configuration/#general-integration-configuration
+  replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
 
-  // This sets the sample rate to be 10%. You may want this to be 100% while
-  // in development and sample at a lower rate in production
-  replaysSessionSampleRate: 0.1,
+  // ...
 
-  // You can remove this option if you're not planning to use the Sentry Session Replay feature:
-  integrations: [
-    new Sentry.Replay({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
+  // Note: if you want to override the automatic release value, do not set a
+  // `release` value here - use the environment variable `SENTRY_RELEASE`, so
+  // that it will also get attached to your source maps
 });
