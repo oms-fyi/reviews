@@ -4,6 +4,7 @@ import classNames from "classnames";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import Image from "next/image";
 
 import { Header } from "src/components/header";
 import "src/styles/globals.css";
@@ -24,23 +25,19 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         <Component {...pageProps} />
         <SpeedInsights />
       </main>
-      <footer className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-          <div className="flex justify-center space-x-6 md:order-2">
-            <a href="https://www.buymeacoffee.com/omstech">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=omstech&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"
-                alt="Donate to omscentral.com"
-              />
-            </a>
-          </div>
-          <div className="mt-8 md:order-1 md:mt-0">
-            <p className="text-center text-base text-gray-400">
-              &copy; {new Date().getFullYear()} OMSCentral. All rights reserved.
-            </p>
-          </div>
-        </div>
+      <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">
+        <p className="text-center text-xs">
+          &copy; {new Date().getFullYear()} OMSCentral.{" "}
+          <span className="max-sm:sr-only">All rights reserved.</span>
+        </p>
+        <a href="https://www.buymeacoffee.com/omstech">
+          <Image
+            height={32}
+            width={150}
+            src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=omstech&button_colour=4f46e5&font_colour=ffffff&font_family=Cookie&outline_colour=ffffff&coffee_colour=FFDD00"
+            alt="Donate to omscentral.com"
+          />
+        </a>
       </footer>
       <Analytics />
     </>
