@@ -2,18 +2,21 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import classNames from "classnames";
 import type { AppProps } from "next/app";
-import { Inter } from "next/font/google";
 import Head from "next/head";
 import Image from "next/image";
 
 import { Header } from "src/components/header";
+import { inter } from "src/styles/fonts";
 import "src/styles/globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
   return (
-    <>
+    <main
+      className={classNames(
+        inter.variable,
+        "flex min-h-full flex-col bg-gray-100 font-sans",
+      )}
+    >
       <Head>
         <link
           rel="icon"
@@ -21,10 +24,9 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
         />
       </Head>
       <Header />
-      <main className={classNames(inter.className, "my-1 overflow-y-auto")}>
+      <div className="grow">
         <Component {...pageProps} />
-        <SpeedInsights />
-      </main>
+      </div>
       <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">
         <p className="text-center text-xs">
           &copy; {new Date().getFullYear()} OMSCentral.{" "}
@@ -39,7 +41,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           />
         </a>
       </footer>
+      <SpeedInsights />
       <Analytics />
-    </>
+    </main>
   );
 }
