@@ -1,5 +1,7 @@
+const { withSentryConfig } = require("@sentry/nextjs");
+
 /** @type {import('next').NextConfig} */
-module.exports = {
+const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
@@ -12,6 +14,9 @@ module.exports = {
     ],
   },
   reactStrictMode: true,
+  experimental: {
+    instrumentationHook: true,
+  },
   async redirects() {
     return [
       {
@@ -491,38 +496,18 @@ module.exports = {
   },
 };
 
-// Injected content via Sentry wizard below
+/**
+ * Copied from https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#extend-your-nextjs-configuration
+ */
 
-const { withSentryConfig } = require("@sentry/nextjs");
+// Make sure adding Sentry options is the last code to run before exporting
+module.exports = withSentryConfig(nextConfig, {
+  org: "omscentral",
+  project: "javascript-nextjs",
 
-module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
+  // An auth token is required for uploading source maps.
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 
-    // Suppresses source map uploading logs during build
-    silent: true,
-    org: "omscentral",
-    project: "javascript-nextjs",
-  },
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
-
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: true,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-  },
-);
+  silent: false, // Can be used to suppress logs
+  tunnelRoute: "/monitoring-tunnel",
+});
