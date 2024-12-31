@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { sanityClient } from "src/sanity/client";
 
@@ -32,5 +33,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  return <NewReviewForm {...await getCoursesAndSemesters()} />;
+  return (
+    <Suspense>
+      <NewReviewForm {...await getCoursesAndSemesters()} />;
+    </Suspense>
+  );
 }
