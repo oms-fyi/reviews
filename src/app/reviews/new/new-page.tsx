@@ -1,16 +1,18 @@
+"use client";
+
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
-import type { GetStaticProps } from "next";
+import type { GetStaticProps, Metadata } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Alert } from "src/components/alert";
 import { sanityClient } from "src/sanity/client";
 import { Course, Review, Semester } from "src/types";
 
-interface NewReviewFormProps {
+export interface NewReviewFormProps {
   courses: Pick<Course, "id" | "slug" | "name">[];
   semesters: Semester[];
 }
@@ -43,11 +45,15 @@ export const getStaticProps: GetStaticProps<NewReviewFormProps> = async () => {
   return { props: { courses, semesters } };
 };
 
+export const metadata: Metadata = {
+  title: "Add review | OMSCentral",
+};
+
 export default function NewReviewForm({
   courses,
   semesters,
 }: NewReviewFormProps): JSX.Element {
-  const router = useRouter();
+  const params = useSearchParams();
 
   const [query, setQuery] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
@@ -75,14 +81,14 @@ export default function NewReviewForm({
   );
 
   useEffect(() => {
-    const { course: courseSlug } = router.query;
+    const courseSlug = params.get("course");
 
     if (typeof courseSlug === "string") {
       setCourseId(
         courses.find((course) => course.slug === courseSlug)?.id ?? "",
       );
     }
-  }, [router, courses]);
+  }, [params, courses]);
 
   useEffect(() => {
     if (reviewRequestState.status === "complete" && reviewRequestState.errors) {
