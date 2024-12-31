@@ -1,3 +1,5 @@
+"use client";
+
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
@@ -13,7 +15,7 @@ import { PlusSmIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useParams, usePathname } from "next/navigation";
 import logo from "public/logo.svg";
 import { Fragment, useEffect, useState } from "react";
 
@@ -66,7 +68,8 @@ const githubMenuItems = [
 ];
 
 export function Header(): JSX.Element {
-  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams<{ slug?: string }>();
   const [newReviewURL, setNewReviewURL] = useState<URL>();
   const [copiedContactInfo, setCopiedContactInfo] = useState<string>("");
 
@@ -82,14 +85,13 @@ export function Header(): JSX.Element {
 
   useEffect(() => {
     const url = new URL(`${window.location.origin}/reviews/new`);
-    const { slug } = router.query;
 
-    if (typeof slug === "string") {
-      url.searchParams.append("course", slug);
+    if (typeof params.slug === "string") {
+      url.searchParams.append("course", params.slug);
     }
 
     setNewReviewURL(url);
-  }, [router]);
+  }, [params.slug]);
 
   return (
     <Disclosure as="nav" className="bg-white shadow">
@@ -127,10 +129,9 @@ export function Header(): JSX.Element {
                     href="/"
                     className={classNames(
                       {
-                        "border-indigo-500 text-gray-900":
-                          router.pathname === "/",
+                        "border-indigo-500 text-gray-900": pathname === "/",
                         "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
-                          router.pathname !== "/",
+                          pathname !== "/",
                       },
                       "inline-flex items-center border-b-2 px-1 pt-1",
                     )}
@@ -289,9 +290,9 @@ export function Header(): JSX.Element {
                   href="#"
                   className={classNames({
                     "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6":
-                      router.pathname === "/",
+                      pathname === "/",
                     "block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6":
-                      router.pathname !== "/",
+                      pathname !== "/",
                   })}
                 >
                   Courses
