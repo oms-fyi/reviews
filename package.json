@@ -2,6 +2,9 @@
   "name": "reviews",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -21,9 +24,9 @@
     "classnames": "^2.3.1",
     "fuse.js": "^6.6.2",
     "joi": "^17.6.0",
-    "next": "13.5.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "next": "14.2.22",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-markdown": "^8.0.3",
     "rehype-sanitize": "^5.0.1",
     "twilio": "^3.80.0"
@@ -39,7 +42,7 @@
     "@typescript-eslint/parser": "^6.7.0",
     "autoprefixer": "^10.4.15",
     "eslint": "^8.2.0",
-    "eslint-config-next": "13.4.19",
+    "eslint-config-next": "14.2.22",
     "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
