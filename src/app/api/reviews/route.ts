@@ -74,7 +74,9 @@ export async function POST(req: Request): Promise<NextResponse<ResponseData>> {
     abortEarly: false,
     errors: { wrap: { label: "" } },
   };
-  const validationResult = schema.validate(req.body, validationOptions);
+
+  const payload: unknown = await req.json();
+  const validationResult = schema.validate(payload, validationOptions);
 
   if (validationResult.error) {
     // Bad Request, Schema Validation Error
