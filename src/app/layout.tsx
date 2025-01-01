@@ -2,7 +2,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import classNames from "classnames";
 import type { Metadata } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import { PropsWithChildren } from "react";
 
@@ -25,12 +24,6 @@ export default function RootLayout({ children }: PropsWithChildren) {
             "flex min-h-full flex-col bg-gray-100 font-sans",
           )}
         >
-          <Head>
-            <link
-              rel="icon"
-              href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>"
-            />
-          </Head>
           <Header />
           <div className="grow">{children}</div>
           <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">
