@@ -1,0 +1,40 @@
+<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="1000%" y2="1000%" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:var(--gradient-start-color); stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:var(--gradient-end-color); stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  <style>
+    :root {
+        --backdrop-fill: #f1f5f9; /* slate-100 */
+        --student-fill: #312e81; /* indigo-900 */
+      }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --backdrop-fill: #312e81;   /* indigo-900 */
+        --student-fill: #f1f5f9;  /* slate-100 */
+      }
+    }
+  </style>
+  <rect x="0" y="0" width="200" height="200" rx="24" ry="24" fill="var(--backdrop-fill)"/>
+  <g transform="translate(-100,390) scale(0.2,-0.2)" stroke="none" fill="var(--student-fill)">
+    <path d="M795 1825 c-93 -40 -171 -79 -173 -85 -2 -6 23 -23 57 -38 l60 -26 3
+-55 3 -54 113 -49 c63 -26 124 -48 135 -48 12 1 72 22 132 49 l110 48 3 55 3
+54 60 26 c34 15 59 32 57 38 -5 16 -338 160 -368 159 -14 0 -101 -33 -195 -74z"/>
+    <path d="M650 1699 c-1 -2 -3 -62 -5 -134 -5 -131 0 -189 15 -180 15 9 19 70
+11 170 -5 57 -5 105 0 111 6 7 4 16 -6 24 -8 7 -15 11 -15 9z" />
+    <path d="M735 1502 c-4 -15 -10 -35 -16 -44 -19 -37 -5 -129 24 -153 7 -6 23
+-31 36 -57 50 -100 135 -168 210 -168 73 0 162 71 215 171 15 30 37 70 47 89
+14 25 18 45 14 70 -3 19 -8 54 -11 78 -7 47 -7 48 -50 24 -30 -17 -31 -18 -17
+-49 7 -18 17 -33 22 -33 15 0 20 -39 10 -75 -6 -19 -16 -35 -22 -35 -7 0 -18
+-15 -25 -34 -7 -19 -28 -54 -47 -78 -99 -130 -247 -91 -323 85 -6 15 -16 27
+-21 27 -9 0 -31 53 -31 76 0 7 6 19 13 26 6 8 19 28 28 45 l17 30 -34 16 c-34
+17 -34 17 -39 -11z"/>
+    <path d="M671 1059 c-25 -5 -61 -22 -80 -37 -41 -33 -89 -119 -98 -176 -5 -35
+-4 -39 11 -33 10 4 238 7 507 7 l489 0 -6 28 c-26 111 -97 192 -183 211 -77
+16 -115 14 -135 -8 -27 -30 -102 -51 -180 -51 -87 0 -136 13 -175 45 -31 27
+-68 30 -150 14z"/>
+  </g>
+</svg>
