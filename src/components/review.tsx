@@ -38,7 +38,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
   }, []);
 
   return (
-    <div className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg">
+    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg">
       <p className="flex items-center gap-2">
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
@@ -90,6 +90,6 @@ export function Review({ review }: ReviewProps): JSX.Element {
           Workload: {workload ? `${workload} hours / week` : "N/A"}
         </span>
       </p>
-    </div>
+    </article>
   );
 }

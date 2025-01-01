@@ -40,7 +40,7 @@ export default async function Page() {
   const { reviews } = await getRecentReviews();
 
   return (
-    <main className="m-auto max-w-7xl px-5 py-10">
+    <section className="m-auto max-w-7xl px-5 py-10">
       <h3 className="mb-10 text-center text-3xl font-medium text-gray-900">
         100 Most Recent Reviews
       </h3>
@@ -51,6 +51,6 @@ export default async function Page() {
           </li>
         ))}
       </ul>
-    </main>
+    </section>
   );
 }

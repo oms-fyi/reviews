@@ -48,8 +48,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   const review = await getReview(params.id); // WHAT IF WE FAIL HERE?
 
   return (
-    <main className="m-auto flex h-full max-w-6xl items-center justify-center px-5 py-10">
+    <section className="m-auto flex h-full max-w-6xl items-center justify-center px-5 py-10">
       <Review review={review} />
-    </main>
+    </section>
   );
 }
