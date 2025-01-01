@@ -106,7 +106,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const programAcronyms = programs.map(({ acronym }) => acronym);
 
   return (
-    <main className="m-auto max-w-6xl px-5 py-10">
+    <section className="m-auto max-w-6xl px-5 py-10">
       <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
         {name}
       </h3>
@@ -269,6 +269,6 @@ export default async function Page({ params }: { params: { slug: string } }) {
           </div>
         )}
       </div>
-    </main>
+    </section>
   );
 }
