@@ -17,13 +17,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className="h-full">
-      <body
-        className={classNames(
-          inter.variable,
-          "flex h-full flex-col bg-gray-100 font-sans",
-        )}
-      >
+    <html lang="en" className={classNames(inter.variable, "h-full")}>
+      <body className="flex h-full flex-col bg-gray-100">
         <Header />
         <main className="grow">{children}</main>
         <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">

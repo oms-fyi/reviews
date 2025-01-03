@@ -201,7 +201,7 @@ export default function NewReviewForm({
       <div className="space-y-8 divide-y divide-gray-200">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1" aria-live="polite">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
+            <h1 className="text-display-xs font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
               Add A Review
             </h1>
             <div className="text-sm font-medium">
