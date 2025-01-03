@@ -185,9 +185,9 @@ export default function NewReviewForm({
 
       if (!errors) {
         setIsSuccessModalOpen(true);
+      } else {
+        setReviewRequestState({ status: "complete", errors });
       }
-
-      setReviewRequestState({ status: "complete", errors });
     } catch {
       setCodeRequestState({
         status: "complete",
