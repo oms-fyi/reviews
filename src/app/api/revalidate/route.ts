@@ -34,5 +34,5 @@ export async function POST(req: Request) {
   revalidatePath("/reviews/recent");
   revalidatePath("/");
 
-  NextResponse.json({}, { status: 200 });
+  return NextResponse.json({}, { status: 200 });
 }
