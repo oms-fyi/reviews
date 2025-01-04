@@ -6,14 +6,14 @@
     "node": "20.x"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "nx next:dev",
+    "build": "nx next:build",
+    "start": "nx next:start",
     "lint": "next lint",
     "prepare": "husky install",
     "typecheck": "tsc --noEmit",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "storybook": "nx serve:storybook -p 6006",
+    "build-storybook": "nx build:storybook"
   },
   "dependencies": {
     "@headlessui/react": "^1.6.5",
@@ -35,6 +35,10 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.3",
+    "@nx/eslint": "20.3.0",
+    "@nx/next": "20.3.0",
+    "@nx/storybook": "20.3.0",
+    "@nx/web": "20.3.0",
     "@storybook/addon-essentials": "^8.4.7",
     "@storybook/addon-interactions": "^8.4.7",
     "@storybook/addon-onboarding": "^8.4.7",
@@ -57,11 +61,13 @@
     "eslint-plugin-storybook": "^0.11.2",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
+    "nx": "20.3.0",
     "postcss": "^8.4.29",
     "prettier": "3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.4",
     "storybook": "^8.4.7",
     "tailwindcss": "^3.3.3",
     "typescript": "4.7.4"
-  }
+  },
+  "nx": {}
 }

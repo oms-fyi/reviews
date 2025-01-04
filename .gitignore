@@ -38,3 +38,14 @@ yarn-error.log*
 .sentryclirc
 
 *storybook.log
+
+
+
+.nx/cache
+.nx/workspace-data
+
+storybook-static
+
+# Next.js
+.next
+out
