@@ -12,7 +12,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Home",
-  description: "Welcome to Next.js",
+  description: "Student reviews for OMS courses.",
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
