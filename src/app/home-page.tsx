@@ -226,8 +226,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   const [view, setView] = useState<CourseWithStats[]>([]);
 
   // FILTERING
-  // By default only show courses with 1+ review
-  const [minReviewCount, setMinReviewCount] = useState<number>(1);
+  const [minReviewCount, setMinReviewCount] = useState<number>();
   const [maxReviewCount, setMaxReviewCount] = useState<number>();
 
   const [minRating, setMinRating] = useState<number>();
@@ -256,7 +255,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
           reviewCount,
         }) =>
           between(
-            reviewCount,
+            reviewCount || 0,
             minReviewCount || 0,
             maxReviewCount || Number.POSITIVE_INFINITY,
           ) &&
@@ -437,7 +436,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                       id="minReview"
                                       type="text"
                                       label="Min Reviews"
-                                      placeholder="1"
+                                      placeholder="0"
                                       defaultValue={getDefaultInputValue(
                                         minReviewCount,
                                       )}
