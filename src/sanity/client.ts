@@ -16,7 +16,7 @@ const apiVersion = "v2021-10-21";
 export const sanityClient = clientFactory({
   projectId,
   dataset,
-  token,
+  token: token || undefined, // Make token optional for read-only access
   useCdn,
   apiVersion,
 });
