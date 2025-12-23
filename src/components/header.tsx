@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import logo from "public/logo.svg";
 import { Fragment, useEffect, useState } from "react";
+import { ThemeToggle } from "./theme-toggle";
 
 const reviewsMenuItems = [
   {
@@ -94,7 +95,7 @@ export function Header(): JSX.Element {
   }, [params.slug]);
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="bg-white shadow dark:bg-gray-800">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -121,7 +122,7 @@ export function Header(): JSX.Element {
                       height={32}
                       className="block"
                     />
-                    <h1 className="text-lg">OMS Reviews</h1>
+                    <h1 className="text-lg text-gray-900 dark:text-gray-100">OMS Reviews</h1>
                   </div>
                 </Link>
                 <div className="hidden justify-center gap-6 md:ml-6 md:flex">
@@ -147,10 +148,10 @@ export function Header(): JSX.Element {
                         <Menu.Button
                           className={classNames(
                             {
-                              "text-gray-900": reviewMenuOpen,
-                              "text-gray-500": !reviewMenuOpen,
+                              "text-gray-900 dark:text-gray-100": reviewMenuOpen,
+                              "text-gray-500 dark:text-gray-400": !reviewMenuOpen,
                             },
-                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800 dark:hover:text-gray-100",
                           )}
                         >
                           Reviews
@@ -175,7 +176,7 @@ export function Header(): JSX.Element {
                         >
                           <Menu.Items className="absolute top-full z-10 -ml-4 -mt-3 w-screen max-w-md origin-bottom-right transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
                             <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                              <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                              <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8 dark:bg-gray-800">
                                 {reviewsMenuItems.map((item) => (
                                   <Menu.Item key={item.href}>
                                     <Link
@@ -188,10 +189,10 @@ export function Header(): JSX.Element {
                                         aria-hidden="true"
                                       />
                                       <div className="ml-4">
-                                        <p className="text-base font-medium text-gray-900">
+                                        <p className="text-base font-medium text-gray-900 dark:text-gray-100">
                                           {item.title}
                                         </p>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                                           {item.subtitle}
                                         </p>
                                       </div>
@@ -207,7 +208,7 @@ export function Header(): JSX.Element {
                   </Menu>
                   <a
                     href="https://omscs-notes.com"
-                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
+                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                   >
                     OMSCS Notes
                   </a>
@@ -227,9 +228,10 @@ export function Header(): JSX.Element {
                   </Link>
                 </div>
                 <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
+                  <ThemeToggle />
                   <Menu as="div" className="relative ml-3">
                     <div className="flex">
-                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:bg-gray-800 dark:text-gray-300 dark:hover:text-gray-200">
                         <span className="sr-only">Open GitHub menu</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -256,7 +258,7 @@ export function Header(): JSX.Element {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800 dark:ring-gray-700">
                         {githubMenuItems.map(({ text, href }) => (
                           <Menu.Item key={href}>
                             {({ active }) => (
@@ -264,9 +266,9 @@ export function Header(): JSX.Element {
                                 href={href}
                                 className={classNames(
                                   {
-                                    "bg-gray-100": active,
+                                    "bg-gray-100 dark:bg-gray-700": active,
                                   },
-                                  "block px-4 py-2 text-gray-700",
+                                  "block px-4 py-2 text-gray-700 dark:text-gray-300",
                                 )}
                               >
                                 {text}
