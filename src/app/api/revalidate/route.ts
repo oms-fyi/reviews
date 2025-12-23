@@ -13,6 +13,11 @@ if (SECRET === "") {
 type SanityWebhookPayload = {
   _type: "review";
   course: Pick<Course, "slug">;
+} | {
+  _type: "course";
+  slug: Course["slug"];
+} | {
+  _type: "semester";
 };
 
 export async function POST(req: Request) {
@@ -30,9 +35,24 @@ export async function POST(req: Request) {
 
   const payload = JSON.parse(body) as SanityWebhookPayload;
 
-  revalidatePath(`/courses/${payload.course.slug}/reviews`);
-  revalidatePath("/reviews/recent");
-  revalidatePath("/");
+  if(payload._type === 'review') {
+    revalidatePath(`/courses/${payload.course.slug}/reviews`);
+    revalidatePath("/reviews/recent");
+    revalidatePath("/");
+  }
+  
+  if(payload._type === 'course') {
+    revalidatePath(`/courses/${payload.slug}/reviews`);
+    revalidatePath("/reviews/new");
+    revalidatePath("/");
+  }
+
+  if(payload._type === 'semester') {
+    revalidatePath("/reviews/new");
+  }
+
 
   NextResponse.json({}, { status: 200 });
 }
+
+
