@@ -34,6 +34,7 @@ export async function POST(req: Request) {
   }
 
   const payload = JSON.parse(body) as SanityWebhookPayload;
+  console.log(payload)
 
   if(payload._type === 'review') {
     revalidatePath(`/courses/${payload.course.slug}/reviews`);
@@ -52,7 +53,7 @@ export async function POST(req: Request) {
   }
 
 
-  NextResponse.json({}, { status: 200 });
+  return NextResponse.json({}, { status: 200 });
 }
 
 
