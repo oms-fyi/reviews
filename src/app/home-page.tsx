@@ -291,15 +291,15 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
   const [sorted, setSorted] = useState<CourseWithStats[]>([]);
   
   // Initialize sort state from URL params or defaults
-  const initialSortParam = searchParams.get("sort");
-  const initialSort: MultiSortConfig = initialSortParam 
-    ? initialSortParam.split(',').map(s => {
-        const [field, direction] = s.split(':');
-        return { field: field as SortableField, direction: direction as "asc" | "desc" };
-      })
-    : [{ field: "reviewCount", direction: "desc" }];
-  
-  const [sort, setSort] = useState<MultiSortConfig>(initialSort);
+  const [sort, setSort] = useState<MultiSortConfig>(() => {
+    const initialSortParam = searchParams.get("sort");
+    return initialSortParam 
+      ? initialSortParam.split(',').map(s => {
+          const [field, direction] = s.split(':');
+          return { field: field as SortableField, direction: direction as "asc" | "desc" };
+        })
+      : [{ field: "reviewCount", direction: "desc" }];
+  });
 
   useEffect(() => {
     setSorted(
