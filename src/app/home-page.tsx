@@ -90,8 +90,8 @@ const Pagination: FC<PaginationProps> = function Pagination({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <p className="text-sm text-gray-700 md:w-full">
+    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:border-gray-700 dark:bg-gray-900">
+      <p className="text-sm text-gray-700 md:w-full dark:text-gray-300">
         Showing{" "}
         {resultCount ? (
           <>
