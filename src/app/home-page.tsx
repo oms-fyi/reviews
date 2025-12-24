@@ -684,10 +684,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                   </Popover>
                 </div>
               </label>
-            </div>
             <div>
               <Listbox
-                value={sort[0].field}
+                value={sort[0]?.field}
                 onChange={(field) => toggleSort(field)}
               >
                 {({ open }) => (
@@ -699,9 +698,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">
                         <div className="flex items-center gap-1">
                           <span className="block truncate">
-                            {sortFieldsToLabels[sort[0].field]}
+                            {sort[0] && sortFieldsToLabels[sort[0].field]}
                           </span>
-                          {sort[0].direction === "asc" ? (
+                          {sort[0]?.direction === "asc" ? (
                             <ChevronUpIcon
                               className="h-5 w-5"
                               aria-hidden="true"
