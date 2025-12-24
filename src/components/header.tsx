@@ -16,7 +16,6 @@ import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import logo from "public/logo.svg";
 import { Fragment, useEffect, useState } from "react";
 
 const reviewsMenuItems = [
@@ -114,8 +113,7 @@ export function Header(): JSX.Element {
                 <Link href="/" className="flex flex-shrink-0 items-center">
                   <div className="flex items-center gap-2">
                     <Image
-                      // https://duncanleung.com/next-js-typescript-svg-any-module-declaration/
-                      src={logo as string}
+                      src="/logo.svg"
                       alt="OMS Tech Logo"
                       width={32}
                       height={32}
