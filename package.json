@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@headlessui/react": "^1.6.5",
+    "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^1.0.6",
     "@sanity/client": "^3.3.2",
     "@sanity/webhook": "^2.0.0",
