@@ -107,11 +107,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <section className="m-auto max-w-6xl px-5 py-10">
-      <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
+      <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left dark:text-gray-100">
         {name}
       </h3>
       {reviews.length > 0 && (
-        <div className="flex justify-center gap-2 lg:justify-start lg:gap-7">
+        <div className="flex justify-center gap-2 lg:justify-start lg:gap-7 text-gray-700 dark:text-gray-300">
           <span className="flex items-center gap-0 lg:gap-1">
             <StarIcon className="h-5 w-5 stroke-indigo-600" />
             {formatNumber(rating)} / 5 rating
@@ -127,12 +127,12 @@ export default async function Page({ params }: { params: { slug: string } }) {
         </div>
       )}
       <div className="mt-10 flex flex-col items-center gap-4 lg:flex-row lg:items-start">
-        <div className="mx-auto max-w-xl grow bg-white shadow sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto">
+        <div className="mx-auto max-w-xl grow bg-white shadow sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto dark:bg-gray-800">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
               Quick Facts and Resources
             </h3>
-            <p className="mt-1 max-w-2xl text-xs text-gray-500">
+            <p className="mt-1 max-w-2xl text-xs text-gray-500 dark:text-gray-400">
               Something missing or incorrect?{" "}
               <a
                 href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${name}`}
@@ -144,47 +144,47 @@ export default async function Page({ params }: { params: { slug: string } }) {
               </a>
             </p>
           </div>
-          <div className="border-t border-gray-200 p-0 px-4 py-5">
-            <dl className="divide-y divide-gray-200">
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Name</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+          <div className="border-t border-gray-200 dark:border-gray-700">
+            <dl className="divide-y divide-gray-200 dark:divide-gray-700">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {name}
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Listed As</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Listed As</dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {formatList(codes)}
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Credit Hours
                 </dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {creditHours}
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Available to
                 </dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {formatList(programAcronyms)} students
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Description
                 </dt>
-                <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3">
+                <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3 dark:text-gray-100">
                   {description ?? "Course description not found."}{" "}
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Syllabus</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Syllabus</dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {syllabusUrl ? (
                     <a
                       href={syllabusUrl}
@@ -199,20 +199,20 @@ export default async function Page({ params }: { params: { slug: string } }) {
                   )}
                 </dd>
               </div>
-              <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Textbooks</dt>
+              <div className="px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Textbooks</dt>
                 <dd
-                  className={classNames("mt-0 text-sm text-gray-900", {
+                  className={classNames("mt-0 text-sm text-gray-900 dark:text-gray-100", {
                     "col-span-3": textbooks,
                     "col-span-2": !textbooks,
                   })}
                 >
                   {textbooks ? (
-                    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
+                    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-700 dark:border-gray-700">
                       {textbooks.map(({ name: textbookName, url }) => (
                         <li
                           key={textbookName}
-                          className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                          className="flex items-center justify-between py-3 pl-3 pr-4 text-sm dark:text-gray-100"
                         >
                           <a
                             href={url}
@@ -242,14 +242,14 @@ export default async function Page({ params }: { params: { slug: string } }) {
             ))}
           </ul>
         ) : (
-          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow sm:rounded-lg lg:max-w-full">
+          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow sm:rounded-lg lg:max-w-full dark:bg-gray-800">
             <div className="px-4 py-5 sm:p-6">
               <div className="text-center">
-                <DocumentAddIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <DocumentAddIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                   No reviews
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   Get started by writing a review.
                 </p>
                 <div className="mt-6">
