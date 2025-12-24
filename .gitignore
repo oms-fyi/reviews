@@ -36,3 +36,6 @@ yarn-error.log*
 
 # Sentry Auth Token
 .sentryclirc
+
+# asdf version manager
+.tool-versions
