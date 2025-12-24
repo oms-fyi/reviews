@@ -248,7 +248,7 @@ export default function NewReviewForm({
               as="div"
               className="mt-6"
               value={courseId}
-              onChange={setCourseId}
+              onChange={(value) => setCourseId(value ?? '')}
             >
               <Combobox.Label className="block text-sm font-medium text-gray-700">
                 Course Name
