@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import classNames from "classnames";
@@ -11,11 +12,15 @@ import { inter } from "src/styles/fonts";
 
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Home",
-  description: "Welcome to Next.js",
-};
-
+export function generateMetadata(): Metadata {
+  return {
+    title: "Home",
+    description: "Welcome to Next.js",
+    other: {
+      ...Sentry.getTraceData(),
+    },
+  };
+}
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className="h-full" suppressHydrationWarning>
