@@ -16,6 +16,7 @@ import {
 import classNames from "classnames";
 import Fuse from "fuse.js";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FC, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Input } from "src/components/input";
@@ -202,6 +203,7 @@ type SortConfig = {
   field: SortableField;
   direction: "desc" | "asc";
 };
+type MultiSortConfig = SortConfig[];
 
 const sortFieldsToLabels: {
   [Property in SortableField]: string;
@@ -214,6 +216,9 @@ const sortFieldsToLabels: {
 };
 
 export default function Home({ courses }: HomePageProps): JSX.Element {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
   const searchIndex = useMemo(
     () =>
       new Fuse(courses, {
@@ -284,49 +289,97 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
 
   // SORTING
   const [sorted, setSorted] = useState<CourseWithStats[]>([]);
-  const [sort, setSort] = useState<SortConfig>({
-    field: "reviewCount",
-    direction: "desc",
-  });
+  
+  // Initialize sort state from URL params or defaults
+  const initialSortParam = searchParams.get("sort");
+  const initialSort: MultiSortConfig = initialSortParam 
+    ? initialSortParam.split(',').map(s => {
+        const [field, direction] = s.split(':');
+        return { field: field as SortableField, direction: direction as "asc" | "desc" };
+      })
+    : [{ field: "reviewCount", direction: "desc" }];
+  
+  const [sort, setSort] = useState<MultiSortConfig>(initialSort);
 
   useEffect(() => {
     setSorted(
       [...view].sort((a, b) => {
-        const { direction, field } = sort;
-        const mult = direction === "asc" ? 1 : -1;
+        // Apply sorts in order - if first sort is equal, move to next sort
+        for (const { direction, field } of sort) {
+          const mult = direction === "asc" ? 1 : -1;
+          let result = 0;
 
-        switch (field) {
-          case "name": {
-            return a.name.localeCompare(b.name) * mult;
+          switch (field) {
+            case "name": {
+              result = a.name.localeCompare(b.name) * mult;
+              break;
+            }
+            case "reviewCount": {
+              result = (a.reviewCount - b.reviewCount) * mult;
+              break;
+            }
+            case "rating":
+            case "difficulty":
+            case "workload": {
+              if (a[field] === undefined && b[field] === undefined) {
+                result = 0;
+              } else if (a[field] === undefined) {
+                result = 1;
+              } else if (b[field] === undefined) {
+                result = -1;
+              } else {
+                result = ((a[field] as number) - (b[field] as number)) * mult;
+              }
+              break;
+            }
+            default: {
+              throw new Error("Unknown sort option!");
+            }
           }
-          case "reviewCount": {
-            return (a.reviewCount - b.reviewCount) * mult;
-          }
-          case "rating":
-          case "difficulty":
-          case "workload": {
-            if (a[field] === undefined) return 1;
-            if (b[field] === undefined) return -1;
 
-            return ((a[field] as number) - (b[field] as number)) * mult;
-          }
-          default: {
-            throw new Error("Unknown sort option!");
-          }
+          // If not equal, return this result; otherwise continue to next sort level
+          if (result !== 0) return result;
         }
+        
+        return 0;
       }),
     );
   }, [sort, view]);
 
-  function toggleSort(field: SortableField) {
-    if (sort.field === field) {
-      setSort({
-        field,
-        direction: sort.direction === "asc" ? "desc" : "asc",
-      });
+  function toggleSort(field: SortableField, shiftKey: boolean = false) {
+    let newSort: MultiSortConfig;
+    
+    if (shiftKey) {
+      // Multi-sort: Add to sort array or update if exists
+      const existingIndex = sort.findIndex(s => s.field === field);
+      if (existingIndex >= 0) {
+        // Toggle direction of existing sort
+        const updated = [...sort];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          direction: updated[existingIndex].direction === "asc" ? "desc" : "asc"
+        };
+        newSort = updated;
+      } else {
+        // Add new sort to the end
+        newSort = [...sort, { field, direction: "asc" }];
+      }
     } else {
-      setSort({ field, direction: "asc" });
+      // Single sort: replace entire sort array
+      const currentSort = sort.find(s => s.field === field);
+      newSort = [{
+        field,
+        direction: currentSort?.direction === "asc" ? "desc" : "asc"
+      }];
     }
+    
+    setSort(newSort);
+    
+    // Update URL with all sort parameters
+    const params = new URLSearchParams(searchParams.toString());
+    const sortParam = newSort.map(s => `${s.field}:${s.direction}`).join(',');
+    params.set("sort", sortParam);
+    router.push(`?${params.toString()}`);
   }
 
   // SEARCHING
@@ -634,7 +687,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
             </div>
             <div>
               <Listbox
-                value={sort.field}
+                value={sort[0].field}
                 onChange={(field) => toggleSort(field)}
               >
                 {({ open }) => (
@@ -646,9 +699,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
                         <div className="flex items-center gap-1">
                           <span className="block truncate">
-                            {sortFieldsToLabels[sort.field]}
+                            {sortFieldsToLabels[sort[0].field]}
                           </span>
-                          {sort.direction === "asc" ? (
+                          {sort[0].direction === "asc" ? (
                             <ChevronUpIcon
                               className="h-5 w-5"
                               aria-hidden="true"
@@ -727,7 +780,18 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       scope="col"
                       className="border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                     >
-                      Course
+                      <button
+                        onClick={(e) => toggleSort("name", e.shiftKey)}
+                        className="group inline-flex items-center hover:text-indigo-600"
+                      >
+                        Course
+                        {sort.findIndex(s => s.field === "name") >= 0 && (
+                          <span className="ml-2 flex items-center gap-0.5 flex-none rounded text-gray-900 group-hover:text-indigo-600">
+                            {sort.find(s => s.field === "name")?.direction === "asc" ? "↑" : "↓"}
+                            {sort.length > 1 && <span className="text-xs">{sort.findIndex(s => s.field === "name") + 1}</span>}
+                          </span>
+                        )}
+                      </button>
                     </th>
                     <th
                       scope="col"
@@ -767,25 +831,69 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       scope="col"
                       className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                     >
-                      Rating
+                      <button
+                        onClick={(e) => toggleSort("rating", e.shiftKey)}
+                        className="group inline-flex items-center hover:text-indigo-600"
+                      >
+                        Rating
+                        {sort.findIndex(s => s.field === "rating") >= 0 && (
+                          <span className="ml-2 flex items-center gap-0.5 flex-none rounded text-gray-900 group-hover:text-indigo-600">
+                            {sort.find(s => s.field === "rating")?.direction === "asc" ? "↑" : "↓"}
+                            {sort.length > 1 && <span className="text-xs">{sort.findIndex(s => s.field === "rating") + 1}</span>}
+                          </span>
+                        )}
+                      </button>
                     </th>
                     <th
                       scope="col"
                       className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                     >
-                      Difficulty
+                      <button
+                        onClick={(e) => toggleSort("difficulty", e.shiftKey)}
+                        className="group inline-flex items-center hover:text-indigo-600"
+                      >
+                        Difficulty
+                        {sort.findIndex(s => s.field === "difficulty") >= 0 && (
+                          <span className="ml-2 flex items-center gap-0.5 flex-none rounded text-gray-900 group-hover:text-indigo-600">
+                            {sort.find(s => s.field === "difficulty")?.direction === "asc" ? "↑" : "↓"}
+                            {sort.length > 1 && <span className="text-xs">{sort.findIndex(s => s.field === "difficulty") + 1}</span>}
+                          </span>
+                        )}
+                      </button>
                     </th>
                     <th
                       scope="col"
                       className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:table-cell"
                     >
-                      Workload
+                      <button
+                        onClick={(e) => toggleSort("workload", e.shiftKey)}
+                        className="group inline-flex items-center hover:text-indigo-600"
+                      >
+                        Workload
+                        {sort.findIndex(s => s.field === "workload") >= 0 && (
+                          <span className="ml-2 flex items-center gap-0.5 flex-none rounded text-gray-900 group-hover:text-indigo-600">
+                            {sort.find(s => s.field === "workload")?.direction === "asc" ? "↑" : "↓"}
+                            {sort.length > 1 && <span className="text-xs">{sort.findIndex(s => s.field === "workload") + 1}</span>}
+                          </span>
+                        )}
+                      </button>
                     </th>
                     <th
                       scope="col"
                       className="hidden border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter md:table-cell"
                     >
-                      Reviews
+                      <button
+                        onClick={(e) => toggleSort("reviewCount", e.shiftKey)}
+                        className="group inline-flex items-center hover:text-indigo-600"
+                      >
+                        Reviews
+                        {sort.findIndex(s => s.field === "reviewCount") >= 0 && (
+                          <span className="ml-2 flex items-center gap-0.5 flex-none rounded text-gray-900 group-hover:text-indigo-600">
+                            {sort.find(s => s.field === "reviewCount")?.direction === "asc" ? "↑" : "↓"}
+                            {sort.length > 1 && <span className="text-xs">{sort.findIndex(s => s.field === "reviewCount") + 1}</span>}
+                          </span>
+                        )}
+                      </button>
                     </th>
                   </tr>
                 </thead>
