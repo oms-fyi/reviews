@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - '@sentry/cli'
+ignoredBuiltDependencies:
+  - '@vercel/speed-insights'
