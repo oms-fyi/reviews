@@ -507,8 +507,8 @@ module.exports = withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: "omscentral",
-  project: "javascript-nextjs",
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
 
   // An auth token is required for uploading source maps.
   authToken: process.env.SENTRY_AUTH_TOKEN,
