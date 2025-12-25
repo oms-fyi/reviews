@@ -41,7 +41,7 @@ export default async function Page() {
 
   return (
     <section className="m-auto max-w-7xl px-5 py-10">
-      <h3 className="mb-10 text-center text-3xl font-medium text-gray-900">
+      <h3 className="mb-10 text-center text-3xl font-medium text-gray-900 dark:text-gray-100">
         100 Most Recent Reviews
       </h3>
       <ul className="space-y-4 divide-gray-200">
