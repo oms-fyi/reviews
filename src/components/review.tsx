@@ -38,15 +38,15 @@ export function Review({ review }: ReviewProps): JSX.Element {
   }, []);
 
   return (
-    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg">
+    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg dark:bg-gray-800">
       <p className="flex items-center gap-2">
-        <UserCircleIcon className="h-11 w-11 text-gray-400" />
+        <UserCircleIcon className="h-11 w-11 text-gray-400 dark:text-gray-500" />
         <span className="flex flex-col gap-1">
-          <span className="font-medium">
+          <span className="font-medium text-gray-900 dark:text-gray-100">
             {authorId ?? "Georgia Tech Student"}
           </span>
           <span className="flex gap-3">
-            <span className="flex items-center gap-1 text-xs text-gray-500">
+            <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
               <PencilAltIcon className="h-4 w-4" aria-hidden="true" />
               {hasMounted
                 ? new Date(created).toLocaleDateString(
@@ -55,7 +55,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
                   )
                 : created}
             </span>
-            <span className="flex items-center gap-1 text-xs text-gray-500">
+            <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
               <CalendarIcon className="h-4 w-4" aria-hidden="true" />
               <span className="capitalize">
                 {semester
@@ -76,7 +76,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
           {course.name}
         </Link>
       )}
-      <div className="break-words">
+      <div className="break-words text-gray-900 dark:text-gray-100">
         <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
       </div>
       <p className="flex flex-row gap-2">
