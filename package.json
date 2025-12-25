@@ -15,8 +15,8 @@
   "dependencies": {
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^1.0.6",
-    "@sanity/client": "^3.3.2",
-    "@sanity/webhook": "^2.0.0",
+    "@sanity/client": "^7.13.2",
+    "@sanity/webhook": "^4.0.4",
     "@sentry/nextjs": "^10.32.1",
     "@vercel/analytics": "^1.0.2",
     "@vercel/speed-insights": "^1.1.0",

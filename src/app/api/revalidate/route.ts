@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
   const body = await req.text();
 
-  if (!isValidSignature(body, signature, SECRET)) {
+  if (!(await isValidSignature(body, signature, SECRET))) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 

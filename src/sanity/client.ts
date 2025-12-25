@@ -1,4 +1,4 @@
-import clientFactory from "@sanity/client";
+import { createClient } from "@sanity/client";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
@@ -10,10 +10,10 @@ if (!projectId || !dataset) {
   throw new Error("Sanity config not found!");
 }
 
-const useCdn = false;
-const apiVersion = "v2021-10-21";
+const useCdn = true;
+const apiVersion = "2025-02-06";
 
-export const sanityClient = clientFactory({
+export const sanityClient = createClient({
   projectId,
   dataset,
   token,
