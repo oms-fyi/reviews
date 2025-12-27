@@ -1,4 +1,6 @@
-onlyBuiltDependencies:
-  - '@sentry/cli'
 ignoredBuiltDependencies:
   - '@vercel/speed-insights'
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
