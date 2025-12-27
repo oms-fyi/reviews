@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 export default function Loading(): JSX.Element {
   return (
     <div className="mx-auto w-full max-w-xl rounded-md bg-white p-4 shadow">
