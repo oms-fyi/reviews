@@ -1,7 +1,7 @@
 "use client";
 
 import { Combobox, Dialog, Transition } from "@headlessui/react";
-import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import type { GetStaticProps, Metadata } from "next";
 import Link from "next/link";
@@ -261,7 +261,7 @@ export default function NewReviewForm({
                   displayValue={() => selectedCourse?.name ?? ""}
                 />
                 <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-                  <SelectorIcon
+                  <ChevronUpDownIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
                   />

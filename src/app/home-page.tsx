@@ -4,15 +4,15 @@ import { Listbox, Popover, Transition } from "@headlessui/react";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  FilterIcon,
+  FunnelIcon,
   InformationCircleIcon,
-  SearchIcon,
-} from "@heroicons/react/outline";
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  SelectorIcon,
-} from "@heroicons/react/solid";
+  ChevronUpDownIcon,
+} from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import Fuse from "fuse.js";
 import Link from "next/link";
@@ -382,7 +382,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <div className="relative flex flex-grow items-stretch focus-within:z-10">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <SearchIcon
+                      <MagnifyingGlassIcon
                         className="hidden h-5 w-5 text-gray-400 sm:block"
                         aria-hidden="true"
                       />
@@ -404,7 +404,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           type="button"
                           className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:py-2"
                         >
-                          <FilterIcon
+                          <FunnelIcon
                             className="h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
@@ -661,7 +661,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           )}
                         </div>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <SelectorIcon
+                          <ChevronUpDownIcon
                             className="h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
