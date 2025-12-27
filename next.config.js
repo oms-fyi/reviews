@@ -14,9 +14,6 @@ const nextConfig = {
     ],
   },
   reactStrictMode: true,
-  experimental: {
-    instrumentationHook: true,
-  },
   async redirects() {
     return [
       {

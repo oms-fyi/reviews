@@ -44,7 +44,8 @@ async function getReview(id: string): Promise<ReviewPageProps["review"]> {
   });
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const review = await getReview(params.id); // WHAT IF WE FAIL HERE?
 
   return (

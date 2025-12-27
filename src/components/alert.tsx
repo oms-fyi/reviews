@@ -1,6 +1,8 @@
 import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 
+import type { JSX } from "react";
+
 interface AlertProps {
   variant: "success" | "failure";
   onDismiss: () => void;
