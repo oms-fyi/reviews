@@ -16,7 +16,7 @@ import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, type JSX } from "react";
 
 const reviewsMenuItems = [
   {

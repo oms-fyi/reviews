@@ -16,7 +16,7 @@ import {
 import classNames from "classnames";
 import Fuse from "fuse.js";
 import Link from "next/link";
-import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useMemo, useState, type JSX } from "react";
 
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";

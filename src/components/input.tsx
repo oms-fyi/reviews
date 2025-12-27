@@ -1,4 +1,4 @@
-import { HTMLProps } from "react";
+import { HTMLProps, type JSX } from "react";
 
 export function Input({
   id,

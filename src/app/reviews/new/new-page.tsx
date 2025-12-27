@@ -6,7 +6,7 @@ import classNames from "classnames";
 import type { GetStaticProps, Metadata } from "next";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
+import { FormEvent, Fragment, useEffect, useMemo, useState, type JSX } from "react";
 
 import { Alert } from "src/components/alert";
 import { sanityClient } from "src/sanity/client";
