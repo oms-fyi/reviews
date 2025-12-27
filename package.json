@@ -16,6 +16,9 @@
     "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "@sanity/client": "^7.13.2",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.22.0",
     "@sanity/webhook": "^4.0.4",
     "@sentry/nextjs": "^10.32.1",
     "@vercel/analytics": "^1.0.2",
@@ -24,10 +27,13 @@
     "fuse.js": "^7.1.0",
     "joi": "^18.0.2",
     "next": "16.1.1",
+    "next-sanity": "^11.6.12",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
     "rehype-sanitize": "^6.0.0",
+    "sanity": "^4.22.0",
+    "styled-components": "^6.1.19",
     "twilio": "^5.11.1"
   },
   "devDependencies": {
@@ -55,7 +61,7 @@
     },
     "onlyBuiltDependencies": [
       "@sentry/cli",
-      "sharp"
+      "esbuild"
     ]
   }
 }

@@ -4,3 +4,4 @@ ignoredBuiltDependencies:
 
 onlyBuiltDependencies:
   - '@sentry/cli'
+  - esbuild
