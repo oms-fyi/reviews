@@ -897,10 +897,10 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         </td>
                         <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 md:table-cell">
                           {codes.map((code) => (
-                            <>
+                            <Fragment key={code}>
                               {code}
                               <br />
-                            </>
+                            </Fragment>
                           ))}
                         </td>
                         <td className="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-700 sm:table-cell">
