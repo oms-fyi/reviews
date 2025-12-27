@@ -21,7 +21,7 @@
     "@vercel/analytics": "^1.0.2",
     "@vercel/speed-insights": "^1.1.0",
     "classnames": "^2.3.1",
-    "fuse.js": "^6.6.2",
+    "fuse.js": "^7.1.0",
     "joi": "^17.6.0",
     "next": "14.2.35",
     "react": "18.3.1",
