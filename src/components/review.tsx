@@ -2,9 +2,9 @@
 
 import {
   CalendarIcon,
-  PencilAltIcon,
+  PencilSquareIcon,
   UserCircleIcon,
-} from "@heroicons/react/outline";
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -47,7 +47,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
           </span>
           <span className="flex gap-3">
             <span className="flex items-center gap-1 text-xs text-gray-500">
-              <PencilAltIcon className="h-4 w-4" aria-hidden="true" />
+              <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
               {hasMounted
                 ? new Date(created).toLocaleDateString(
                     navigator.language || "en-US",

@@ -1,10 +1,10 @@
 import {
   ClockIcon,
-  DocumentAddIcon,
-  LightningBoltIcon,
+  DocumentPlusIcon,
+  BoltIcon,
   StarIcon,
-} from "@heroicons/react/outline";
-import { PlusIcon } from "@heroicons/react/solid";
+} from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import Link from "next/link";
 
@@ -117,7 +117,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
             {formatNumber(rating)} / 5 rating
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
-            <LightningBoltIcon className="h-5 w-5 stroke-indigo-600" />
+            <BoltIcon className="h-5 w-5 stroke-indigo-600" />
             {formatNumber(difficulty)} / 5 difficulty
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
@@ -245,7 +245,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
           <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow sm:rounded-lg lg:max-w-full">
             <div className="px-4 py-5 sm:p-6">
               <div className="text-center">
-                <DocumentAddIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <DocumentPlusIcon className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
                   No reviews
                 </h3>

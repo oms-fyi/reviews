@@ -1,4 +1,4 @@
-import { CheckCircleIcon, XCircleIcon, XIcon } from "@heroicons/react/solid";
+import { CheckCircleIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 
 interface AlertProps {
@@ -57,7 +57,7 @@ export function Alert({
               )}
             >
               <span className="sr-only">Dismiss</span>
-              <XIcon className="h-5 w-5" aria-hidden="true" />
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
