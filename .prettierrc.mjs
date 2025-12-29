@@ -1,4 +1,4 @@
-module.exports = {
+const prettierConfig = {
   plugins: [
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss",
@@ -7,3 +7,5 @@ module.exports = {
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
 };
+
+export default prettierConfig;
