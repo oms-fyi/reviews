@@ -10,15 +10,18 @@ if (SECRET === "") {
   throw new Error("Cannot read Sanity Webhook Secret!");
 }
 
-type SanityWebhookPayload = {
-  _type: "review";
-  course: Pick<Course, "slug">;
-} | {
-  _type: "course";
-  slug: Course["slug"];
-} | {
-  _type: "semester";
-};
+type SanityWebhookPayload =
+  | {
+      _type: "review";
+      course: Pick<Course, "slug">;
+    }
+  | {
+      _type: "course";
+      slug: Course["slug"];
+    }
+  | {
+      _type: "semester";
+    };
 
 export async function POST(req: Request) {
   const signature = req.headers.get(SIGNATURE_HEADER_NAME);
@@ -34,26 +37,23 @@ export async function POST(req: Request) {
   }
 
   const payload = JSON.parse(body) as SanityWebhookPayload;
-  console.log(payload)
+  console.log(payload);
 
-  if(payload._type === 'review') {
+  if (payload._type === "review") {
     revalidatePath(`/courses/${payload.course.slug}/reviews`);
     revalidatePath("/reviews/recent");
     revalidatePath("/");
   }
-  
-  if(payload._type === 'course') {
+
+  if (payload._type === "course") {
     revalidatePath(`/courses/${payload.slug}/reviews`);
     revalidatePath("/reviews/new");
     revalidatePath("/");
   }
 
-  if(payload._type === 'semester') {
+  if (payload._type === "semester") {
     revalidatePath("/reviews/new");
   }
 
-
   return NextResponse.json({}, { status: 200 });
 }
-
-

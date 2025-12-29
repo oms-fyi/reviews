@@ -1,22 +1,22 @@
 "use client";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { PlusIcon } from "@heroicons/react/20/solid";
 import {
+  Bars3Icon,
   ChevronDownIcon,
-  CpuChipIcon,
   ClockIcon,
+  CpuChipIcon,
   CurrencyDollarIcon,
   GlobeAltIcon,
   LockClosedIcon,
-  Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { Fragment, useEffect, useState, type JSX } from "react";
+import { Fragment, type JSX, useEffect, useState } from "react";
 
 const reviewsMenuItems = [
   {

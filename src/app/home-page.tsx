@@ -16,7 +16,7 @@ import {
 import classNames from "classnames";
 import Fuse from "fuse.js";
 import Link from "next/link";
-import { FC, Fragment, useEffect, useMemo, useState, type JSX } from "react";
+import { FC, Fragment, type JSX, useEffect, useMemo, useState } from "react";
 
 import { Input } from "src/components/input";
 import { Toggle } from "src/components/toggle";
@@ -118,7 +118,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
                 },
                 "relative inline-flex items-center border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:px-4 sm:py-2",
                 {
-                  "z-10 border-indigo-500 bg-indigo-50 text-indigo-600  hover:bg-indigo-50":
+                  "z-10 border-indigo-500 bg-indigo-50 text-indigo-600 hover:bg-indigo-50":
                     size === pageSize,
                 },
               )}
@@ -166,7 +166,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
               : [
                   <span
                     key="..."
-                    className=" relative inline-flex items-center border bg-white px-2 py-1 text-sm font-medium text-gray-700 sm:px-4 sm:py-2"
+                    className="relative inline-flex items-center border bg-white px-2 py-1 text-sm font-medium text-gray-700 sm:px-4 sm:py-2"
                   >
                     ...
                   </span>,
@@ -818,7 +818,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 <span className="mr-2 block text-xs text-gray-500 md:hidden">
                                   {codes.join(" / ")}
                                 </span>
-                                <span className=" text-base">{name}</span>
+                                <span className="text-base">{name}</span>
                               </span>
                             </dd>
                             <div className="block sm:hidden">
