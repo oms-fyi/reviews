@@ -1,15 +1,19 @@
 import * as Sentry from "@sentry/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import classNames from "classnames";
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import Image from "next/image";
 import { PropsWithChildren } from "react";
 
 import { Header } from "src/components/header";
-import { inter } from "src/styles/fonts";
 
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-Inter",
+});
 
 export function generateMetadata(): Metadata {
   return {
@@ -22,13 +26,8 @@ export function generateMetadata(): Metadata {
 }
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className="h-full">
-      <body
-        className={classNames(
-          inter.variable,
-          "flex h-full flex-col bg-gray-100 font-sans",
-        )}
-      >
+    <html lang="en" className={`${inter.variable} h-full`}>
+      <body className="flex h-full flex-col bg-gray-100 font-sans">
         <Header />
         <main className="grow">{children}</main>
         <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">
