@@ -37,6 +37,8 @@ export async function generateStaticParams() {
   return await sanityClient.fetch<Array<Pick<Course, "slug">>>(query);
 }
 
+export const dynamicParams = false;
+
 async function getCourseWithReviews(slug: string): Promise<ReviewsPageProps> {
   const query = `
     *[_type == 'course' && slug.current == $slug]{
