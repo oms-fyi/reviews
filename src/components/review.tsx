@@ -38,7 +38,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
   }, []);
 
   return (
-    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow sm:rounded-lg">
+    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow-sm sm:rounded-lg">
       <p className="flex items-center gap-2">
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
@@ -76,7 +76,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
           {course.name}
         </Link>
       )}
-      <div className="break-words">
+      <div className="wrap-break-word">
         <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
       </div>
       <p className="flex flex-row gap-2">

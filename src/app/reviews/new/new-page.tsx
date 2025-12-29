@@ -208,7 +208,7 @@ export default function NewReviewForm({
       <div className="space-y-8 divide-y divide-gray-200">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1" aria-live="polite">
-            <h1 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
+            <h1 className="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl">
               Add A Review
             </h1>
             <div className="text-sm font-medium">
@@ -244,7 +244,7 @@ export default function NewReviewForm({
           className="space-y-8 divide-y divide-gray-200"
         >
           <div className="pt-8">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
               Course
             </h3>
             <p className="mt-1 text-sm text-gray-500">
@@ -263,11 +263,11 @@ export default function NewReviewForm({
               <div className="relative mt-1">
                 <Combobox.Input
                   required
-                  className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                  className="w-full rounded-md border border-gray-300 bg-white py-2 pr-10 pl-3 shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:text-sm"
                   onChange={(event) => setQuery(event.target.value)}
                   displayValue={() => selectedCourse?.name ?? ""}
                 />
-                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-hidden">
                   <ChevronUpDownIcon
                     className="h-5 w-5 text-gray-400"
                     aria-hidden="true"
@@ -275,14 +275,14 @@ export default function NewReviewForm({
                 </Combobox.Button>
 
                 {filteredCourses.length > 0 && (
-                  <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-hidden sm:text-sm">
                     {filteredCourses.map((course) => (
                       <Combobox.Option
                         key={course.id}
                         value={course.id}
                         className={({ active }) =>
                           classNames(
-                            "relative cursor-default select-none py-2 pl-3 pr-9",
+                            "relative cursor-default py-2 pr-9 pl-3 select-none",
                             {
                               "bg-indigo-600 text-white": active,
                               "text-gray-900": !active,
@@ -331,12 +331,12 @@ export default function NewReviewForm({
               <p className="mb-4 text-sm leading-5 text-gray-500">
                 When did you take this course?
               </p>
-              <div className="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
+              <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                 {semesters.map(({ id, term, startDate }) => (
                   <div key={id}>
                     <label
                       htmlFor={`semester-${term}-${startDate}`}
-                      className="flex flex-row-reverse items-center justify-end gap-3 text-sm font-medium capitalize text-gray-700"
+                      className="flex flex-row-reverse items-center justify-end gap-3 text-sm font-medium text-gray-700 capitalize"
                     >
                       {`${term} ${new Date(startDate).getFullYear()}`}
                       <input
@@ -355,7 +355,7 @@ export default function NewReviewForm({
             </fieldset>
           </div>
           <div className="pt-8">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
               Review
             </h3>
             <p className="mt-1 text-sm text-gray-500">
@@ -424,7 +424,7 @@ export default function NewReviewForm({
               className="mt-6 block text-sm font-medium text-gray-700"
             >
               Workload
-              <div className="relative mt-1 w-1/2 rounded-md shadow-sm">
+              <div className="relative mt-1 w-1/2 rounded-md shadow-xs">
                 <input
                   required
                   type="number"
@@ -467,7 +467,7 @@ export default function NewReviewForm({
                   value={body}
                   onChange={(e) => setBody(e.currentTarget.value)}
                   rows={6}
-                  className="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
             </label>
@@ -476,7 +476,7 @@ export default function NewReviewForm({
             </p>
           </div>
           <div className="pt-8" aria-live="polite">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
               Authentication
             </h3>
             {codeRequestState.status === "complete" &&
@@ -549,7 +549,7 @@ export default function NewReviewForm({
                         onClick={() => {
                           sendCode().catch(() => {});
                         }}
-                        className="rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 shadow-sm hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
+                        className="rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 shadow-xs hover:bg-indigo-200 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:outline-hidden"
                       >
                         {codeRequestState.status === "pending"
                           ? "Sending..."
@@ -581,7 +581,7 @@ export default function NewReviewForm({
                       value={code}
                       onChange={(e) => setCode(e.currentTarget.value)}
                       placeholder="123456"
-                      className="relative block min-w-0 rounded border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="relative block min-w-0 rounded-sm border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
                 </label>
@@ -598,7 +598,7 @@ export default function NewReviewForm({
                   ? { disabled: true }
                   : {})}
                 type="submit"
-                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
               >
                 {reviewRequestState.status === "pending"
                   ? "Submitting..."
@@ -623,7 +623,7 @@ export default function NewReviewForm({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -637,7 +637,7 @@ export default function NewReviewForm({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
                   <div>
                     <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                       <CheckIcon
@@ -648,7 +648,7 @@ export default function NewReviewForm({
                     <div className="mt-3 text-center sm:mt-5">
                       <Dialog.Title
                         as="h3"
-                        className="text-lg font-medium leading-6 text-gray-900"
+                        className="text-lg leading-6 font-medium text-gray-900"
                       >
                         Submission successful
                       </Dialog.Title>
@@ -665,7 +665,7 @@ export default function NewReviewForm({
                       href={`/courses/${
                         selectedCourse?.slug ?? "CS-0000"
                       }/reviews`}
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden sm:text-sm"
                     >
                       View my review
                     </Link>
