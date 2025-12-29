@@ -1,29 +1,29 @@
-import { defineField, defineType } from 'sanity';
-import { CalendarIcon } from '@sanity/icons';
+import { CalendarIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 export const semesterType = defineType({
-  name: 'semester',
-  title: 'Semester',
-  type: 'document',
+  name: "semester",
+  title: "Semester",
+  type: "document",
   icon: CalendarIcon,
   fields: [
     defineField({
-      name: 'term',
-      type: 'string',
-      options: { list: ['spring', 'summer', 'fall'] },
+      name: "term",
+      type: "string",
+      options: { list: ["spring", "summer", "fall"] },
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'startDate',
-      description: 'When does this semester start?',
-      type: 'date',
+      name: "startDate",
+      description: "When does this semester start?",
+      type: "date",
       validation: (rule) => rule.required(),
     }),
   ],
   preview: {
     select: {
-      term: 'term',
-      startDate: 'startDate',
+      term: "term",
+      startDate: "startDate",
     },
     prepare({ term, startDate }) {
       return {

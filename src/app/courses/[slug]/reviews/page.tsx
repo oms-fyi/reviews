@@ -1,7 +1,7 @@
 import {
+  BoltIcon,
   ClockIcon,
   DocumentPlusIcon,
-  BoltIcon,
   StarIcon,
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -85,7 +85,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page(props: { params: Promise<{ slug: string }> }) {
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
   const params = await props.params;
   const {
     course: {

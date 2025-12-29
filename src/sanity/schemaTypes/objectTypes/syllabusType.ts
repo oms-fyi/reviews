@@ -1,21 +1,21 @@
-import { defineField, defineType } from 'sanity';
+import { defineField, defineType } from "sanity";
 
 export const syllabusType = defineType({
-  name: 'syllabus',
-  title: 'Syllabus',
-  type: 'object',
+  name: "syllabus",
+  title: "Syllabus",
+  type: "object",
   fields: [
     defineField({
-      name: 'file',
-      title: 'File',
-      type: 'file',
-      description: 'Upload a syllabus',
+      name: "file",
+      title: "File",
+      type: "file",
+      description: "Upload a syllabus",
     }),
     defineField({
-      name: 'url',
-      title: 'URL',
-      type: 'url',
-      description: 'Paste in link to syllabus',
+      name: "url",
+      title: "URL",
+      type: "url",
+      description: "Paste in link to syllabus",
     }),
   ],
 });

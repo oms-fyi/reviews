@@ -6,7 +6,14 @@ import classNames from "classnames";
 import type { GetStaticProps, Metadata } from "next";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, Fragment, useEffect, useMemo, useState, type JSX } from "react";
+import {
+  FormEvent,
+  Fragment,
+  type JSX,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { Alert } from "src/components/alert";
 import { sanityClient } from "src/sanity/client";
@@ -248,7 +255,7 @@ export default function NewReviewForm({
               as="div"
               className="mt-6"
               value={courseId}
-              onChange={(value) => setCourseId(value ?? '')}
+              onChange={(value) => setCourseId(value ?? "")}
             >
               <Combobox.Label className="block text-sm font-medium text-gray-700">
                 Course Name
@@ -478,7 +485,7 @@ export default function NewReviewForm({
                   variant="success"
                   onDismiss={() => onDismissSendCodeAlert()}
                 >
-                  <p className="text-sm font-medium ">
+                  <p className="text-sm font-medium">
                     {`Sent code to ${username}@gatech.edu!`} This code is valid
                     for 10 minutes. Click &apos;Send code&apos; again if you
                     need a new code.
@@ -491,7 +498,7 @@ export default function NewReviewForm({
                   variant="failure"
                   onDismiss={() => onDismissSendCodeAlert()}
                 >
-                  <p className="text-sm font-medium ">
+                  <p className="text-sm font-medium">
                     {codeRequestState.errors[0]}
                   </p>
                 </Alert>

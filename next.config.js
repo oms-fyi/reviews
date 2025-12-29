@@ -497,7 +497,6 @@ const nextConfig = {
  * Copied from https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#extend-your-nextjs-configuration
  */
 
-
 // Injected content via Sentry wizard below
 
 module.exports = withSentryConfig(nextConfig, {
