@@ -93,15 +93,15 @@ export function Header(): JSX.Element {
   }, [params.slug]);
 
   return (
-    <Disclosure as="nav" className="bg-white shadow">
+    <Disclosure as="nav" className="bg-white shadow-sm">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
-                <div className="-ml-2 mr-2 flex items-center md:hidden">
+                <div className="mr-2 -ml-2 flex items-center md:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -110,7 +110,7 @@ export function Header(): JSX.Element {
                     )}
                   </Disclosure.Button>
                 </div>
-                <Link href="/" className="flex flex-shrink-0 items-center">
+                <Link href="/" className="flex shrink-0 items-center">
                   <div className="flex items-center gap-2">
                     <Image
                       src="/logo.svg"
@@ -148,7 +148,7 @@ export function Header(): JSX.Element {
                               "text-gray-900": reviewMenuOpen,
                               "text-gray-500": !reviewMenuOpen,
                             },
-                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden",
                           )}
                         >
                           Reviews
@@ -171,8 +171,8 @@ export function Header(): JSX.Element {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className="absolute top-full z-10 -ml-4 -mt-3 w-screen max-w-md origin-bottom-right transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
-                            <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+                          <Menu.Items className="absolute top-full z-10 -mt-3 -ml-4 w-screen max-w-md origin-bottom-right transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
+                            <div className="ring-opacity-5 overflow-hidden rounded-lg shadow-lg">
                               <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
                                 {reviewsMenuItems.map((item) => (
                                   <Menu.Item key={item.href}>
@@ -182,7 +182,7 @@ export function Header(): JSX.Element {
                                       className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
                                     >
                                       <item.icon
-                                        className="h-6 w-6 flex-shrink-0 text-indigo-600"
+                                        className="h-6 w-6 shrink-0 text-indigo-600"
                                         aria-hidden="true"
                                       />
                                       <div className="ml-4">
@@ -212,22 +212,22 @@ export function Header(): JSX.Element {
                 </div>
               </div>
               <div className="flex items-center">
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <Link
                     href={newReviewURL ?? "/"}
-                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
                   >
                     <PlusIcon
-                      className="-ml-1 mr-2 h-5 w-5"
+                      className="mr-2 -ml-1 h-5 w-5"
                       aria-hidden="true"
                     />
                     <span>Add Review</span>
                   </Link>
                 </div>
-                <div className="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
+                <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
                   <Menu as="div" className="relative ml-3">
                     <div className="flex">
-                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden">
                         <span className="sr-only">Open GitHub menu</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +254,7 @@ export function Header(): JSX.Element {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-hidden">
                         {githubMenuItems.map(({ text, href }) => (
                           <Menu.Item key={href}>
                             {({ active }) => (
@@ -281,15 +281,15 @@ export function Header(): JSX.Element {
           </div>
 
           <Disclosure.Panel className="md:hidden">
-            <div className="space-y-1 pb-3 pt-2">
+            <div className="space-y-1 pt-2 pb-3">
               <Link href="/" passHref>
                 <Disclosure.Button
                   as="a"
                   href="#"
                   className={classNames({
-                    "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6":
+                    "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pr-4 pl-3 text-base font-medium text-indigo-700 sm:pr-6 sm:pl-5":
                       pathname === "/",
-                    "block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6":
+                    "block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5":
                       pathname !== "/",
                   })}
                 >
@@ -299,12 +299,12 @@ export function Header(): JSX.Element {
               <Disclosure.Button
                 as="a"
                 href="https://omscs-notes.com"
-                className="block py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pl-5 sm:pr-6"
+                className="block py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5"
               >
                 OMSCS Notes
               </Disclosure.Button>
             </div>
-            <div className="border-t border-gray-200 pb-3 pt-4">
+            <div className="border-t border-gray-200 pt-4 pb-3">
               <div className="space-y-1">
                 {reviewsMenuItems.map((item) => (
                   <Link href={item.href} key={item.href} passHref>
@@ -313,7 +313,7 @@ export function Header(): JSX.Element {
                       className="flex items-start rounded-lg p-3 hover:bg-gray-50"
                     >
                       <item.icon
-                        className="h-6 w-6 flex-shrink-0 text-indigo-600"
+                        className="h-6 w-6 shrink-0 text-indigo-600"
                         aria-hidden="true"
                       />
                       <div className="ml-4">
@@ -329,7 +329,7 @@ export function Header(): JSX.Element {
                 ))}
               </div>
             </div>
-            <div className="border-t border-gray-200 pb-3 pt-4">
+            <div className="border-t border-gray-200 pt-4 pb-3">
               <div className="space-y-1">
                 {githubMenuItems.map(({ text, href }) => (
                   <Disclosure.Button

@@ -130,9 +130,9 @@ export default async function Page(props: {
         </div>
       )}
       <div className="mt-10 flex flex-col items-center gap-4 lg:flex-row lg:items-start">
-        <div className="mx-auto max-w-xl grow bg-white shadow sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto">
+        <div className="mx-auto max-w-xl grow bg-white shadow-sm sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
               Quick Facts and Resources
             </h3>
             <p className="mt-1 max-w-2xl text-xs text-gray-500">
@@ -215,7 +215,7 @@ export default async function Page(props: {
                       {textbooks.map(({ name: textbookName, url }) => (
                         <li
                           key={textbookName}
-                          className="flex items-center justify-between py-3 pl-3 pr-4 text-sm"
+                          className="flex items-center justify-between py-3 pr-4 pl-3 text-sm"
                         >
                           <a
                             href={url}
@@ -245,7 +245,7 @@ export default async function Page(props: {
             ))}
           </ul>
         ) : (
-          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow sm:rounded-lg lg:max-w-full">
+          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow-sm sm:rounded-lg lg:max-w-full">
             <div className="px-4 py-5 sm:p-6">
               <div className="text-center">
                 <DocumentPlusIcon className="mx-auto h-12 w-12 text-gray-400" />
@@ -258,10 +258,10 @@ export default async function Page(props: {
                 <div className="mt-6">
                   <Link
                     href={`/reviews/new?course=${slug}`}
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white no-underline shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white no-underline shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
                   >
                     <PlusIcon
-                      className="-ml-1 mr-2 h-5 w-5"
+                      className="mr-2 -ml-1 h-5 w-5"
                       aria-hidden="true"
                     />
                     New Review
