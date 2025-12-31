@@ -1,56 +1,39 @@
+import { notFound } from "next/navigation";
+
 import { Review } from "src/components/review";
 import { sanityClient } from "src/sanity/client";
-import type { Course, Review as ReviewType, Semester } from "src/types";
+import { REVIEW_IDS_QUERY, REVIEW_QUERY } from "src/sanity/queries";
 
 const PRERENDER_LIMIT = 100;
 
-type ReviewPageProps = {
-  review: ReviewType & {
-    semester: Semester;
-    course?: Pick<Course, "name" | "slug">;
-  };
+type Props = {
+  params: Promise<{ id: string }>;
 };
 
-export const dynamicParams = true;
-
 export async function generateStaticParams() {
-  const query = `
-  *[_type == 'review'] {
-      "id": _id
-    }[0...$limit]
-  `;
-
-  return await sanityClient.fetch<Array<Pick<ReviewType, "id">>>(query, {
+  return await sanityClient.fetch(REVIEW_IDS_QUERY, {
     limit: PRERENDER_LIMIT,
   });
 }
 
-async function getReview(id: string): Promise<ReviewPageProps["review"]> {
-  const query = `
-    *[_type == 'review' && _id == $id]{
-      "id": _id,
-      "created": _createdAt,
-      ...,
-      course->{
-        name,
-        "slug": slug.current
-      },
-      semester->
-    }[0]
-  `;
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const review = await sanityClient.fetch(REVIEW_QUERY, { id }); // WHAT IF WE FAIL HERE?
 
-  return await sanityClient.fetch<ReviewPageProps["review"]>(query, {
-    id,
-  });
-}
-
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-  const params = await props.params;
-  const review = await getReview(params.id); // WHAT IF WE FAIL HERE?
+  if (review === null) {
+    notFound();
+  }
 
   return (
-    <section className="m-auto flex h-full max-w-6xl items-center justify-center px-5 py-10">
-      <Review review={review} />
-    </section>
+    <Review
+      createdAt={review?._createdAt}
+      author={review?.authorId}
+      difficulty={review?.difficulty ?? 0}
+      rating={review?.rating ?? 0}
+      workload={review?.workload ?? 0}
+      body={review?.body ?? ""}
+      course={review?.course}
+      semester={review?.semester}
+    />
   );
 }

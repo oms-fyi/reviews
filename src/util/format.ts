@@ -11,7 +11,7 @@ export function formatNumber(value?: number | bigint): string {
   }).format(value);
 }
 
-export function formatList(list: Iterable<string>): string {
+export function formatList(list: string[]): string {
   return new Intl.ListFormat(DEFAULT_LOCALE, {
     style: "long",
     type: "conjunction",

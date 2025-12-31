@@ -44,6 +44,9 @@ importers:
       fuse.js:
         specifier: ^7.1.0
         version: 7.1.0
+      groq:
+        specifier: ^5.1.0
+        version: 5.1.0
       joi:
         specifier: ^18.0.2
         version: 18.0.2
@@ -4524,6 +4527,10 @@ packages:
 
   groq@4.22.0:
     resolution: {integrity: sha512-98P1gLlIHbdB0wP2dPsKsn6c31iaUoPi+ES+iwNpe7L8sQp7zYWm/yZDdX/KEdCloCPthTlWIYEXVKHqiTc0eA==}
+    engines: {node: '>=20.19 <22 || >=22.12'}
+
+  groq@5.1.0:
+    resolution: {integrity: sha512-ayFz6MxyEPBi16z0jrM/gUSUAXaTqiwEMRCGpkUSAdrcfVVR4GcfD8+kSe36zZvXEC9h3xvPDtIopF/T/5AhTA==}
     engines: {node: '>=20.19 <22 || >=22.12'}
 
   gunzip-maybe@1.4.2:
@@ -12370,6 +12377,8 @@ snapshots:
   groq@3.88.1-typegen-experimental.0: {}
 
   groq@4.22.0: {}
+
+  groq@5.1.0: {}
 
   gunzip-maybe@1.4.2:
     dependencies:

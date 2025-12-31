@@ -6,114 +6,60 @@ import {
 } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
+import { Metadata } from "next";
 import Link from "next/link";
 
-import { Review as ReviewComponent } from "src/components/review";
+import { Review } from "src/components/review";
 import { sanityClient } from "src/sanity/client";
-import type { Course, Program, Review, Semester } from "src/types";
+import {
+  COURSE_REVIEWS_PAGE_METADATA_QUERY,
+  COURSE_SLUGS_QUERY,
+  COURSE_WITH_REVIEWS_QUERY,
+} from "src/sanity/queries";
 import { formatList, formatNumber } from "src/util/format";
 import { average } from "src/util/math";
 
-export type CourseWithReviews = Course & {
-  programs: Array<Pick<Program, "acronym">>;
-  reviews: Array<Review & { semester: Semester }>;
-};
-
-export interface ReviewsPageProps {
-  course: CourseWithReviews & {
-    rating: number;
-    difficulty: number;
-    workload: number;
-  };
+interface Props {
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  const query = `
-  *[_type == 'course'] {
-      "slug": slug.current,
-    }
-  `;
-
-  return await sanityClient.fetch<Array<Pick<Course, "slug">>>(query);
+  return await sanityClient.fetch(COURSE_SLUGS_QUERY);
 }
 
 export const dynamicParams = false;
 
-async function getCourseWithReviews(slug: string): Promise<ReviewsPageProps> {
-  const query = `
-    *[_type == 'course' && slug.current == $slug]{
-      "id": _id,
-      "created": _createdAt,
-      ...,
-      "slug": slug.current,
-      "syllabusUrl": coalesce(syllabus.file.asset->url, syllabus.url),
-      programs[]->{acronym},
-      "reviews": *[_type == 'review' && references(^._id)]{
-        "id": _id,
-        "created": _createdAt,
-        ...,
-        "course": null,
-        semester->
-      } | order(created desc)
-    }[0]
-  `;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
 
-  const course = await sanityClient.fetch<CourseWithReviews>(query, { slug });
-
-  const rating = average(course.reviews, "rating");
-  const difficulty = average(course.reviews, "difficulty");
-  const workload = average(course.reviews, "workload");
-
-  return { course: { ...course, rating, difficulty, workload } };
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const query = `
-  *[_type == 'course' && slug.current == $slug] {
-      name
-    }[0]
-  `;
-
-  const course = await sanityClient.fetch<Pick<Course, "name">>(query, {
-    slug: (await params).slug,
+  const course = await sanityClient.fetch(COURSE_REVIEWS_PAGE_METADATA_QUERY, {
+    slug,
   });
 
   return {
-    title: `${course.name} | OMSCentral`,
+    title: `${course?.name ?? "OMSCS Course"} | OMSCentral`,
   };
 }
 
-export default async function Page(props: {
-  params: Promise<{ slug: string }>;
-}) {
-  const params = await props.params;
-  const {
-    course: {
-      name,
-      slug,
-      reviews,
-      codes,
-      creditHours,
-      description,
-      programs,
-      textbooks,
-      syllabusUrl,
-      rating,
-      difficulty,
-      workload,
-    },
-  } = await getCourseWithReviews(params.slug);
+export default async function Page({ params }: Props) {
+  const { slug } = await params;
 
-  const programAcronyms = programs.map(({ acronym }) => acronym);
+  const course = await sanityClient.fetch(COURSE_WITH_REVIEWS_QUERY, { slug });
+  const reviews = course?.reviews ?? [];
+
+  const rating = average(reviews, "rating");
+  const difficulty = average(reviews, "difficulty");
+  const workload = average(reviews, "workload");
+
+  const programAcronyms = course?.programs?.reduce<string[]>(
+    (acc, { acronym }) => (acronym === null ? acc : [...acc, acronym]),
+    [],
+  );
 
   return (
     <section className="m-auto max-w-6xl px-5 py-10">
       <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
-        {name}
+        {course?.name}
       </h3>
       {reviews.length > 0 && (
         <div className="flex justify-center gap-2 lg:justify-start lg:gap-7">
@@ -140,7 +86,7 @@ export default async function Page(props: {
             <p className="mt-1 max-w-2xl text-xs text-gray-500">
               Something missing or incorrect?{" "}
               <a
-                href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${name}`}
+                href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${course?.name}`}
                 target="_blank"
                 rel="noreferrer"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -154,13 +100,13 @@ export default async function Page(props: {
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
                 <dt className="text-sm font-medium text-gray-500">Name</dt>
                 <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                  {name}
+                  {course?.name}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
                 <dt className="text-sm font-medium text-gray-500">Listed As</dt>
                 <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                  {formatList(codes)}
+                  {formatList(course?.codes ?? [])}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
@@ -168,7 +114,7 @@ export default async function Page(props: {
                   Credit Hours
                 </dt>
                 <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                  {creditHours}
+                  {course?.creditHours}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
@@ -176,7 +122,7 @@ export default async function Page(props: {
                   Available to
                 </dt>
                 <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                  {formatList(programAcronyms)} students
+                  {formatList(programAcronyms ?? [])} students
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
@@ -184,15 +130,15 @@ export default async function Page(props: {
                   Description
                 </dt>
                 <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3">
-                  {description ?? "Course description not found."}{" "}
+                  {course?.description ?? "Course description not found."}{" "}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
                 <dt className="text-sm font-medium text-gray-500">Syllabus</dt>
                 <dd className="col-span-2 mt-0 text-sm text-gray-900">
-                  {syllabusUrl ? (
+                  {course?.syllabusUrl ? (
                     <a
-                      href={syllabusUrl}
+                      href={course.syllabusUrl}
                       target="_blank"
                       rel="noreferrer"
                       className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -208,15 +154,15 @@ export default async function Page(props: {
                 <dt className="text-sm font-medium text-gray-500">Textbooks</dt>
                 <dd
                   className={classNames("mt-0 text-sm text-gray-900", {
-                    "col-span-3": textbooks,
-                    "col-span-2": !textbooks,
+                    "col-span-3": course?.textbooks,
+                    "col-span-2": !course?.textbooks,
                   })}
                 >
-                  {textbooks ? (
+                  {course?.textbooks ? (
                     <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
-                      {textbooks.map(({ name: textbookName, url }) => (
+                      {course?.textbooks.map(({ name, url }) => (
                         <li
-                          key={textbookName}
+                          key={name}
                           className="flex items-center justify-between py-3 pr-4 pl-3 text-sm"
                         >
                           <a
@@ -225,7 +171,7 @@ export default async function Page(props: {
                             rel="noreferrer"
                             className="w-0 flex-1 truncate font-medium text-indigo-600 hover:text-indigo-500"
                           >
-                            {textbookName}
+                            {name}
                           </a>
                         </li>
                       ))}
@@ -239,10 +185,19 @@ export default async function Page(props: {
           </div>
         </div>
         {reviews.length > 0 ? (
-          <ul className="space-y-4 divide-gray-200">
+          <ul className="flex flex-col gap-7">
             {reviews.map((review) => (
-              <li key={review.id}>
-                <ReviewComponent review={review} />
+              <li key={review._id}>
+                <Review
+                  createdAt={review._createdAt}
+                  author={review.authorId}
+                  difficulty={review.difficulty ?? 0}
+                  rating={review.rating ?? 0}
+                  workload={review.workload ?? 0}
+                  body={review.body ?? ""}
+                  course={review.course}
+                  semester={review.semester}
+                />
               </li>
             ))}
           </ul>

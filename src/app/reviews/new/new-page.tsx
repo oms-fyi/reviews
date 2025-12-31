@@ -3,25 +3,16 @@
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
-import type { GetStaticProps, Metadata } from "next";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import {
-  FormEvent,
-  Fragment,
-  type JSX,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FormEvent, Fragment, useEffect, useMemo, useState } from "react";
 
 import { Alert } from "src/components/alert";
-import { sanityClient } from "src/sanity/client";
 import { Course, Review, Semester } from "src/types";
 
 export interface NewReviewFormProps {
-  courses: Pick<Course, "id" | "slug" | "name">[];
+  courses: Course[];
   semesters: Semester[];
+  courseSlugFromParams?: string;
 }
 
 type RequestState = {
@@ -29,43 +20,18 @@ type RequestState = {
   errors?: string[];
 };
 
-export const getStaticProps: GetStaticProps<NewReviewFormProps> = async () => {
-  const query = `{ 
-    "courses": *[_type == 'course'] {
-      "id": _id,
-      "slug": slug.current,
-      name
-    } | order(name),
-    "semesters" : *[_type == 'semester' && startDate <= now()]{
-    "id": _id,
-    ...
-    } | order(startDate desc)[0...$limit]
-  }`;
-
-  const { courses, semesters } = await sanityClient.fetch<NewReviewFormProps>(
-    query,
-    {
-      limit: 3,
-    },
-  );
-
-  return { props: { courses, semesters } };
-};
-
-export const metadata: Metadata = {
-  title: "Add review | OMSCentral",
-};
-
 export default function NewReviewForm({
   courses,
   semesters,
-}: NewReviewFormProps): JSX.Element {
-  const params = useSearchParams();
-
+  courseSlugFromParams,
+}: NewReviewFormProps) {
   const [query, setQuery] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
-  const [courseId, setCourseId] = useState<Course["id"]>("");
+  const [courseId, setCourseId] = useState<Course["id"]>(
+    () =>
+      courses.find((course) => course.slug === courseSlugFromParams)?.id ?? "",
+  );
   const [semesterId, setSemesterId] = useState<Semester["id"]>("");
   const [rating, setRating] = useState<NonNullable<Review["rating"]>>();
   const [difficulty, setDifficulty] =
@@ -86,16 +52,6 @@ export default function NewReviewForm({
     () => courses.find(({ id }) => id === courseId),
     [courseId, courses],
   );
-
-  useEffect(() => {
-    const courseSlug = params.get("course");
-
-    if (typeof courseSlug === "string") {
-      setCourseId(
-        courses.find((course) => course.slug === courseSlug)?.id ?? "",
-      );
-    }
-  }, [params, courses]);
 
   useEffect(() => {
     if (reviewRequestState.status === "complete" && reviewRequestState.errors) {
