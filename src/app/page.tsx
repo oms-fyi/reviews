@@ -1,65 +1,45 @@
 import type { Metadata } from "next";
 
 import { sanityClient } from "src/sanity/client";
-import { Course, Review } from "src/types";
+import { GET_COURSES_WITH_REVIEWS_STATS_QUERY } from "src/sanity/queries";
+import { Course } from "src/types";
 import { average } from "src/util/math";
 
 import HomePage from "./home-page";
-import type { HomePageProps } from "./home-page";
 
 export const metadata: Metadata = {
   title: "Home | OMSCentral",
 };
 
-type CourseWithReviewsStats = Course & {
-  reviews: Pick<Review, "rating" | "difficulty" | "workload">[];
-};
+export default async function Page() {
+  const apiResponse = await sanityClient.fetch(
+    GET_COURSES_WITH_REVIEWS_STATS_QUERY,
+  );
 
-type CourseWithStats = Course & {
-  rating?: number;
-  difficulty?: number;
-  workload?: number;
-  reviewCount: number;
-};
-
-async function getCoursesWithReviewsStats(): Promise<HomePageProps> {
-  const query = `
-    *[_type == 'course']{
-      ...,
-      "slug": slug.current,
-      "id": _id,
-      "reviews": *[_type == 'review' && references(^._id)]{
-        "id": _id,
-        "created": _createdAt,
-        ...,
-        "body": "",
-        "course": null,
-      }
-    }
-  `;
-
-  const apiResponse = await sanityClient.fetch<CourseWithReviewsStats[]>(query);
-
-  const courses = apiResponse.map(({ reviews, ...rest }) => {
-    const course: CourseWithStats = {
-      ...rest,
+  const courses = apiResponse.map(({ reviews, ...course }) => {
+    return Object.assign(course, {
+      slug: course.slug ?? "",
+      codes: course.codes ?? [],
+      name: course.name ?? "",
+      textbooks: (course.textbooks ?? []).reduce<
+        NonNullable<Course["textbooks"]>
+      >(
+        (acc, { name, url }) =>
+          name === undefined || url === undefined
+            ? acc
+            : [...acc, { name, url }],
+        [],
+      ),
+      creditHours: course.creditHours ?? 0,
+      isFoundational: course.isFoundational ?? false,
+      isDeprecated: course.isDeprecated ?? false,
+      rating: average(reviews, "rating") || undefined,
+      tags: course.tags ?? [],
+      difficulty: average(reviews, "difficulty") || undefined,
+      workload: average(reviews, "workload") || undefined,
       reviewCount: reviews.length,
-    };
-
-    const rating = average(reviews, "rating");
-    const difficulty = average(reviews, "difficulty");
-    const workload = average(reviews, "workload");
-
-    if (rating) course.rating = rating;
-    if (difficulty) course.difficulty = difficulty;
-    if (workload) course.workload = workload;
-
-    return course;
+    });
   });
 
-  return { courses };
-}
-
-export default async function Page() {
-  return <HomePage {...await getCoursesWithReviewsStats()} />;
+  return <HomePage courses={courses} />;
 }

@@ -25,6 +25,7 @@
     "@vercel/speed-insights": "^1.1.0",
     "classnames": "^2.3.1",
     "fuse.js": "^7.1.0",
+    "groq": "^5.1.0",
     "joi": "^18.0.2",
     "next": "16.1.1",
     "next-sanity": "^11.6.12",

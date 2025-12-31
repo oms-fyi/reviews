@@ -1,64 +1,60 @@
-"use client";
-
 import {
   CalendarIcon,
   PencilSquareIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import classNames from "classnames";
 import Link from "next/link";
-import { type JSX, useEffect, useState } from "react";
+import { type JSX } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 
-import type { Course, Review as ReviewType, Semester } from "src/types";
+import { Time } from "./datetime";
 
 interface ReviewProps {
-  review: ReviewType & {
-    semester: Semester;
-    course?: Pick<Course, "name" | "slug">;
-  };
+  createdAt: string;
+  course: {
+    name: string | null;
+    slug: string | null;
+  } | null;
+  semester: {
+    startDate: string | null;
+    term: string | null;
+  } | null;
+  author: string | null;
+  difficulty: number;
+  rating: number;
+  workload: number;
+  body: string;
 }
 
-export function Review({ review }: ReviewProps): JSX.Element {
-  const {
-    course,
-    authorId,
-    created,
-    semester,
-    body,
-    rating,
-    difficulty,
-    workload,
-  } = review;
-
-  const [hasMounted, setHasMounted] = useState(false);
-
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
-
+export function Review({
+  author = "Georgia Tech Student",
+  difficulty,
+  rating,
+  workload,
+  body,
+  createdAt,
+  course,
+  semester,
+}: ReviewProps): JSX.Element {
   return (
     <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow-sm sm:rounded-lg">
       <p className="flex items-center gap-2">
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
           <span className="font-medium">
-            {authorId ?? "Georgia Tech Student"}
+            {author ?? "Georgia Tech Student"}
           </span>
           <span className="flex gap-3">
             <span className="flex items-center gap-1 text-xs text-gray-500">
               <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
-              {hasMounted
-                ? new Date(created).toLocaleDateString(
-                    navigator.language || "en-US",
-                    { dateStyle: "long" },
-                  )
-                : created}
+              <Time dateTime={createdAt} opts={{ dateStyle: "long" }} />
             </span>
             <span className="flex items-center gap-1 text-xs text-gray-500">
               <CalendarIcon className="h-4 w-4" aria-hidden="true" />
               <span className="capitalize">
-                {semester
+                {semester && semester.startDate
                   ? `${semester.term} ${new Date(
                       semester.startDate,
                     ).getFullYear()}`
@@ -68,7 +64,7 @@ export function Review({ review }: ReviewProps): JSX.Element {
           </span>
         </span>
       </p>
-      {course && (
+      {course && course?.slug && course?.name && (
         <Link
           href={`/courses/${course.slug}/reviews`}
           className="text-sm text-indigo-600 hover:text-indigo-900"
