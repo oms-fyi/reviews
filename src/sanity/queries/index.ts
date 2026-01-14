@@ -45,7 +45,7 @@ export const COURSE_WITH_REVIEWS_QUERY = defineQuery(`
       startDate,
       term
     },
-  } | order(created desc)
+  } | order(_createdAt desc)
 }[0]
 `);
 

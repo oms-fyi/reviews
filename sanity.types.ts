@@ -283,7 +283,7 @@ export type COURSE_SLUGS_QUERY_RESULT = Array<{
 
 // Source: src/sanity/queries/index.ts
 // Variable: COURSE_WITH_REVIEWS_QUERY
-// Query: *[_type == 'course' && slug.current == $slug]{  ...,  "slug": slug.current,  "syllabusUrl": coalesce(syllabus.file.asset->url, syllabus.url),  programs[]->{acronym},  "reviews": *[_type == 'review' && references(^._id)]{    _id,    _createdAt,    body,    rating,    difficulty,    workload,    authorId,    "course": null,    semester->{      startDate,      term    },  } | order(created desc)}[0]
+// Query: *[_type == 'course' && slug.current == $slug]{  ...,  "slug": slug.current,  "syllabusUrl": coalesce(syllabus.file.asset->url, syllabus.url),  programs[]->{acronym},  "reviews": *[_type == 'review' && references(^._id)]{    _id,    _createdAt,    body,    rating,    difficulty,    workload,    authorId,    "course": null,    semester->{      startDate,      term    },  } | order(_createdAt desc)}[0]
 export type COURSE_WITH_REVIEWS_QUERY_RESULT = {
   _id: string;
   _type: "course";
@@ -437,7 +437,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "\n*[_type == 'review']{\n  _id,\n  _createdAt,\n  body,\n  rating,\n  difficulty,\n  workload,\n  authorId,\n  semester->{\n    startDate,\n    term\n  },\n  course->{\n    name,\n    \"slug\": slug.current,\n  }\n} | order(_createdAt desc)[0...100]\n": RECENT_REVIEWS_QUERY_RESULT;
     "\n*[_type == 'course'] {\n  \"slug\": slug.current,\n}\n": COURSE_SLUGS_QUERY_RESULT;
-    '\n*[_type == \'course\' && slug.current == $slug]{\n  ...,\n  "slug": slug.current,\n  "syllabusUrl": coalesce(syllabus.file.asset->url, syllabus.url),\n  programs[]->{acronym},\n  "reviews": *[_type == \'review\' && references(^._id)]{\n    _id,\n    _createdAt,\n    body,\n    rating,\n    difficulty,\n    workload,\n    authorId,\n    "course": null,\n    semester->{\n      startDate,\n      term\n    },\n  } | order(created desc)\n}[0]\n': COURSE_WITH_REVIEWS_QUERY_RESULT;
+    '\n*[_type == \'course\' && slug.current == $slug]{\n  ...,\n  "slug": slug.current,\n  "syllabusUrl": coalesce(syllabus.file.asset->url, syllabus.url),\n  programs[]->{acronym},\n  "reviews": *[_type == \'review\' && references(^._id)]{\n    _id,\n    _createdAt,\n    body,\n    rating,\n    difficulty,\n    workload,\n    authorId,\n    "course": null,\n    semester->{\n      startDate,\n      term\n    },\n  } | order(_createdAt desc)\n}[0]\n': COURSE_WITH_REVIEWS_QUERY_RESULT;
     "\n*[_type == 'course' && slug.current == $slug] {\n  name\n}[0]\n": COURSE_REVIEWS_PAGE_METADATA_QUERY_RESULT;
     "\n*[_type == 'review'] {\n  \"id\": _id\n}[0...$limit]\n": REVIEW_IDS_QUERY_RESULT;
     "\n*[_type == 'review' && _id == $id]{\n    _id,\n    _createdAt,\n    body,\n    rating,\n    difficulty,\n    workload,\n    authorId,\n    course->{\n      name,\n      \"slug\": slug.current\n    },\n    semester->{\n      startDate,\n      term\n    },\n}[0]\n": REVIEW_QUERY_RESULT;
