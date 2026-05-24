@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "backfill:course-stats": "node --env-file=.env.local scripts/backfill-course-stats.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.9",

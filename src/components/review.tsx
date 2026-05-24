@@ -9,6 +9,8 @@ import { type JSX } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 
+import { getAnonymousDisplayName } from "src/lib/anonymous-name";
+
 import { Time } from "./datetime";
 
 interface ReviewProps {
@@ -21,7 +23,7 @@ interface ReviewProps {
     startDate: string | null;
     term: string | null;
   } | null;
-  author: string | null;
+  authorId?: string | null;
   difficulty: number;
   rating: number;
   workload: number;
@@ -29,7 +31,7 @@ interface ReviewProps {
 }
 
 export function Review({
-  author = "Georgia Tech Student",
+  authorId,
   difficulty,
   rating,
   workload,
@@ -44,7 +46,7 @@ export function Review({
         <UserCircleIcon className="h-11 w-11 text-gray-400" />
         <span className="flex flex-col gap-1">
           <span className="font-medium">
-            {author ?? "Georgia Tech Student"}
+            {getAnonymousDisplayName(authorId)}
           </span>
           <span className="flex gap-3">
             <span className="flex items-center gap-1 text-xs text-gray-500">

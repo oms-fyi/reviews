@@ -15,6 +15,7 @@ import {
 import classNames from "classnames";
 import Image from "next/image";
 import Link from "next/link";
+import { AccountMenu, AccountMenuMobile } from "src/components/account-menu";
 import { useParams, usePathname } from "next/navigation";
 import { Fragment, type JSX, useEffect, useState } from "react";
 
@@ -48,21 +49,6 @@ const reviewsMenuItems = [
     subtitle: "Introduction to Operating Systems",
     href: "/courses/graduate-introduction-to-operating-systems/reviews",
     icon: CpuChipIcon,
-  },
-];
-
-const githubMenuItems = [
-  {
-    text: "Report a bug",
-    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=bug&template=bug_report.md&title=[BUG REPORT]",
-  },
-  {
-    text: "Request a feature",
-    href: "https://github.com/oms-tech/reviews/issues/new?assignees=m4ttsch&labels=enhancement&template=feature_request.md&title=[FEATURE REQUEST]",
-  },
-  {
-    text: "View code",
-    href: "https://github.com/oms-tech/reviews",
   },
 ];
 
@@ -225,56 +211,7 @@ export function Header(): JSX.Element {
                   </Link>
                 </div>
                 <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
-                  <Menu as="div" className="relative ml-3">
-                    <div className="flex">
-                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden">
-                        <span className="sr-only">Open GitHub menu</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-6 w-6"
-                        >
-                          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                        </svg>
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
-                    >
-                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-hidden">
-                        {githubMenuItems.map(({ text, href }) => (
-                          <Menu.Item key={href}>
-                            {({ active }) => (
-                              <a
-                                href={href}
-                                className={classNames(
-                                  {
-                                    "bg-gray-100": active,
-                                  },
-                                  "block px-4 py-2 text-gray-700",
-                                )}
-                              >
-                                {text}
-                              </a>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
+                  <AccountMenu />
                 </div>
               </div>
             </div>
@@ -330,18 +267,7 @@ export function Header(): JSX.Element {
               </div>
             </div>
             <div className="border-t border-gray-200 pt-4 pb-3">
-              <div className="space-y-1">
-                {githubMenuItems.map(({ text, href }) => (
-                  <Disclosure.Button
-                    as="a"
-                    href={href}
-                    key={href}
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
-                  >
-                    {text}
-                  </Disclosure.Button>
-                ))}
-              </div>
+              <AccountMenuMobile />
             </div>
           </Disclosure.Panel>
         </>
