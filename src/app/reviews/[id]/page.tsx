@@ -27,7 +27,7 @@ export default async function Page({ params }: Props) {
   return (
     <Review
       createdAt={review?._createdAt}
-      author={review?.authorId}
+      authorId={review?.authorId}
       difficulty={review?.difficulty ?? 0}
       rating={review?.rating ?? 0}
       workload={review?.workload ?? 0}

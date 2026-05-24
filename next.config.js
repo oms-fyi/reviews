@@ -2,6 +2,10 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Avoid inferring workspace root from lockfiles outside this repo (e.g. ~/package-lock.json).
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

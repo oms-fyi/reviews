@@ -1,0 +1,8 @@
+# Mock CAS server for local GT auth development.
+# Start: docker compose up -d
+# Login URL: http://localhost:8080/cas/login?service=http://localhost:3000/api/auth/cas/callback
+services:
+  cas:
+    image: soulwing/cas-mock-server
+    ports:
+      - "8080:8080"

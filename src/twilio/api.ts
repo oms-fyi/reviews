@@ -1,6 +1,6 @@
 import RestException from "twilio/lib/base/RestException";
 
-import { twilioClient } from "./client";
+import { getTwilioClient } from "./client";
 
 const VERIFY_SERVICE_SID = "VA8fe01f6ccca6c198aaaf592da51ad99c";
 
@@ -17,7 +17,7 @@ export async function sendCodeToUser(
 
   try {
     // https://www.twilio.com/docs/verify/email
-    await twilioClient.verify.v2
+    await getTwilioClient().verify.v2
       .services(VERIFY_SERVICE_SID)
       .verifications.create({ to: email, channel: "email" });
 
@@ -57,7 +57,7 @@ export async function doesUserCodeMatch(
 
   try {
     // https://www.twilio.com/docs/verify/api/verification-check
-    const verificationCheck = await twilioClient.verify.v2
+    const verificationCheck = await getTwilioClient().verify.v2
       .services(VERIFY_SERVICE_SID)
       .verificationChecks.create({ to: email, code });
 

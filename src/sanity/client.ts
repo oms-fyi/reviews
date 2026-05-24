@@ -10,13 +10,21 @@ if (!projectId || !dataset) {
   throw new Error("Sanity config not found!");
 }
 
-const useCdn = true;
 const apiVersion = "2025-02-06";
 
+/** Public reads — no token; CDN-safe. */
 export const sanityClient = createClient({
   projectId,
   dataset,
+  useCdn: true,
+  apiVersion,
+});
+
+/** Creates/patches — requires SANITY_API_WRITE_TOKEN; do not use CDN with a token. */
+export const sanityWriteClient = createClient({
+  projectId,
+  dataset,
   token,
-  useCdn,
+  useCdn: false,
   apiVersion,
 });

@@ -2,6 +2,10 @@ import { SIGNATURE_HEADER_NAME, isValidSignature } from "@sanity/webhook";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
+import {
+  recomputeCourseStats,
+  recomputeCourseStatsBySlug,
+} from "src/sanity/course-stats";
 import { Course } from "src/types";
 
 const SECRET = process.env.SANITY_WEBHOOK_SECRET ?? "";
@@ -10,11 +14,16 @@ if (SECRET === "") {
   throw new Error("Cannot read Sanity Webhook Secret!");
 }
 
+type ReviewWebhookPayload = {
+  _type: "review";
+  course?: {
+    _ref?: string;
+    slug?: string;
+  };
+};
+
 type SanityWebhookPayload =
-  | {
-      _type: "review";
-      course: Pick<Course, "slug">;
-    }
+  | ReviewWebhookPayload
   | {
       _type: "course";
       slug: Course["slug"];
@@ -22,6 +31,23 @@ type SanityWebhookPayload =
   | {
       _type: "semester";
     };
+
+async function syncCourseStatsFromReview(
+  payload: ReviewWebhookPayload,
+): Promise<void> {
+  try {
+    if (payload.course?._ref) {
+      await recomputeCourseStats(payload.course._ref);
+      return;
+    }
+
+    if (payload.course?.slug) {
+      await recomputeCourseStatsBySlug(payload.course.slug);
+    }
+  } catch (error) {
+    console.error("Failed to recompute course stats from webhook", error);
+  }
+}
 
 export async function POST(req: Request) {
   const signature = req.headers.get(SIGNATURE_HEADER_NAME);
@@ -40,7 +66,11 @@ export async function POST(req: Request) {
   console.log(payload);
 
   if (payload._type === "review") {
-    revalidatePath(`/courses/${payload.course.slug}/reviews`);
+    await syncCourseStatsFromReview(payload);
+    const slug = payload.course?.slug;
+    if (slug) {
+      revalidatePath(`/courses/${slug}/reviews`);
+    }
     revalidatePath("/reviews/recent");
     revalidatePath("/");
   }
