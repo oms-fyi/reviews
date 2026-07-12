@@ -30,6 +30,8 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html
       lang="en"
       className={`${inter.variable} h-full`}
+      // ThemeScript mutates class/data-theme-pref on <html> before React
+      // hydrates; without this, every load logs a false-positive mismatch.
       suppressHydrationWarning
     >
       <head>

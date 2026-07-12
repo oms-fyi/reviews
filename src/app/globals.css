@@ -10,6 +10,21 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*
+  Theme preference icons: visibility is driven by data-theme-pref on <html>
+  (set by the pre-paint theme script) so the toggle needs no hydrated state.
+*/
+.theme-pref-icon {
+  display: none;
+}
+
+html:not([data-theme-pref]) .theme-pref-icon--system,
+html[data-theme-pref="system"] .theme-pref-icon--system,
+html[data-theme-pref="light"] .theme-pref-icon--light,
+html[data-theme-pref="dark"] .theme-pref-icon--dark {
+  display: block;
+}
+
+/*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.

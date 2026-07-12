@@ -1,11 +1,28 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import {
+  ComputerDesktopIcon,
+  MoonIcon,
+  SunIcon,
+} from "@heroicons/react/24/outline";
 import { type JSX, useEffect } from "react";
 
-function applyTheme(dark: boolean): void {
+export type ThemePreference = "light" | "dark" | "system";
+
+const PREFERENCE_ORDER: ThemePreference[] = ["light", "dark", "system"];
+
+function applyResolvedTheme(dark: boolean): void {
   document.documentElement.classList.toggle("dark", dark);
-  document.documentElement.style.colorScheme = dark ? "dark" : "light";
+}
+
+function applyPreference(preference: ThemePreference): void {
+  const dark =
+    preference === "dark" ||
+    (preference === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  applyResolvedTheme(dark);
+  document.documentElement.setAttribute("data-theme-pref", preference);
 }
 
 function getStoredTheme(): string | null {
@@ -16,7 +33,7 @@ function getStoredTheme(): string | null {
   }
 }
 
-function setStoredTheme(theme: "dark" | "light"): void {
+function setStoredTheme(theme: ThemePreference): void {
   try {
     localStorage.setItem("theme", theme);
   } catch {
@@ -24,72 +41,85 @@ function setStoredTheme(theme: "dark" | "light"): void {
   }
 }
 
+function readPreference(): ThemePreference {
+  const stored = getStoredTheme();
+  if (stored === "light" || stored === "dark" || stored === "system") {
+    return stored;
+  }
+  return "system";
+}
+
+function nextPreference(current: ThemePreference): ThemePreference {
+  const index = PREFERENCE_ORDER.indexOf(current);
+  return PREFERENCE_ORDER[(index + 1) % PREFERENCE_ORDER.length];
+}
+
 /**
- * Toggles the `dark` class on <html> and persists the choice. Both icons are
- * rendered and CSS decides which one is visible, so there is no client state
- * to hydrate and no flash of the wrong icon.
+ * Cycles light → dark → system. Icons follow data-theme-pref on <html>
+ * (set by the pre-paint script and kept in sync here) so there is no
+ * preference state to hydrate.
  */
 export function ThemeToggle(): JSX.Element {
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
 
-    // Re-assert the theme after hydration: React can reset the class
-    // attribute on <html> while reconciling server markup, undoing the
-    // pre-paint theme script.
-    const theme = getStoredTheme();
-    applyTheme(theme === "dark" || (theme !== "light" && media.matches));
+    // Re-assert after hydration: React can reset <html> attributes while
+    // reconciling server markup, undoing the pre-paint theme script.
+    applyPreference(readPreference());
 
-    // Follow system preference changes while the user has no explicit choice.
     const onMediaChange = (event: MediaQueryListEvent) => {
-      if (getStoredTheme() === null) {
-        applyTheme(event.matches);
+      if (readPreference() === "system") {
+        applyResolvedTheme(event.matches);
       }
     };
 
-    // Keep multiple open tabs in sync.
     const onStorage = (event: StorageEvent) => {
       if (event.key === "theme") {
-        applyTheme(
-          event.newValue === "dark" ||
-            (event.newValue === null && media.matches),
+        applyPreference(
+          event.newValue === "light" ||
+            event.newValue === "dark" ||
+            event.newValue === "system"
+            ? event.newValue
+            : "system",
         );
       }
     };
 
-    // MediaQueryList.addEventListener is widely supported; addListener covers
-    // older Safari that only has the legacy API.
-    if (typeof media.addEventListener === "function") {
-      media.addEventListener("change", onMediaChange);
-    } else {
-      media.addListener(onMediaChange);
-    }
+    media.addEventListener("change", onMediaChange);
     window.addEventListener("storage", onStorage);
 
     return () => {
-      if (typeof media.removeEventListener === "function") {
-        media.removeEventListener("change", onMediaChange);
-      } else {
-        media.removeListener(onMediaChange);
-      }
+      media.removeEventListener("change", onMediaChange);
       window.removeEventListener("storage", onStorage);
     };
   }, []);
 
-  const toggleTheme = () => {
-    const dark = !document.documentElement.classList.contains("dark");
-    applyTheme(dark);
-    setStoredTheme(dark ? "dark" : "light");
+  const cycleTheme = () => {
+    const next = nextPreference(readPreference());
+    applyPreference(next);
+    setStoredTheme(next);
   };
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
-      aria-label="Toggle dark mode"
+      onClick={cycleTheme}
+      aria-label="Cycle color theme (light, dark, or system)"
+      title="Cycle color theme (light, dark, or system)"
       className="rounded-full p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-300 dark:hover:text-gray-100 dark:focus:ring-offset-gray-900"
     >
-      <MoonIcon className="h-6 w-6 dark:hidden" aria-hidden="true" />
-      <SunIcon className="hidden h-6 w-6 dark:block" aria-hidden="true" />
+      <SunIcon
+        className="theme-pref-icon theme-pref-icon--light h-6 w-6"
+        aria-hidden="true"
+      />
+      <MoonIcon
+        className="theme-pref-icon theme-pref-icon--dark h-6 w-6"
+        aria-hidden="true"
+      />
+      <ComputerDesktopIcon
+        className="theme-pref-icon theme-pref-icon--system h-6 w-6"
+        aria-hidden="true"
+      />
     </button>
   );
 }

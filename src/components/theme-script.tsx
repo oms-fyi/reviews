@@ -2,13 +2,17 @@ import { type JSX } from "react";
 
 const themeScript = `(function () {
   try {
-    var theme = localStorage.getItem("theme");
+    var stored = localStorage.getItem("theme");
+    var pref =
+      stored === "light" || stored === "dark" || stored === "system"
+        ? stored
+        : "system";
     var dark =
-      theme === "dark" ||
-      (theme !== "light" &&
+      pref === "dark" ||
+      (pref === "system" &&
         window.matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.classList.toggle("dark", dark);
-    document.documentElement.style.colorScheme = dark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme-pref", pref);
   } catch (e) {
     /* no-op */
   }
