@@ -7,6 +7,7 @@ import Image from "next/image";
 import { PropsWithChildren } from "react";
 
 import { Header } from "src/components/header";
+import { ThemeScript } from "src/components/theme-script";
 
 import "./globals.css";
 
@@ -26,11 +27,20 @@ export function generateMetadata(): Metadata {
 }
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className={`${inter.variable} h-full`}>
-      <body className="flex h-full flex-col bg-gray-100 font-sans">
+    <html
+      lang="en"
+      className={`${inter.variable} h-full`}
+      // ThemeScript mutates class on <html> before React hydrates;
+      // without this, every load logs a false-positive mismatch.
+      suppressHydrationWarning
+    >
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="flex h-full flex-col bg-gray-100 font-sans dark:bg-gray-950">
         <Header />
         <main className="grow">{children}</main>
-        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400">
+        <footer className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 bg-white px-4 py-2 text-gray-400 dark:border-t dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300">
           <p className="text-xs">
             &copy; {new Date().getFullYear()} OMSCentral.{" "}
             <span className="max-sm:sr-only">All rights reserved.</span>

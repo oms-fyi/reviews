@@ -90,8 +90,8 @@ const Pagination: FC<PaginationProps> = function Pagination({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <p className="text-sm text-gray-700 md:w-full">
+    <div className="flex flex-wrap items-center justify-center gap-4 border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:border-gray-800 dark:bg-gray-900">
+      <p className="text-sm text-gray-700 md:w-full dark:text-gray-300">
         Showing{" "}
         {resultCount ? (
           <>
@@ -116,17 +116,18 @@ const Pagination: FC<PaginationProps> = function Pagination({
                   "-ml-px": i > 0,
                   "rounded-r-md": i === a.length - 1,
                 },
-                "relative inline-flex items-center border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:px-4 sm:py-2",
-                {
-                  "z-10 border-indigo-500 bg-indigo-50 text-indigo-600 hover:bg-indigo-50":
-                    size === pageSize,
-                },
+                "relative inline-flex items-center border px-2 py-1 text-sm font-medium focus:z-10 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:px-4 sm:py-2",
+                size === pageSize
+                  ? "z-10 border-indigo-500 bg-indigo-50 text-indigo-600 hover:bg-indigo-50 dark:border-indigo-400 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-950"
+                  : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800",
               )}
             >
               {size}
             </button>
           ))}
-          <span className="ml-2 text-sm text-gray-700">courses per page</span>
+          <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+            courses per page
+          </span>
         </span>
       </div>
       <div>
@@ -138,7 +139,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
             {...(hasPrevPage ? {} : { disabled: true })}
             type="button"
             onClick={decrementPageNumber}
-            className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2"
+            className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:disabled:text-gray-600 dark:disabled:hover:bg-gray-900"
           >
             <span className="sr-only">Previous</span>
             <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -151,10 +152,9 @@ const Pagination: FC<PaginationProps> = function Pagination({
                 {...(page === pageNumber && { "aria-current": "page" })}
                 onClick={() => onPageChange(page)}
                 className={classNames(
-                  {
-                    "z-10 border-indigo-500 bg-indigo-50 text-indigo-600":
-                      page === pageNumber,
-                  },
+                  page === pageNumber
+                    ? "z-10 border-indigo-500 bg-indigo-50 text-indigo-600 dark:border-indigo-400 dark:bg-indigo-950 dark:text-indigo-300"
+                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800",
                   "relative inline-flex items-center border px-2 py-1 text-sm font-medium sm:px-4 sm:py-2",
                 )}
               >
@@ -166,7 +166,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
               : [
                   <span
                     key="..."
-                    className="relative inline-flex items-center border bg-white px-2 py-1 text-sm font-medium text-gray-700 sm:px-4 sm:py-2"
+                    className="relative inline-flex items-center border bg-white px-2 py-1 text-sm font-medium text-gray-700 sm:px-4 sm:py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
                   >
                     ...
                   </span>,
@@ -176,7 +176,7 @@ const Pagination: FC<PaginationProps> = function Pagination({
             type="button"
             {...(hasNextPage ? {} : { disabled: true })}
             onClick={incrementPageNumber}
-            className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2"
+            className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-1 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:text-gray-300 disabled:hover:bg-white sm:px-4 sm:py-2 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:disabled:text-gray-600 dark:disabled:hover:bg-gray-900"
           >
             <span className="sr-only">Next</span>
             <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
@@ -376,7 +376,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
             <div>
               <label
                 htmlFor="search"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
                 Search courses
                 <div className="mt-1 flex rounded-md shadow-xs">
@@ -393,7 +393,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       id="search"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.currentTarget.value)}
-                      className="block w-full min-w-0 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:pl-10 sm:text-sm"
+                      className="block w-full min-w-0 rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:pl-10 sm:text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-400"
                       placeholder="HPCA"
                     />
                   </div>
@@ -402,7 +402,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                       <>
                         <Popover.Button
                           type="button"
-                          className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:py-2"
+                          className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-gray-300 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:py-2 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
                         >
                           <FunnelIcon
                             className="h-5 w-5 text-gray-400"
@@ -423,9 +423,9 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         >
                           <Popover.Panel className="absolute right-0 z-10 mt-3 translate-x-1/2 px-4 sm:translate-x-0 sm:px-0">
                             <article className="overflow-hidden rounded-lg shadow-lg">
-                              <form className="bg-white p-7">
+                              <form className="bg-white p-7 dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
                                 <div className="mb-6">
-                                  <p className="mb-4 text-xs text-gray-500 uppercase">
+                                  <p className="mb-4 text-xs text-gray-500 uppercase dark:text-gray-300">
                                     Filter by review count
                                   </p>
                                   <fieldset className="flex gap-2">
@@ -471,7 +471,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   </fieldset>
                                 </div>
                                 <div className="mb-6">
-                                  <p className="mb-4 text-xs text-gray-500 uppercase">
+                                  <p className="mb-4 text-xs text-gray-500 uppercase dark:text-gray-300">
                                     Filter by stats
                                   </p>
                                   <div className="flex flex-col gap-6">
@@ -601,7 +601,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   </div>
                                 </div>
                                 <div className="mb-6">
-                                  <p className="mb-4 text-xs text-gray-500 uppercase">
+                                  <p className="mb-4 text-xs text-gray-500 uppercase dark:text-gray-300">
                                     Other Filters
                                   </p>
                                   <div className="flex flex-col gap-6">
@@ -639,11 +639,11 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
               >
                 {({ open }) => (
                   <>
-                    <Listbox.Label className="block text-sm font-medium text-gray-700">
+                    <Listbox.Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Sort by
                     </Listbox.Label>
                     <div className="relative mt-1">
-                      <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pr-10 pl-3 text-left shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:text-sm">
+                      <Listbox.Button className="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pr-10 pl-3 text-left shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200">
                         <div className="flex items-center gap-1">
                           <span className="block truncate">
                             {sortFieldsToLabels[sort.field]}
@@ -675,7 +675,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                       >
-                        <Listbox.Options className="absolute right-0 z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-hidden sm:text-sm">
+                        <Listbox.Options className="absolute right-0 z-10 mt-1 max-h-60 w-40 overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-hidden sm:text-sm dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
                           {Object.entries(sortFieldsToLabels).map(
                             ([field, label]) => (
                               <Listbox.Option
@@ -684,7 +684,8 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                   classNames(
                                     {
                                       "bg-indigo-600 text-white": active,
-                                      "text-gray-900": !active,
+                                      "text-gray-900 dark:text-gray-100":
+                                        !active,
                                     },
                                     "relative cursor-default py-2 pr-9 pl-3 select-none",
                                   )
@@ -715,30 +716,30 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
               </Listbox>
             </div>
           </div>
-          <div className="overflow-hidden shadow-sm md:mx-0 md:rounded-lg">
-            <div className="overflow-scroll">
+          <div className="overflow-hidden shadow-sm md:mx-0 md:rounded-lg dark:ring-1 dark:ring-white/10">
+            <div className="overflow-x-auto">
               <table
                 className="min-w-full border-separate"
                 style={{ borderSpacing: 0 }}
               >
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th
                       scope="col"
-                      className="bg-opacity-75 border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter"
+                      className="bg-opacity-75 border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       Course
                     </th>
                     <th
                       scope="col"
-                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter md:table-cell"
+                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter md:table-cell dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       <span className="flex">
                         Code(s)
                         <Popover className="relative">
                           <>
                             <Popover.Button type="button">
-                              <InformationCircleIcon className="h-4 w-4 text-indigo-600" />
+                              <InformationCircleIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
                             </Popover.Button>
                             <Transition
                               as={Fragment}
@@ -750,7 +751,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               leaveTo="opacity-0 translate-y-1"
                             >
                               <Popover.Panel className="absolute right-0 z-10 mt-3 w-80 translate-x-1/2 px-0">
-                                <article className="rounded-lg bg-white px-4 py-2 font-normal shadow-lg">
+                                <article className="rounded-lg bg-white px-4 py-2 font-normal shadow-lg dark:bg-gray-800 dark:text-gray-100 dark:ring-1 dark:ring-white/10">
                                   Multiple departments may <b>crosslist</b> a
                                   single course so that students with distinct
                                   degree requirements can enroll. Please
@@ -765,31 +766,31 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                     </th>
                     <th
                       scope="col"
-                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell"
+                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       Rating
                     </th>
                     <th
                       scope="col"
-                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell"
+                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       Difficulty
                     </th>
                     <th
                       scope="col"
-                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell"
+                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter sm:table-cell dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       Workload
                     </th>
                     <th
                       scope="col"
-                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter md:table-cell"
+                      className="bg-opacity-75 hidden border-b border-gray-300 bg-gray-50 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur-sm backdrop-filter md:table-cell dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100"
                     >
                       Reviews
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-800 dark:bg-gray-900">
                   {page.map(
                     (
                       {
@@ -808,17 +809,23 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                     ) => (
                       <tr
                         key={id}
-                        className={index % 2 === 0 ? undefined : "bg-gray-50"}
+                        className={
+                          index % 2 === 0
+                            ? undefined
+                            : "bg-gray-50 dark:bg-white/5"
+                        }
                       >
-                        <td className="px-3 py-4 text-sm text-gray-700 sm:pl-6">
+                        <td className="px-3 py-4 text-sm text-gray-700 sm:pl-6 dark:text-gray-300">
                           <dl className="font-normal">
                             <dt className="sr-only">Course name</dt>
                             <dd className="inline">
                               <span className="block w-72 truncate whitespace-nowrap lg:w-96">
-                                <span className="mr-2 block text-xs text-gray-500 md:hidden">
+                                <span className="mr-2 block text-xs text-gray-500 md:hidden dark:text-gray-300">
                                   {codes.join(" / ")}
                                 </span>
-                                <span className="text-base">{name}</span>
+                                <span className="text-base text-gray-900 dark:text-gray-100">
+                                  {name}
+                                </span>
                               </span>
                             </dd>
                             <div className="block sm:hidden">
@@ -826,7 +833,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 <dt className="sr-only">Rating</dt>
                                 <dd>
                                   {formatNumber(rating)}
-                                  <span className="text-gray-400">
+                                  <span className="text-gray-400 dark:text-gray-300">
                                     {" "}
                                     / 5 rating
                                   </span>
@@ -834,7 +841,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                 <dt className="sr-only">Difficulty</dt>
                                 <dd className="before:mr-1 before:content-['\b7']">
                                   {formatNumber(difficulty)}
-                                  <span className="text-gray-400">
+                                  <span className="text-gray-400 dark:text-gray-300">
                                     {" "}
                                     / 5 difficulty
                                   </span>
@@ -843,7 +850,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               <dt className="sr-only">Workload</dt>
                               <dd>
                                 {formatNumber(workload)}
-                                <span className="text-gray-400">
+                                <span className="text-gray-400 dark:text-gray-300">
                                   {" "}
                                   hours of work per week
                                 </span>
@@ -854,7 +861,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                               <dd>
                                 <Link
                                   href={`/courses/${slug}/reviews`}
-                                  className="text-sm text-indigo-600 hover:text-indigo-900"
+                                  className="text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200"
                                 >
                                   Reviews
                                 </Link>{" "}
@@ -870,7 +877,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                       href={officialURL}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="text-sm text-indigo-600 hover:text-indigo-900"
+                                      className="text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200"
                                     >
                                       GT Official
                                     </a>
@@ -885,7 +892,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                                       href={notesURL}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="text-sm text-indigo-600 hover:text-indigo-900"
+                                      className="text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200"
                                     >
                                       Lecture Notes
                                     </a>
@@ -895,7 +902,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             </div>
                           </dl>
                         </td>
-                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 md:table-cell">
+                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 md:table-cell dark:text-gray-300">
                           {codes.map((code) => (
                             <Fragment key={code}>
                               {code}
@@ -903,16 +910,16 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                             </Fragment>
                           ))}
                         </td>
-                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell">
+                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell dark:text-gray-300">
                           {formatNumber(rating)}
                         </td>
-                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell">
+                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell dark:text-gray-300">
                           {formatNumber(difficulty)}
                         </td>
-                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell">
+                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 sm:table-cell dark:text-gray-300">
                           {formatNumber(workload)}
                         </td>
-                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 md:table-cell">
+                        <td className="hidden px-3 py-4 text-sm whitespace-nowrap text-gray-700 md:table-cell dark:text-gray-300">
                           {reviewCount}
                         </td>
                       </tr>

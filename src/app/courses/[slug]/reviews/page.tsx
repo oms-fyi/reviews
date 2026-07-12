@@ -66,90 +66,96 @@ export default async function Page({ params }: Props) {
 
   return (
     <section className="m-auto max-w-6xl px-5 py-10">
-      <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left">
+      <h3 className="mb-2 text-center text-3xl font-medium text-gray-900 lg:text-left dark:text-gray-100">
         {course?.name}
       </h3>
       {reviews.length > 0 && (
-        <div className="flex justify-center gap-2 lg:justify-start lg:gap-7">
+        <div className="flex justify-center gap-2 text-gray-700 lg:justify-start lg:gap-7 dark:text-gray-300">
           <span className="flex items-center gap-0 lg:gap-1">
-            <StarIcon className="h-5 w-5 stroke-indigo-600" />
+            <StarIcon className="h-5 w-5 stroke-indigo-600 dark:stroke-indigo-300" />
             {formatNumber(rating)} / 5 rating
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
-            <BoltIcon className="h-5 w-5 stroke-indigo-600" />
+            <BoltIcon className="h-5 w-5 stroke-indigo-600 dark:stroke-indigo-300" />
             {formatNumber(difficulty)} / 5 difficulty
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
-            <ClockIcon className="h-5 w-5 stroke-indigo-600" />
+            <ClockIcon className="h-5 w-5 stroke-indigo-600 dark:stroke-indigo-300" />
             {formatNumber(workload)} hrs / week
           </span>
         </div>
       )}
       <div className="mt-10 flex flex-col items-center gap-4 lg:flex-row lg:items-start">
-        <div className="mx-auto max-w-xl grow bg-white shadow-sm sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto">
+        <div className="mx-auto max-w-xl grow bg-white shadow-sm sm:rounded-lg lg:sticky lg:top-4 lg:max-h-screen lg:overflow-y-auto dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
               Quick Facts and Resources
             </h3>
-            <p className="mt-1 max-w-2xl text-xs text-gray-500">
+            <p className="mt-1 max-w-2xl text-xs text-gray-500 dark:text-gray-300">
               Something missing or incorrect?{" "}
               <a
                 href={`https://github.com/oms-tech/reviews/issues/new?template=course-edit-request.md&title=[EDIT] ${course?.name}`}
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
               >
                 Tell us more.
               </a>
             </p>
           </div>
-          <div className="border-t border-gray-200 p-0 px-4 py-5">
-            <dl className="divide-y divide-gray-200">
+          <div className="border-t border-gray-200 p-0 px-4 py-5 dark:border-gray-800">
+            <dl className="divide-y divide-gray-200 dark:divide-gray-800">
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Name</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                  Name
+                </dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {course?.name}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Listed As</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                  Listed As
+                </dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {formatList(course?.codes ?? [])}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   Credit Hours
                 </dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {course?.creditHours}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   Available to
                 </dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {formatList(programAcronyms ?? [])} students
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   Description
                 </dt>
-                <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3">
+                <dd className="col-span-3 mt-0 text-sm text-gray-900 sm:col-span-2 lg:col-span-3 dark:text-gray-100">
                   {course?.description ?? "Course description not found."}{" "}
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Syllabus</dt>
-                <dd className="col-span-2 mt-0 text-sm text-gray-900">
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                  Syllabus
+                </dt>
+                <dd className="col-span-2 mt-0 text-sm text-gray-900 dark:text-gray-100">
                   {course?.syllabusUrl ? (
                     <a
                       href={course.syllabusUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
                     >
                       Syllabus
                     </a>
@@ -159,15 +165,20 @@ export default async function Page({ params }: Props) {
                 </dd>
               </div>
               <div className="grid grid-cols-3 gap-4 px-6 py-5">
-                <dt className="text-sm font-medium text-gray-500">Textbooks</dt>
+                <dt className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                  Textbooks
+                </dt>
                 <dd
-                  className={classNames("mt-0 text-sm text-gray-900", {
-                    "col-span-3": course?.textbooks,
-                    "col-span-2": !course?.textbooks,
-                  })}
+                  className={classNames(
+                    "mt-0 text-sm text-gray-900 dark:text-gray-100",
+                    {
+                      "col-span-3": course?.textbooks,
+                      "col-span-2": !course?.textbooks,
+                    },
+                  )}
                 >
                   {course?.textbooks ? (
-                    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
+                    <ul className="divide-y divide-gray-200 rounded-md border border-gray-200 dark:divide-gray-800 dark:border-gray-700">
                       {course?.textbooks.map(({ name, url }) => (
                         <li
                           key={name}
@@ -177,7 +188,7 @@ export default async function Page({ params }: Props) {
                             href={url}
                             target="_blank"
                             rel="noreferrer"
-                            className="w-0 flex-1 truncate font-medium text-indigo-600 hover:text-indigo-500"
+                            className="w-0 flex-1 truncate font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200"
                           >
                             {name}
                           </a>
@@ -210,20 +221,20 @@ export default async function Page({ params }: Props) {
             ))}
           </ul>
         ) : (
-          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow-sm sm:rounded-lg lg:max-w-full">
+          <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow-sm sm:rounded-lg lg:max-w-full dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
             <div className="px-4 py-5 sm:p-6">
               <div className="text-center">
-                <DocumentPlusIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                <DocumentPlusIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                   No reviews
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
                   Get started by writing a review.
                 </p>
                 <div className="mt-6">
                   <Link
                     href={`/reviews/new?course=${slug}`}
-                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white no-underline shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
+                    className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white no-underline shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-950"
                   >
                     <PlusIcon
                       className="mr-2 -ml-1 h-5 w-5"

@@ -13,7 +13,7 @@ export default async function Page() {
 
   return (
     <section className="p-7">
-      <h3 className="mb-10 text-center text-3xl font-medium text-gray-900">
+      <h3 className="mb-10 text-center text-3xl font-medium text-gray-900 dark:text-gray-100">
         100 Most Recent Reviews
       </h3>
       <ul className="flex flex-col items-center gap-7">

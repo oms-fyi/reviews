@@ -39,19 +39,19 @@ export function Review({
   semester,
 }: ReviewProps): JSX.Element {
   return (
-    <article className="prose prose-sm mx-auto bg-white px-6 py-3 shadow-sm sm:rounded-lg">
+    <article className="prose prose-sm dark:prose-invert mx-auto bg-white px-6 py-3 shadow-sm sm:rounded-lg dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
       <p className="flex items-center gap-2">
-        <UserCircleIcon className="h-11 w-11 text-gray-400" />
+        <UserCircleIcon className="h-11 w-11 text-gray-400 dark:text-gray-300" />
         <span className="flex flex-col gap-1">
           <span className="font-medium">
             {author ?? "Georgia Tech Student"}
           </span>
           <span className="flex gap-3">
-            <span className="flex items-center gap-1 text-xs text-gray-500">
+            <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300">
               <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
               <Time dateTime={createdAt} opts={{ dateStyle: "long" }} />
             </span>
-            <span className="flex items-center gap-1 text-xs text-gray-500">
+            <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300">
               <CalendarIcon className="h-4 w-4" aria-hidden="true" />
               <span className="capitalize">
                 {semester && semester.startDate
@@ -67,7 +67,7 @@ export function Review({
       {course && course?.slug && course?.name && (
         <Link
           href={`/courses/${course.slug}/reviews`}
-          className="text-sm text-indigo-600 hover:text-indigo-900"
+          className="text-sm text-indigo-600 hover:text-indigo-900 dark:text-indigo-300 dark:hover:text-indigo-200"
         >
           {course.name}
         </Link>
@@ -75,17 +75,17 @@ export function Review({
       <div className="wrap-break-word">
         <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
       </div>
-      <p className="flex flex-row gap-2">
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+      <div className="not-prose flex flex-wrap gap-2">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Rating: {rating ? `${rating} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Difficulty: {difficulty ? `${difficulty} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Workload: {workload ? `${workload} hours / week` : "N/A"}
         </span>
-      </p>
+      </div>
     </article>
   );
 }
