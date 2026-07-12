@@ -75,17 +75,17 @@ export function Review({
       <div className="wrap-break-word">
         <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{body}</ReactMarkdown>
       </div>
-      <p className="flex flex-row gap-2">
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+      <div className="not-prose flex flex-wrap gap-2">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Rating: {rating ? `${rating} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Difficulty: {difficulty ? `${difficulty} / 5` : "N/A"}
         </span>
-        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+        <span className="inline-flex shrink-0 items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium whitespace-nowrap text-green-800 dark:bg-green-900 dark:text-green-200">
           Workload: {workload ? `${workload} hours / week` : "N/A"}
         </span>
-      </p>
+      </div>
     </article>
   );
 }
