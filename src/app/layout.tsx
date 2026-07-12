@@ -18,8 +18,9 @@ const inter = Inter({
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Home",
-    description: "Welcome to Next.js",
+    title: "OMSCentral",
+    description:
+      "Course reviews, ratings, difficulty, and workload for Georgia Tech OMS programs.",
     other: {
       ...Sentry.getTraceData(),
     },
