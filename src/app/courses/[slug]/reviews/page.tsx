@@ -8,6 +8,7 @@ import { PlusIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { Review } from "src/components/review";
 import { sanityClient } from "src/sanity/client";
@@ -27,7 +28,9 @@ export async function generateStaticParams() {
   return await sanityClient.fetch(COURSE_SLUGS_QUERY);
 }
 
-export const dynamicParams = false;
+// Allow courses added after the last deploy to render on first request.
+// Unknown slugs still 404 via notFound() below.
+export const dynamicParams = true;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -45,13 +48,18 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
 
   const course = await sanityClient.fetch(COURSE_WITH_REVIEWS_QUERY, { slug });
-  const reviews = course?.reviews ?? [];
+
+  if (course === null) {
+    notFound();
+  }
+
+  const reviews = course.reviews ?? [];
 
   const rating = average(reviews, "rating");
   const difficulty = average(reviews, "difficulty");
   const workload = average(reviews, "workload");
 
-  const programAcronyms = course?.programs?.reduce<string[]>(
+  const programAcronyms = course.programs?.reduce<string[]>(
     (acc, { acronym }) => (acronym === null ? acc : [...acc, acronym]),
     [],
   );
