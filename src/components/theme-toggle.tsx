@@ -5,11 +5,29 @@ import {
   MoonIcon,
   SunIcon,
 } from "@heroicons/react/24/outline";
-import { type JSX, useEffect } from "react";
+import { type JSX, useEffect, useState } from "react";
 
-export type ThemePreference = "light" | "dark" | "system";
+const THEME_PREFERENCES = ["light", "dark", "system"] as const;
+export type ThemePreference = (typeof THEME_PREFERENCES)[number];
 
-const PREFERENCE_ORDER: ThemePreference[] = ["light", "dark", "system"];
+const THEME_TO_NEXT_THEME: Record<ThemePreference, ThemePreference> = {
+  light: "dark",
+  dark: "system",
+  system: "light",
+};
+
+const THEME_ICONS = {
+  light: SunIcon,
+  dark: MoonIcon,
+  system: ComputerDesktopIcon,
+} as const;
+
+function isThemePreference(value: string | null): value is ThemePreference {
+  return (
+    value !== null &&
+    (THEME_PREFERENCES as readonly string[]).includes(value)
+  );
+}
 
 function applyResolvedTheme(dark: boolean): void {
   document.documentElement.classList.toggle("dark", dark);
@@ -22,12 +40,12 @@ function applyPreference(preference: ThemePreference): void {
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   applyResolvedTheme(dark);
-  document.documentElement.setAttribute("data-theme-pref", preference);
 }
 
-function getStoredTheme(): string | null {
+function getStoredTheme(): ThemePreference | null {
   try {
-    return localStorage.getItem("theme");
+    const stored = localStorage.getItem("theme");
+    return isThemePreference(stored) ? stored : null;
   } catch {
     return null;
   }
@@ -42,30 +60,28 @@ function setStoredTheme(theme: ThemePreference): void {
 }
 
 function readPreference(): ThemePreference {
-  const stored = getStoredTheme();
-  if (stored === "light" || stored === "dark" || stored === "system") {
-    return stored;
+  if (typeof window === "undefined") {
+    return "system";
   }
-  return "system";
-}
-
-function nextPreference(current: ThemePreference): ThemePreference {
-  const index = PREFERENCE_ORDER.indexOf(current);
-  return PREFERENCE_ORDER[(index + 1) % PREFERENCE_ORDER.length];
+  return getStoredTheme() ?? "system";
 }
 
 /**
- * Cycles light → dark → system. Icons follow data-theme-pref on <html>
- * (set by the pre-paint script and kept in sync here) so there is no
- * preference state to hydrate.
+ * Cycles light → dark → system. Preference lives in React state (synced from
+ * localStorage after mount) so icon/label rendering stays in one place.
  */
 export function ThemeToggle(): JSX.Element {
+  const [themePreference, setThemePreference] =
+    useState<ThemePreference>("system");
+
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const preference = readPreference();
 
     // Re-assert after hydration: React can reset <html> attributes while
     // reconciling server markup, undoing the pre-paint theme script.
-    applyPreference(readPreference());
+    setThemePreference(preference);
+    applyPreference(preference);
 
     const onMediaChange = (event: MediaQueryListEvent) => {
       if (readPreference() === "system") {
@@ -75,13 +91,11 @@ export function ThemeToggle(): JSX.Element {
 
     const onStorage = (event: StorageEvent) => {
       if (event.key === "theme") {
-        applyPreference(
-          event.newValue === "light" ||
-            event.newValue === "dark" ||
-            event.newValue === "system"
-            ? event.newValue
-            : "system",
-        );
+        const next = isThemePreference(event.newValue)
+          ? event.newValue
+          : "system";
+        setThemePreference(next);
+        applyPreference(next);
       }
     };
 
@@ -94,32 +108,24 @@ export function ThemeToggle(): JSX.Element {
     };
   }, []);
 
+  const nextTheme = THEME_TO_NEXT_THEME[themePreference];
+  const ThemeIcon = THEME_ICONS[themePreference];
+
   const cycleTheme = () => {
-    const next = nextPreference(readPreference());
-    applyPreference(next);
-    setStoredTheme(next);
+    applyPreference(nextTheme);
+    setStoredTheme(nextTheme);
+    setThemePreference(nextTheme);
   };
 
   return (
     <button
       type="button"
       onClick={cycleTheme}
-      aria-label="Cycle color theme (light, dark, or system)"
-      title="Cycle color theme (light, dark, or system)"
+      aria-label={`Current theme: ${themePreference}. Click to switch to ${nextTheme}`}
+      title={`Current theme: ${themePreference}. Click to switch to ${nextTheme}`}
       className="rounded-full p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:text-gray-300 dark:hover:text-gray-100 dark:focus:ring-offset-gray-900"
     >
-      <SunIcon
-        className="theme-pref-icon theme-pref-icon--light h-6 w-6"
-        aria-hidden="true"
-      />
-      <MoonIcon
-        className="theme-pref-icon theme-pref-icon--dark h-6 w-6"
-        aria-hidden="true"
-      />
-      <ComputerDesktopIcon
-        className="theme-pref-icon theme-pref-icon--system h-6 w-6"
-        aria-hidden="true"
-      />
+      <ThemeIcon className="h-6 w-6" aria-hidden="true" />
     </button>
   );
 }

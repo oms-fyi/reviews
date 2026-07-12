@@ -12,7 +12,6 @@ const themeScript = `(function () {
       (pref === "system" &&
         window.matchMedia("(prefers-color-scheme: dark)").matches);
     document.documentElement.classList.toggle("dark", dark);
-    document.documentElement.setAttribute("data-theme-pref", pref);
   } catch (e) {
     /* no-op */
   }
