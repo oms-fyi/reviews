@@ -18,6 +18,8 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { Fragment, type JSX, useEffect, useState } from "react";
 
+import { ThemeToggle } from "src/components/theme-toggle";
+
 const reviewsMenuItems = [
   {
     title: "Most Recent",
@@ -93,7 +95,7 @@ export function Header(): JSX.Element {
   }, [params.slug]);
 
   return (
-    <Disclosure as="nav" className="bg-white shadow-sm">
+    <Disclosure as="nav" className="bg-white shadow-sm dark:border-b dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -101,7 +103,7 @@ export function Header(): JSX.Element {
               <div className="flex">
                 <div className="mr-2 -ml-2 flex items-center md:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset">
+                  <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
@@ -119,7 +121,9 @@ export function Header(): JSX.Element {
                       height={32}
                       className="block"
                     />
-                    <h1 className="text-lg">OMS Reviews</h1>
+                    <h1 className="text-lg text-gray-900 dark:text-gray-100">
+                      OMS Reviews
+                    </h1>
                   </div>
                 </Link>
                 <div className="hidden justify-center gap-6 md:ml-6 md:flex">
@@ -127,8 +131,9 @@ export function Header(): JSX.Element {
                     href="/"
                     className={classNames(
                       {
-                        "border-indigo-500 text-gray-900": pathname === "/",
-                        "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700":
+                        "border-indigo-500 text-gray-900 dark:text-gray-100":
+                          pathname === "/",
+                        "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100":
                           pathname !== "/",
                       },
                       "inline-flex items-center border-b-2 px-1 pt-1",
@@ -138,17 +143,19 @@ export function Header(): JSX.Element {
                   </Link>
                   <Menu
                     as="div"
-                    className="relative inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
+                    className="relative inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
                   >
                     {({ open: reviewMenuOpen }) => (
                       <>
                         <Menu.Button
                           className={classNames(
                             {
-                              "text-gray-900": reviewMenuOpen,
-                              "text-gray-500": !reviewMenuOpen,
+                              "text-gray-900 dark:text-gray-100":
+                                reviewMenuOpen,
+                              "text-gray-500 dark:text-gray-300":
+                                !reviewMenuOpen,
                             },
-                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden",
+                            "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:hover:text-gray-100 dark:focus:ring-offset-gray-900",
                           )}
                         >
                           Reviews
@@ -173,23 +180,23 @@ export function Header(): JSX.Element {
                         >
                           <Menu.Items className="absolute top-full z-10 -mt-3 -ml-4 w-screen max-w-md origin-bottom-right transform px-2 sm:px-0 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2">
                             <div className="ring-opacity-5 overflow-hidden rounded-lg shadow-lg">
-                              <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                              <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8 dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
                                 {reviewsMenuItems.map((item) => (
                                   <Menu.Item key={item.href}>
                                     <Link
                                       href={item.href}
                                       key={item.href}
-                                      className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50"
+                                      className="-m-3 flex items-start rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-700"
                                     >
                                       <item.icon
-                                        className="h-6 w-6 shrink-0 text-indigo-600"
+                                        className="h-6 w-6 shrink-0 text-indigo-600 dark:text-indigo-300"
                                         aria-hidden="true"
                                       />
                                       <div className="ml-4">
-                                        <p className="text-base font-medium text-gray-900">
+                                        <p className="text-base font-medium text-gray-900 dark:text-gray-100">
                                           {item.title}
                                         </p>
-                                        <p className="mt-1 text-sm text-gray-500">
+                                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
                                           {item.subtitle}
                                         </p>
                                       </div>
@@ -205,7 +212,7 @@ export function Header(): JSX.Element {
                   </Menu>
                   <a
                     href="https://omscs-notes.com"
-                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700"
+                    className="inline-flex items-center px-1 pt-1 text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100"
                   >
                     OMSCS Notes
                   </a>
@@ -215,7 +222,7 @@ export function Header(): JSX.Element {
                 <div className="shrink-0">
                   <Link
                     href={newReviewURL ?? "/"}
-                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
+                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-900"
                   >
                     <PlusIcon
                       className="mr-2 -ml-1 h-5 w-5"
@@ -224,10 +231,13 @@ export function Header(): JSX.Element {
                     <span>Add Review</span>
                   </Link>
                 </div>
-                <div className="hidden md:ml-4 md:flex md:shrink-0 md:items-center">
+                <div className="ml-2 flex shrink-0 items-center md:ml-4">
+                  <ThemeToggle />
+                </div>
+                <div className="hidden md:ml-3 md:flex md:shrink-0 md:items-center">
                   <Menu as="div" className="relative ml-3">
                     <div className="flex">
-                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden">
+                      <Menu.Button className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:bg-gray-900 dark:text-gray-300 dark:hover:text-gray-100 dark:focus:text-gray-100 dark:focus:ring-offset-gray-900">
                         <span className="sr-only">Open GitHub menu</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +264,7 @@ export function Header(): JSX.Element {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-hidden">
+                      <Menu.Items className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg focus:outline-hidden dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
                         {githubMenuItems.map(({ text, href }) => (
                           <Menu.Item key={href}>
                             {({ active }) => (
@@ -262,9 +272,9 @@ export function Header(): JSX.Element {
                                 href={href}
                                 className={classNames(
                                   {
-                                    "bg-gray-100": active,
+                                    "bg-gray-100 dark:bg-gray-700": active,
                                   },
-                                  "block px-4 py-2 text-gray-700",
+                                  "block px-4 py-2 text-gray-700 dark:text-gray-200",
                                 )}
                               >
                                 {text}
@@ -287,9 +297,9 @@ export function Header(): JSX.Element {
                   as="a"
                   href="#"
                   className={classNames({
-                    "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pr-4 pl-3 text-base font-medium text-indigo-700 sm:pr-6 sm:pl-5":
+                    "block border-l-4 border-indigo-500 bg-indigo-50 py-2 pr-4 pl-3 text-base font-medium text-indigo-700 sm:pr-6 sm:pl-5 dark:bg-gray-900 dark:text-indigo-300":
                       pathname === "/",
-                    "block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5":
+                    "block border-l-4 border-transparent py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100":
                       pathname !== "/",
                   })}
                 >
@@ -299,28 +309,28 @@ export function Header(): JSX.Element {
               <Disclosure.Button
                 as="a"
                 href="https://omscs-notes.com"
-                className="block py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5"
+                className="block py-2 pr-4 pl-3 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-700 sm:pr-6 sm:pl-5 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
               >
                 OMSCS Notes
               </Disclosure.Button>
             </div>
-            <div className="border-t border-gray-200 pt-4 pb-3">
+            <div className="border-t border-gray-200 pt-4 pb-3 dark:border-gray-800">
               <div className="space-y-1">
                 {reviewsMenuItems.map((item) => (
                   <Link href={item.href} key={item.href} passHref>
                     <Disclosure.Button
                       as="a"
-                      className="flex items-start rounded-lg p-3 hover:bg-gray-50"
+                      className="flex items-start rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       <item.icon
-                        className="h-6 w-6 shrink-0 text-indigo-600"
+                        className="h-6 w-6 shrink-0 text-indigo-600 dark:text-indigo-300"
                         aria-hidden="true"
                       />
                       <div className="ml-4">
-                        <p className="text-base font-medium text-gray-900">
+                        <p className="text-base font-medium text-gray-900 dark:text-gray-100">
                           {item.title}
                         </p>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
                           {item.subtitle}
                         </p>
                       </div>
@@ -329,14 +339,14 @@ export function Header(): JSX.Element {
                 ))}
               </div>
             </div>
-            <div className="border-t border-gray-200 pt-4 pb-3">
+            <div className="border-t border-gray-200 pt-4 pb-3 dark:border-gray-800">
               <div className="space-y-1">
                 {githubMenuItems.map(({ text, href }) => (
                   <Disclosure.Button
                     as="a"
                     href={href}
                     key={href}
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6"
+                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 sm:px-6 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                   >
                     {text}
                   </Disclosure.Button>

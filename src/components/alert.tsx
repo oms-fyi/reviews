@@ -21,8 +21,8 @@ export function Alert({
     <div
       className={classNames(
         {
-          "bg-red-50": variant === "failure",
-          "bg-green-50": variant === "success",
+          "bg-red-50 dark:bg-red-950": variant === "failure",
+          "bg-green-50 dark:bg-green-950": variant === "success",
         },
         "my-4 rounded-md p-4",
       )}
@@ -38,8 +38,8 @@ export function Alert({
         <div
           className={classNames(
             {
-              "text-green-800": variant === "success",
-              "text-red-800": variant === "failure",
+              "text-green-800 dark:text-green-200": variant === "success",
+              "text-red-800 dark:text-red-200": variant === "failure",
             },
             "ml-3",
           )}
@@ -53,9 +53,9 @@ export function Alert({
               onClick={onDismiss}
               className={classNames(
                 {
-                  "bg-green-50 text-green-500 hover:bg-green-100 focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50 focus:outline-hidden":
+                  "bg-green-50 text-green-500 hover:bg-green-100 focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50 focus:outline-hidden dark:bg-green-950 dark:text-green-200 dark:hover:bg-green-900 dark:focus:ring-offset-green-950":
                     variant === "success",
-                  "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 focus:outline-hidden":
+                  "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-red-50 focus:outline-hidden dark:bg-red-950 dark:text-red-300 dark:hover:bg-red-900 dark:focus:ring-offset-red-950":
                     variant === "failure",
                 },
                 "inline-flex rounded-md p-1.5",

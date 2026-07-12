@@ -15,8 +15,11 @@ export function Toggle({ enabled, onChange, label }: ToggleProps): JSX.Element {
         checked={enabled}
         onChange={onChange}
         className={classNames(
-          { "bg-indigo-600": enabled, "bg-gray-200": !enabled },
-          "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden",
+          {
+            "bg-indigo-600": enabled,
+            "bg-gray-200 dark:bg-gray-600": !enabled,
+          },
+          "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:focus:ring-offset-gray-900",
         )}
       >
         <span
@@ -28,7 +31,9 @@ export function Toggle({ enabled, onChange, label }: ToggleProps): JSX.Element {
         />
       </Switch>
       <Switch.Label as="span" className="ml-3">
-        <span className="text-sm font-medium text-gray-900">{label}</span>
+        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+          {label}
+        </span>
       </Switch.Label>
     </Switch.Group>
   );

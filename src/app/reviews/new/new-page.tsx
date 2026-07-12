@@ -160,11 +160,11 @@ export default function NewReviewForm({
   }
 
   return (
-    <section className="mx-auto mt-10 max-w-2xl bg-white px-5 py-10 sm:px-20">
-      <div className="space-y-8 divide-y divide-gray-200">
+    <section className="mx-auto mt-10 max-w-2xl bg-white px-5 py-10 sm:px-20 dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
+      <div className="space-y-8 divide-y divide-gray-200 dark:divide-gray-800">
         <div className="md:flex md:items-center md:justify-between">
           <div className="min-w-0 flex-1" aria-live="polite">
-            <h1 className="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl">
+            <h1 className="text-2xl leading-7 font-bold text-gray-900 sm:truncate sm:text-3xl dark:text-gray-100">
               Add A Review
             </h1>
             <div className="text-sm font-medium">
@@ -197,13 +197,13 @@ export default function NewReviewForm({
           onSubmit={(e) => {
             createReview(e).catch(() => {});
           }}
-          className="space-y-8 divide-y divide-gray-200"
+          className="space-y-8 divide-y divide-gray-200 dark:divide-gray-800"
         >
           <div className="pt-8">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
               Course
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
               Let&apos;s start with some information about the course want to
               review.
             </p>
@@ -213,13 +213,13 @@ export default function NewReviewForm({
               value={courseId}
               onChange={(value) => setCourseId(value ?? "")}
             >
-              <Combobox.Label className="block text-sm font-medium text-gray-700">
+              <Combobox.Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Course Name
               </Combobox.Label>
               <div className="relative mt-1">
                 <Combobox.Input
                   required
-                  className="w-full rounded-md border border-gray-300 bg-white py-2 pr-10 pl-3 shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:text-sm"
+                  className="w-full rounded-md border border-gray-300 bg-white py-2 pr-10 pl-3 shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-hidden sm:text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100"
                   onChange={(event) => setQuery(event.target.value)}
                   displayValue={() => selectedCourse?.name ?? ""}
                 />
@@ -231,7 +231,7 @@ export default function NewReviewForm({
                 </Combobox.Button>
 
                 {filteredCourses.length > 0 && (
-                  <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-hidden sm:text-sm">
+                  <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg focus:outline-hidden sm:text-sm dark:bg-gray-800 dark:ring-1 dark:ring-white/10">
                     {filteredCourses.map((course) => (
                       <Combobox.Option
                         key={course.id}
@@ -241,7 +241,7 @@ export default function NewReviewForm({
                             "relative cursor-default py-2 pr-9 pl-3 select-none",
                             {
                               "bg-indigo-600 text-white": active,
-                              "text-gray-900": !active,
+                              "text-gray-900 dark:text-gray-100": !active,
                             },
                           )
                         }
@@ -281,10 +281,10 @@ export default function NewReviewForm({
               </div>
             </Combobox>
             <fieldset className="mt-6">
-              <legend className="text-sm font-medium text-gray-900">
+              <legend className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 Semester
               </legend>
-              <p className="mb-4 text-sm leading-5 text-gray-500">
+              <p className="mb-4 text-sm leading-5 text-gray-500 dark:text-gray-300">
                 When did you take this course?
               </p>
               <div className="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
@@ -292,7 +292,7 @@ export default function NewReviewForm({
                   <div key={id}>
                     <label
                       htmlFor={`semester-${term}-${startDate}`}
-                      className="flex flex-row-reverse items-center justify-end gap-3 text-sm font-medium text-gray-700 capitalize"
+                      className="flex flex-row-reverse items-center justify-end gap-3 text-sm font-medium text-gray-700 capitalize dark:text-gray-300"
                     >
                       {`${term} ${new Date(startDate).getFullYear()}`}
                       <input
@@ -302,7 +302,7 @@ export default function NewReviewForm({
                         id={`semester-${term}-${startDate}`}
                         name="semester"
                         type="radio"
-                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-950"
                       />
                     </label>
                   </div>
@@ -311,17 +311,17 @@ export default function NewReviewForm({
             </fieldset>
           </div>
           <div className="pt-8">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
               Review
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
               Please share your experience along with some quick stats.
             </p>
             <fieldset className="mt-6">
-              <legend className="text-sm font-medium text-gray-900">
+              <legend className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 Rating
               </legend>
-              <p className="mb-4 text-sm leading-5 text-gray-500">
+              <p className="mb-4 text-sm leading-5 text-gray-500 dark:text-gray-300">
                 Overall, how would you rate this course on a scale of 1-5?
               </p>
               <div className="flex items-center space-x-7 md:space-x-10">
@@ -329,7 +329,7 @@ export default function NewReviewForm({
                   <div className="flex items-center" key={num}>
                     <label
                       htmlFor={`rating-${num}`}
-                      className="flex flex-row-reverse items-center gap-3 text-sm font-medium text-gray-700"
+                      className="flex flex-row-reverse items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
                       {num}
                       <input
@@ -339,7 +339,7 @@ export default function NewReviewForm({
                         type="radio"
                         checked={rating === num}
                         onChange={() => setRating(num)}
-                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-950"
                       />
                     </label>
                   </div>
@@ -347,10 +347,10 @@ export default function NewReviewForm({
               </div>
             </fieldset>
             <fieldset className="mt-6">
-              <legend className="text-sm font-medium text-gray-900">
+              <legend className="text-sm font-medium text-gray-900 dark:text-gray-100">
                 Difficulty
               </legend>
-              <p className="mb-4 text-sm leading-5 text-gray-500">
+              <p className="mb-4 text-sm leading-5 text-gray-500 dark:text-gray-300">
                 How difficult was this course on a scale of 1-5?
               </p>
               <div className="flex items-center space-x-7 md:space-x-10">
@@ -358,7 +358,7 @@ export default function NewReviewForm({
                   <div className="flex items-center" key={num}>
                     <label
                       htmlFor={`difficulty-${num}`}
-                      className="flex flex-row-reverse items-center gap-3 text-sm font-medium text-gray-700"
+                      className="flex flex-row-reverse items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
                       {num}
                       <input
@@ -368,7 +368,7 @@ export default function NewReviewForm({
                         type="radio"
                         checked={difficulty === num}
                         onChange={() => setDifficulty(num)}
-                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 dark:border-gray-700 dark:bg-gray-950"
                       />
                     </label>
                   </div>
@@ -377,7 +377,7 @@ export default function NewReviewForm({
             </fieldset>
             <label
               htmlFor="workload"
-              className="mt-6 block text-sm font-medium text-gray-700"
+              className="mt-6 block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Workload
               <div className="relative mt-1 w-1/2 rounded-md shadow-xs">
@@ -397,22 +397,27 @@ export default function NewReviewForm({
                     }
                   }}
                   id="workload"
-                  className="block w-full rounded-md border-gray-300 pr-28 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border-gray-300 pr-28 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder-gray-400"
                   aria-describedby="workload-unit"
                   placeholder="12"
                 />
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                  <span className="text-gray-500 sm:text-sm">hours / week</span>
+                  <span className="text-gray-500 sm:text-sm dark:text-gray-300">
+                    hours / week
+                  </span>
                 </div>
               </div>
             </label>
-            <p className="mt-2 text-sm text-gray-500" id="workload-unit">
+            <p
+              className="mt-2 text-sm text-gray-500 dark:text-gray-300"
+              id="workload-unit"
+            >
               How much time <span className="sr-only">(in hours per week)</span>{" "}
               did you invest in this course?
             </p>
             <label
               htmlFor="body"
-              className="mt-6 block text-sm font-medium text-gray-700"
+              className="mt-6 block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
               Review
               <div className="mt-1">
@@ -423,16 +428,16 @@ export default function NewReviewForm({
                   value={body}
                   onChange={(e) => setBody(e.currentTarget.value)}
                   rows={6}
-                  className="block w-full rounded-md border border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full rounded-md border border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100"
                 />
               </div>
             </label>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
               So, how was this course?
             </p>
           </div>
           <div className="pt-8" aria-live="polite">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
+            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">
               Authentication
             </h3>
             {codeRequestState.status === "complete" &&
@@ -459,12 +464,12 @@ export default function NewReviewForm({
                   </p>
                 </Alert>
               )}
-            <div className="mt-1 text-sm text-gray-500">
+            <div className="mt-1 text-sm text-gray-500 dark:text-gray-300">
               <span className="block">
                 Only verified GATech students can leave reviews at this time.
               </span>
               <details className="inline-block">
-                <summary className="cursor-pointer text-xs text-indigo-600 hover:text-indigo-900 md:text-sm">
+                <summary className="cursor-pointer text-xs text-indigo-600 hover:text-indigo-900 md:text-sm dark:text-indigo-300 dark:hover:text-indigo-200">
                   How does this work?
                 </summary>
                 Enter your GT username below. If you need a code, you can
@@ -476,7 +481,7 @@ export default function NewReviewForm({
               <div className="sm:col-span-6">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   GT Account
                   <div className="mt-1 flex flex-wrap gap-4">
@@ -490,9 +495,9 @@ export default function NewReviewForm({
                         onChange={(e) => setUsername(e.currentTarget.value)}
                         autoComplete="none"
                         placeholder="david.joyner"
-                        className="relative block min-w-0 rounded-none rounded-l-md border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="relative block min-w-0 rounded-none rounded-l-md border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder-gray-400"
                       />
-                      <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
+                      <span className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300">
                         @gatech.edu
                       </span>
                     </div>
@@ -505,7 +510,7 @@ export default function NewReviewForm({
                         onClick={() => {
                           sendCode().catch(() => {});
                         }}
-                        className="rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 shadow-xs hover:bg-indigo-200 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:outline-hidden"
+                        className="rounded-md border border-transparent bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 shadow-xs hover:bg-indigo-200 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:outline-hidden dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900 dark:focus:ring-offset-gray-900"
                       >
                         {codeRequestState.status === "pending"
                           ? "Sending..."
@@ -514,14 +519,14 @@ export default function NewReviewForm({
                     )}
                   </div>
                 </label>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
                   Who are you, fellow student?
                 </p>
               </div>
               <div className="sm:col-span-4">
                 <label
                   htmlFor="code"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Code
                   <div className="mt-1">
@@ -537,11 +542,11 @@ export default function NewReviewForm({
                       value={code}
                       onChange={(e) => setCode(e.currentTarget.value)}
                       placeholder="123456"
-                      className="relative block min-w-0 rounded-sm border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="relative block min-w-0 rounded-sm border-gray-300 font-normal placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:placeholder-gray-400"
                     />
                   </div>
                 </label>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
                   Please enter your one-time six-digit code.
                 </p>
               </div>
@@ -554,7 +559,7 @@ export default function NewReviewForm({
                   ? { disabled: true }
                   : {})}
                 type="submit"
-                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"
+                className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-900"
               >
                 {reviewRequestState.status === "pending"
                   ? "Submitting..."
@@ -593,23 +598,23 @@ export default function NewReviewForm({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
                   <div>
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                       <CheckIcon
-                        className="h-6 w-6 text-green-600"
+                        className="h-6 w-6 text-green-600 dark:text-green-200"
                         aria-hidden="true"
                       />
                     </div>
                     <div className="mt-3 text-center sm:mt-5">
                       <Dialog.Title
                         as="h3"
-                        className="text-lg leading-6 font-medium text-gray-900"
+                        className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100"
                       >
                         Submission successful
                       </Dialog.Title>
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-300">
                           Thanks, {username}! It&apos;s so awesome you took the
                           time to write a review.
                         </p>
@@ -621,7 +626,7 @@ export default function NewReviewForm({
                       href={`/courses/${
                         selectedCourse?.slug ?? "CS-0000"
                       }/reviews`}
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden sm:text-sm"
+                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden sm:text-sm dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-offset-gray-900"
                     >
                       View my review
                     </Link>
