@@ -1,20 +1,18 @@
 "use client";
 
 import { Listbox, Popover, Transition } from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  FunnelIcon,
-  InformationCircleIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/24/solid";
 import classNames from "classnames";
 import Fuse from "fuse.js";
+import {
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronUpIcon,
+  ChevronsUpDownIcon,
+  FunnelIcon,
+  InfoIcon,
+  SearchIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { FC, Fragment, type JSX, useEffect, useMemo, useState } from "react";
 
@@ -382,7 +380,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                 <div className="mt-1 flex rounded-md shadow-xs">
                   <div className="relative flex grow items-stretch focus-within:z-10">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                      <MagnifyingGlassIcon
+                      <SearchIcon
                         className="hidden h-5 w-5 text-gray-400 sm:block"
                         aria-hidden="true"
                       />
@@ -661,7 +659,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                           )}
                         </div>
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                          <ChevronUpDownIcon
+                          <ChevronsUpDownIcon
                             className="h-5 w-5 text-gray-400"
                             aria-hidden="true"
                           />
@@ -739,7 +737,7 @@ export default function Home({ courses }: HomePageProps): JSX.Element {
                         <Popover className="relative">
                           <>
                             <Popover.Button type="button">
-                              <InformationCircleIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
+                              <InfoIcon className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
                             </Popover.Button>
                             <Transition
                               as={Fragment}

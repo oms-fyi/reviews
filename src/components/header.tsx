@@ -1,18 +1,18 @@
 "use client";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { PlusIcon } from "@heroicons/react/20/solid";
+import classNames from "classnames";
 import {
-  Bars3Icon,
   ChevronDownIcon,
   ClockIcon,
-  CpuChipIcon,
-  CurrencyDollarIcon,
-  GlobeAltIcon,
-  LockClosedIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import classNames from "classnames";
+  CpuIcon,
+  DollarSignIcon,
+  GlobeIcon,
+  LockIcon,
+  MenuIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -31,25 +31,25 @@ const reviewsMenuItems = [
     title: "CS-6250",
     subtitle: "Computer Networks",
     href: "/courses/computer-networks/reviews",
-    icon: GlobeAltIcon,
+    icon: GlobeIcon,
   },
   {
     title: "CS-6035",
     subtitle: "Introduction to Information Security",
     href: "/courses/introduction-to-information-security/reviews",
-    icon: LockClosedIcon,
+    icon: LockIcon,
   },
   {
     title: "CS-7646",
     subtitle: "Machine Learning for Trading",
     href: "/courses/machine-learning-for-trading/reviews",
-    icon: CurrencyDollarIcon,
+    icon: DollarSignIcon,
   },
   {
     title: "CS-6200",
     subtitle: "Introduction to Operating Systems",
     href: "/courses/graduate-introduction-to-operating-systems/reviews",
-    icon: CpuChipIcon,
+    icon: CpuIcon,
   },
 ];
 
@@ -95,7 +95,10 @@ export function Header(): JSX.Element {
   }, [params.slug]);
 
   return (
-    <Disclosure as="nav" className="bg-white shadow-sm dark:border-b dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+    <Disclosure
+      as="nav"
+      className="bg-white shadow-sm dark:border-b dark:border-gray-800 dark:bg-gray-900 dark:shadow-none"
+    >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -106,9 +109,9 @@ export function Header(): JSX.Element {
                   <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden focus:ring-inset dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
-                      <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                      <XIcon className="block h-6 w-6" aria-hidden="true" />
                     ) : (
-                      <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
                     )}
                   </Disclosure.Button>
                 </div>

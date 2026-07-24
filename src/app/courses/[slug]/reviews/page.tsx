@@ -1,11 +1,11 @@
-import {
-  BoltIcon,
-  ClockIcon,
-  DocumentPlusIcon,
-  StarIcon,
-} from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/24/solid";
 import classNames from "classnames";
+import {
+  ClockIcon,
+  FilePlusIcon,
+  PlusIcon,
+  StarIcon,
+  ZapIcon,
+} from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -76,7 +76,7 @@ export default async function Page({ params }: Props) {
             {formatNumber(rating)} / 5 rating
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
-            <BoltIcon className="h-5 w-5 stroke-indigo-600 dark:stroke-indigo-300" />
+            <ZapIcon className="h-5 w-5 stroke-indigo-600 dark:stroke-indigo-300" />
             {formatNumber(difficulty)} / 5 difficulty
           </span>
           <span className="flex items-center gap-0 lg:gap-1">
@@ -224,7 +224,7 @@ export default async function Page({ params }: Props) {
           <div className="w-full max-w-xl grow bg-white px-4 py-2 shadow-sm sm:rounded-lg lg:max-w-full dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
             <div className="px-4 py-5 sm:p-6">
               <div className="text-center">
-                <DocumentPlusIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300" />
+                <FilePlusIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-300" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                   No reviews
                 </h3>

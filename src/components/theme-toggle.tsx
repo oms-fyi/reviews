@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  ComputerDesktopIcon,
-  MoonIcon,
-  SunIcon,
-} from "@heroicons/react/24/outline";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { type JSX, useEffect, useState } from "react";
 
 const THEME_PREFERENCES = ["light", "dark", "system"] as const;
@@ -19,7 +15,7 @@ const THEME_TO_NEXT_THEME: Record<ThemePreference, ThemePreference> = {
 const THEME_ICONS = {
   light: SunIcon,
   dark: MoonIcon,
-  system: ComputerDesktopIcon,
+  system: MonitorIcon,
 } as const;
 
 function isThemePreference(value: string | null): value is ThemePreference {

@@ -1,9 +1,5 @@
-import {
-  CheckCircleIcon,
-  XCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/solid";
 import classNames from "classnames";
+import { CircleCheckIcon, CircleXIcon, XIcon } from "lucide-react";
 import type { JSX } from "react";
 
 interface AlertProps {
@@ -30,9 +26,9 @@ export function Alert({
       <div className="flex">
         <div className="shrink-0">
           {variant === "success" ? (
-            <CheckCircleIcon className="h-5 w-5 text-green-400" />
+            <CircleCheckIcon className="h-5 w-5 text-green-400" />
           ) : (
-            <XCircleIcon className="h-5 w-5 text-red-400" />
+            <CircleXIcon className="h-5 w-5 text-red-400" />
           )}
         </div>
         <div
@@ -62,7 +58,7 @@ export function Alert({
               )}
             >
               <span className="sr-only">Dismiss</span>
-              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+              <XIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>
