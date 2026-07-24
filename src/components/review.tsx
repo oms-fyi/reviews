@@ -1,9 +1,5 @@
-import {
-  CalendarIcon,
-  PencilSquareIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
 import classNames from "classnames";
+import { CalendarIcon, CircleUserRoundIcon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 import { type JSX } from "react";
 import ReactMarkdown from "react-markdown";
@@ -41,14 +37,14 @@ export function Review({
   return (
     <article className="prose prose-sm dark:prose-invert mx-auto bg-white px-6 py-3 shadow-sm sm:rounded-lg dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
       <p className="flex items-center gap-2">
-        <UserCircleIcon className="h-11 w-11 text-gray-400 dark:text-gray-300" />
+        <CircleUserRoundIcon className="h-11 w-11 text-gray-400 dark:text-gray-300" />
         <span className="flex flex-col gap-1">
           <span className="font-medium">
             {author ?? "Georgia Tech Student"}
           </span>
           <span className="flex gap-3">
             <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300">
-              <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
+              <SquarePenIcon className="h-4 w-4" aria-hidden="true" />
               <Time dateTime={createdAt} opts={{ dateStyle: "long" }} />
             </span>
             <span className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-300">
